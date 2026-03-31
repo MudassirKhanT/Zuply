@@ -1,7 +1,8 @@
 package com.zuply.modules.product.demo;
 
 import com.zuply.common.ApiResponse;
-import com.zuply.modules.product.model.Product;
+import com.zuply.modules.product.dto.ProductDto;
+import com.zuply.modules.product.dto.ProductRequest;
 import com.zuply.modules.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,51 +17,89 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    // ── Public: Search, Filter, Sort ─────────────────────────────────
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts(
-            @RequestParam(required = false) String name) {
-        List<Product> products = (name != null)
-                ? productService.searchByName(name)
-                : productService.findAllApproved();
-        return ResponseEntity.ok(ApiResponse.success(products, "Products fetched"));
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String pincode,
+            @RequestParam(required = false) String sortBy) {
+
+        List<ProductDto> products =
+                productService.searchProducts(name, pincode, sortBy);
+
+        if (products.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.success(
+                    products, "No products available in this location"));
+        }
+
+        return ResponseEntity.ok(
+                ApiResponse.success(products, "Products fetched"));
     }
 
+    // ── Public: Single Product ────────────────────────────────────────
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.findById(id);
-        return product.map(p -> ResponseEntity.ok(ApiResponse.success(p, "Product found")))
+    public ResponseEntity<ApiResponse<ProductDto>> getProductById(
+            @PathVariable Long id) {
+
+        Optional<ProductDto> product = productService.findById(id);
+        return product
+                .map(p -> ResponseEntity.ok(ApiResponse.success(p, "Product found")))
                 .orElse(ResponseEntity.status(404)
                         .body(ApiResponse.error("Product not found")));
     }
 
+    // ── Seller: Create Product ────────────────────────────────────────
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody Product product) {
-        Product saved = productService.save(product);
-        return ResponseEntity.ok(ApiResponse.success(saved, "Product created"));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> updateProduct(
-            @PathVariable Long id,
-            @RequestBody Product updatedProduct) {
-        Optional<Product> existing = productService.findById(id);
-        if (existing.isPresent()) {
-            Product product = existing.get();
-            product.setName(updatedProduct.getName());
-            product.setPrice(updatedProduct.getPrice());
-            product.setStock(updatedProduct.getStock());
-            product.setVariations(updatedProduct.getVariations());
-            product.setDeliveryMethod(updatedProduct.getDeliveryMethod());
-            product.setReturnPolicy(updatedProduct.getReturnPolicy());
-            return ResponseEntity.ok(ApiResponse.success(
-                    productService.save(product), "Product updated"));
+    public ResponseEntity<ApiResponse<ProductDto>> createProduct(
+            @RequestBody ProductRequest request) {
+        try {
+            ProductDto created = productService.createProduct(request);
+            return ResponseEntity.ok(
+                    ApiResponse.success(created, "Product created successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400)
+                    .body(ApiResponse.error(e.getMessage()));
         }
-        return ResponseEntity.status(404).body(ApiResponse.error("Product not found"));
     }
 
+    // ── Seller: Update Product ────────────────────────────────────────
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDto>> updateProduct(
+            @PathVariable Long id,
+            @RequestBody ProductRequest request,
+            @RequestParam Long sellerId) {
+        try {
+            ProductDto updated = productService.updateProduct(id, request, sellerId);
+            return ResponseEntity.ok(
+                    ApiResponse.success(updated, "Product updated successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    // ── Seller: Delete Product ────────────────────────────────────────
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable Long id) {
-        productService.deleteById(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", "Product deleted"));
+    public ResponseEntity<ApiResponse<String>> deleteProduct(
+            @PathVariable Long id,
+            @RequestParam Long sellerId) {
+        try {
+            productService.deleteProduct(id, sellerId);
+            return ResponseEntity.ok(
+                    ApiResponse.success("Deleted", "Product deleted successfully"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400)
+                    .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    // ── Seller: Get Own Products ──────────────────────────────────────
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getSellerProducts(
+            @PathVariable Long sellerId) {
+
+        List<ProductDto> products = productService.findBySellerId(sellerId);
+        return ResponseEntity.ok(
+                ApiResponse.success(products, "Seller products fetched"));
     }
 }
