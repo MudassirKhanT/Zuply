@@ -18,6 +18,7 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<Category>>> getAllCategories() {
         List<Category> categories = categoryService.findAll();
-        return ResponseEntity.ok(ApiResponse.success(categories, "Categories fetched"));
+        return ResponseEntity.ok(
+                ApiResponse.success(categories, "Categories fetched"));
     }
 }
