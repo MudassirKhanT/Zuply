@@ -5,7 +5,7 @@ import com.zuply.modules.auth.dto.LoginRequest;
 import com.zuply.modules.auth.dto.LoginResponse;
 import com.zuply.modules.auth.dto.RegisterRequest;
 import com.zuply.modules.auth.service.AuthService;
-import com.zuply.modules.user.model.User;
+import com.zuply.modules.user.dto.UserProfileDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +19,10 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<User>> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<UserProfileDto>> register(   // FIXED: was <User>
+                                                                   @Valid @RequestBody RegisterRequest request) {
         try {
-            User saved = authService.register(request);
+            UserProfileDto saved = authService.register(request);  // FIXED: service now returns DTO
             return ResponseEntity.ok(ApiResponse.success(saved, "User registered successfully"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
@@ -29,7 +30,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+            @Valid @RequestBody LoginRequest request) {
         try {
             LoginResponse response = authService.login(request);
             return ResponseEntity.ok(ApiResponse.success(response, "Login successful"));

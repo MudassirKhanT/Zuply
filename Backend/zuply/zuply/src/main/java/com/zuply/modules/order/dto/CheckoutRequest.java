@@ -12,41 +12,39 @@ public class CheckoutRequest {
 
     @Valid
     @NotNull(message = "Delivery address is required")
-    private DeliveryAddressDto deliveryAddress;
+    private DeliveryAddressDto deliveryAddress;  // ✅ nested DTO, not a String
 
-    @NotBlank(message = "Payment method is required")
-    private String paymentMethod; // UPI, CARD, COD
+    @NotBlank(message = "Payment method must not be blank")
+    private String paymentMethod;
 
-    // Optional: if null, order is placed from the existing cart
     private List<CheckoutItemDto> items;
 
-    public CheckoutRequest() {}
+    // Getters & Setters
+    public Long getCustomerId()                          { return customerId; }
+    public void setCustomerId(Long customerId)           { this.customerId = customerId; }
 
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public DeliveryAddressDto getDeliveryAddress()       { return deliveryAddress; }
+    public void setDeliveryAddress(DeliveryAddressDto d) { this.deliveryAddress = d; }
 
-    public DeliveryAddressDto getDeliveryAddress() { return deliveryAddress; }
-    public void setDeliveryAddress(DeliveryAddressDto deliveryAddress) { this.deliveryAddress = deliveryAddress; }
+    public String getPaymentMethod()                     { return paymentMethod; }
+    public void setPaymentMethod(String m)               { this.paymentMethod = m; }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public List<CheckoutItemDto> getItems()              { return items; }
+    public void setItems(List<CheckoutItemDto> items)    { this.items = items; }
 
-    public List<CheckoutItemDto> getItems() { return items; }
-    public void setItems(List<CheckoutItemDto> items) { this.items = items; }
-
-    // Inner class for individual items in checkout payload
+    // Inner DTO for cart-based checkout items
     public static class CheckoutItemDto {
         private Long productId;
         private Integer quantity;
         private Double price;
 
-        public Long getProductId() { return productId; }
-        public void setProductId(Long productId) { this.productId = productId; }
+        public Long getProductId()           { return productId; }
+        public void setProductId(Long id)    { this.productId = id; }
 
-        public Integer getQuantity() { return quantity; }
+        public Integer getQuantity()              { return quantity; }
         public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
-        public Double getPrice() { return price; }
-        public void setPrice(Double price) { this.price = price; }
+        public Double getPrice()             { return price; }
+        public void setPrice(Double price)   { this.price = price; }
     }
 }

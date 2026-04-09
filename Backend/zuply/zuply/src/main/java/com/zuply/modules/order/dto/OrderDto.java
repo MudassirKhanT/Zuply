@@ -1,70 +1,70 @@
 package com.zuply.modules.order.dto;
 
-import com.zuply.common.enums.OrderStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderDto {
 
-    private Long orderId;
-    private LocalDateTime orderDate;
-    private OrderStatus orderStatus;
-    private Double orderAmount;
-    private String paymentMethod;
+    private Long          orderId;
+    private String        status;
+    private Double        totalAmount;
+    private String        deliveryAddress;
+    private String        city;
+    private String        pincode;
+    private String        paymentMethod;
+    private LocalDateTime createdAt;
     private List<OrderItemDto> items;
 
-    public OrderDto() {}
-
-    public Long getOrderId() { return orderId; }
-    public void setOrderId(Long orderId) { this.orderId = orderId; }
-
-    public LocalDateTime getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
-
-    public OrderStatus getOrderStatus() { return orderStatus; }
-    public void setOrderStatus(OrderStatus orderStatus) { this.orderStatus = orderStatus; }
-
-    public Double getOrderAmount() { return orderAmount; }
-    public void setOrderAmount(Double orderAmount) { this.orderAmount = orderAmount; }
-
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
-
-    public List<OrderItemDto> getItems() { return items; }
-    public void setItems(List<OrderItemDto> items) { this.items = items; }
-
-    // Inner class for each item in the order
+    // ── Nested DTO ────────────────────────────────────────────────────────────
     public static class OrderItemDto {
-        private Long orderItemId;
-        private Long productId;
+        private Long   productId;
         private String productName;
-        private Integer quantity;
+        private int    quantity;
         private Double price;
+        private Double lineTotal;
 
-        public OrderItemDto() {}
+        public Long   getProductId()               { return productId; }
+        public void   setProductId(Long id)        { this.productId = id; }
 
-        public OrderItemDto(Long orderItemId, Long productId, String productName,
-                            Integer quantity, Double price) {
-            this.orderItemId = orderItemId;
-            this.productId = productId;
-            this.productName = productName;
-            this.quantity = quantity;
-            this.price = price;
-        }
+        public String getProductName()             { return productName; }
+        public void   setProductName(String n)     { this.productName = n; }
 
-        public Long getOrderItemId() { return orderItemId; }
-        public void setOrderItemId(Long orderItemId) { this.orderItemId = orderItemId; }
+        public int    getQuantity()                { return quantity; }
+        public void   setQuantity(int q)           { this.quantity = q; }
 
-        public Long getProductId() { return productId; }
-        public void setProductId(Long productId) { this.productId = productId; }
+        public Double getPrice()                   { return price; }
+        public void   setPrice(Double p)           { this.price = p; }
 
-        public String getProductName() { return productName; }
-        public void setProductName(String productName) { this.productName = productName; }
-
-        public Integer getQuantity() { return quantity; }
-        public void setQuantity(Integer quantity) { this.quantity = quantity; }
-
-        public Double getPrice() { return price; }
-        public void setPrice(Double price) { this.price = price; }
+        public Double getLineTotal()               { return lineTotal; }
+        public void   setLineTotal(Double t)       { this.lineTotal = t; }
     }
+
+    // ── Getters / setters ─────────────────────────────────────────────────────
+
+    public Long   getOrderId()                          { return orderId; }
+    public void   setOrderId(Long id)                   { this.orderId = id; }
+
+    public String getStatus()                           { return status; }
+    public void   setStatus(String status)              { this.status = status; }
+
+    public Double getTotalAmount()                      { return totalAmount; }
+    public void   setTotalAmount(Double t)              { this.totalAmount = t; }
+
+    public String getDeliveryAddress()                  { return deliveryAddress; }
+    public void   setDeliveryAddress(String a)          { this.deliveryAddress = a; }
+
+    public String getCity()                             { return city; }
+    public void   setCity(String city)                  { this.city = city; }
+
+    public String getPincode()                          { return pincode; }
+    public void   setPincode(String p)                  { this.pincode = p; }
+
+    public String getPaymentMethod()                    { return paymentMethod; }
+    public void   setPaymentMethod(String m)            { this.paymentMethod = m; }
+
+    public LocalDateTime getCreatedAt()                 { return createdAt; }
+    public void          setCreatedAt(LocalDateTime t)  { this.createdAt = t; }
+
+    public List<OrderItemDto> getItems()                { return items; }
+    public void               setItems(List<OrderItemDto> i) { this.items = i; }
 }

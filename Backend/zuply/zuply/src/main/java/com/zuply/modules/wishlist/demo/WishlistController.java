@@ -1,10 +1,15 @@
 package com.zuply.modules.wishlist.demo;
 
 import com.zuply.common.ApiResponse;
-import com.zuply.modules.wishlist.dto.WishlistItemDto;
+import com.zuply.modules.product.model.Product;
+import com.zuply.modules.product.repository.ProductRepository;
+import com.zuply.modules.user.model.User;
+import com.zuply.modules.user.repository.UserRepository;
+import com.zuply.modules.wishlist.model.Wishlist;
 import com.zuply.modules.wishlist.service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,42 +18,63 @@ import java.util.List;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
 
-    @Autowired
-    private WishlistService wishlistService;
+    @Autowired private WishlistService wishlistService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private ProductRepository productRepository;
 
-    // GET /api/wishlist?customerId={id}  — get full wishlist
+    // ── Helper ────────────────────────────────────────────────────────────────
+
+    private User getAuthUser(Authentication authentication) {
+        return userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // ── GET /api/wishlist ─────────────────────────────────────────────────────
+
     @GetMapping
-    public ResponseEntity<ApiResponse<List<WishlistItemDto>>> getWishlist(
-            @RequestParam Long customerId) {
-        List<WishlistItemDto> wishlist = wishlistService.getWishlistByCustomerId(customerId);
+    public ResponseEntity<ApiResponse<List<Wishlist>>> getWishlist(
+            Authentication authentication) {
+        User user = getAuthUser(authentication);
+        List<Wishlist> wishlist = wishlistService.findByCustomerId(user.getId());
         return ResponseEntity.ok(ApiResponse.success(wishlist, "Wishlist fetched"));
     }
 
-    // POST /api/wishlist/{productId}?customerId={id}  — add to wishlist
-    @PostMapping("/{productId}")
-    public ResponseEntity<ApiResponse<WishlistItemDto>> addToWishlist(
+    // ── POST /api/wishlist/{productId} ────────────────────────────────────────
+
+    @PostMapping("/{productId}")   // FIXED: was @PostMapping with body=Wishlist
+    public ResponseEntity<ApiResponse<Wishlist>> addToWishlist(
             @PathVariable Long productId,
-            @RequestParam Long customerId) {
+            Authentication authentication) {
         try {
-            WishlistItemDto item = wishlistService.addToWishlist(customerId, productId);
-            return ResponseEntity.ok(ApiResponse.success(item, "Added to wishlist"));
+            User user = getAuthUser(authentication);
+
+            if (wishlistService.existsByCustomerIdAndProductId(user.getId(), productId)) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("Product already in wishlist"));
+            }
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            Wishlist wishlist = new Wishlist();
+            wishlist.setCustomer(user);
+            wishlist.setProduct(product);
+
+            Wishlist saved = wishlistService.save(wishlist);
+            return ResponseEntity.ok(ApiResponse.success(saved, "Added to wishlist"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400)
-                    .body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
         }
     }
 
-    // DELETE /api/wishlist/{productId}?customerId={id}  — remove from wishlist
-    @DeleteMapping("/{productId}")
+    // ── DELETE /api/wishlist/{productId} ──────────────────────────────────────
+
+    @DeleteMapping("/{productId}")   // FIXED: was /{customerId}/{productId}
     public ResponseEntity<ApiResponse<String>> removeFromWishlist(
             @PathVariable Long productId,
-            @RequestParam Long customerId) {
-        try {
-            wishlistService.removeFromWishlist(customerId, productId);
-            return ResponseEntity.ok(ApiResponse.success("Removed", "Removed from wishlist"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404)
-                    .body(ApiResponse.error(e.getMessage()));
-        }
+            Authentication authentication) {
+        User user = getAuthUser(authentication);
+        wishlistService.removeByCustomerIdAndProductId(user.getId(), productId);
+        return ResponseEntity.ok(ApiResponse.success("Removed", "Removed from wishlist"));
     }
 }

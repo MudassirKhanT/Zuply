@@ -14,12 +14,16 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "zuply-secret-key-that-is-at-least-256-bits-long-for-hs256";
-    private static final long EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+    private static final String SECRET =
+            "zuply-secret-key-that-is-at-least-256-bits-long-for-hs256";
+
+    private static final long EXPIRATION_MS = 7L * 24 * 60 * 60 * 1000; // 7 days
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
+
+
 
     public String generateToken(String email, String role) {
         return Jwts.builder()
@@ -31,7 +35,13 @@ public class JwtUtil {
                 .compact();
     }
 
+
     public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -39,10 +49,14 @@ public class JwtUtil {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
+
+
     public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        String email = extractUsername(token);
+        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
+
+
 
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());

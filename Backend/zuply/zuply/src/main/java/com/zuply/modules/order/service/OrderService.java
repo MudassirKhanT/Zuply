@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +40,7 @@ public class OrderService {
 
     private static final List<String> VALID_PAYMENT_METHODS = Arrays.asList("UPI", "CARD", "COD");
 
-    // POST /api/orders - place order from cart
+    // POST /api/orders - place order from cart or explicit items
     @Transactional
     public OrderDto placeOrder(CheckoutRequest request) {
 
@@ -57,7 +56,7 @@ public class OrderService {
         User customer = userRepository.findById(request.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        // Build order items — from cart if items not provided, else from request
+        // Build order items — from request items if provided, else from cart
         List<OrderItem> orderItems = new ArrayList<>();
         double totalAmount = 0.0;
 
@@ -104,6 +103,8 @@ public class OrderService {
         // Build and save order
         Order order = new Order();
         order.setCustomer(customer);
+        order.setCustomerName(request.getDeliveryAddress().getCustomerName());
+        order.setPhone(request.getDeliveryAddress().getPhone());
         order.setDeliveryAddress(request.getDeliveryAddress().getAddress());
         order.setCity(request.getDeliveryAddress().getCity());
         order.setPincode(request.getDeliveryAddress().getPincode());
@@ -127,16 +128,19 @@ public class OrderService {
         return toDto(savedOrder);
     }
 
-    // GET /api/orders?customerId={id} - order history
-    public List<OrderDto> getOrdersByCustomer(Long customerId) {
+    // GET /api/orders - order history for authenticated customer
+    public List<OrderDto> findByCustomerId(Long customerId) {
         List<Order> orders = orderRepository.findByCustomerId(customerId);
         return orders.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    // GET /api/orders/{id} - single order detail
-    public OrderDto getOrderById(Long id) {
-        Order order = orderRepository.findById(id)
+    // GET /api/orders/{id} - single order detail with ownership check
+    public OrderDto findByIdAndCustomerId(Long orderId, Long customerId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (!order.getCustomer().getId().equals(customerId)) {
+            throw new RuntimeException("Forbidden: this order does not belong to you");
+        }
         return toDto(order);
     }
 
@@ -144,20 +148,25 @@ public class OrderService {
     private OrderDto toDto(Order order) {
         OrderDto dto = new OrderDto();
         dto.setOrderId(order.getId());
-        dto.setOrderDate(order.getCreatedAt());
-        dto.setOrderStatus(order.getStatus());
-        dto.setOrderAmount(order.getTotalAmount());
+        dto.setCreatedAt(order.getCreatedAt());
+        dto.setStatus(order.getStatus().name());
+        dto.setTotalAmount(order.getTotalAmount());
         dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setDeliveryAddress(order.getDeliveryAddress());
+        dto.setCity(order.getCity());
+        dto.setPincode(order.getPincode());
 
         if (order.getItems() != null) {
             List<OrderDto.OrderItemDto> itemDtos = order.getItems().stream()
-                    .map(item -> new OrderDto.OrderItemDto(
-                            item.getId(),
-                            item.getProduct().getId(),
-                            item.getProduct().getName(),
-                            item.getQuantity(),
-                            item.getPrice()
-                    ))
+                    .map(item -> {
+                        OrderDto.OrderItemDto itemDto = new OrderDto.OrderItemDto();
+                        itemDto.setProductId(item.getProduct().getId());
+                        itemDto.setProductName(item.getProduct().getName());
+                        itemDto.setQuantity(item.getQuantity());
+                        itemDto.setPrice(item.getPrice());
+                        itemDto.setLineTotal(item.getPrice() * item.getQuantity());
+                        return itemDto;
+                    })
                     .collect(Collectors.toList());
             dto.setItems(itemDtos);
         }

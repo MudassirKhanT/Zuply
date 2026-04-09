@@ -23,6 +23,8 @@ public class Order {
     private String pincode;
     private String paymentMethod;
     private Double totalAmount;
+    private String customerName;
+    private String phone;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PLACED;
@@ -31,6 +33,13 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

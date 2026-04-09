@@ -2,6 +2,8 @@ package com.zuply.modules.cart.model;
 
 import com.zuply.modules.user.model.User;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,18 +15,20 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> items;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> items = new ArrayList<>();   // initialised — never null
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // ── Getters / Setters ─────────────────────────────────────────────────────
 
-    public User getCustomer() { return customer; }
-    public void setCustomer(User customer) { this.customer = customer; }
+    public Long getId()                         { return id; }
+    public void setId(Long id)                  { this.id = id; }
 
-    public List<CartItem> getItems() { return items; }
-    public void setItems(List<CartItem> items) { this.items = items; }
+    public User getCustomer()                   { return customer; }
+    public void setCustomer(User customer)      { this.customer = customer; }
+
+    public List<CartItem> getItems()            { return items; }
+    public void setItems(List<CartItem> items)  { this.items = items; }
 }

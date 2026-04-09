@@ -1,7 +1,7 @@
 package com.zuply.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuply.payload.ApiResponse;
+import com.zuply.common.ApiResponse;   // FIXED: was com.zuply.payload.ApiResponse
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (!StringUtils.hasText(token)) {
-            // No token — let Spring Security's default handling respond with 401
             filterChain.doFilter(request, response);
             return;
         }
@@ -67,8 +66,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
-
     private String extractToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
@@ -77,7 +74,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
+    private void sendUnauthorized(HttpServletResponse response, String message)
+            throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ApiResponse<Void> body = ApiResponse.failure(message);

@@ -1,7 +1,7 @@
 package com.zuply.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuply.payload.ApiResponse;
+import com.zuply.common.ApiResponse;   // FIXED: was com.zuply.payload.ApiResponse
 import com.zuply.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,28 +38,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(s ->
+                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // ── 401 handler (missing / invalid token) ──────────────────────
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            ApiResponse<Void> body = ApiResponse.failure("Unauthorized: " + authException.getMessage());
-                            response.getWriter().write(objectMapper.writeValueAsString(body));
+                        .authenticationEntryPoint((req, res, authEx) -> {
+                            res.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            ApiResponse<Void> body = ApiResponse.failure(
+                                    "Unauthorized: " + authEx.getMessage());
+                            res.getWriter().write(objectMapper.writeValueAsString(body));
                         })
-                        // ── 403 handler (authenticated but wrong role) ─────────────
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            ApiResponse<Void> body = ApiResponse.failure("Access denied: you do not have permission");
-                            response.getWriter().write(objectMapper.writeValueAsString(body));
+                        .accessDeniedHandler((req, res, accessEx) -> {
+                            res.setStatus(HttpStatus.FORBIDDEN.value());
+                            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            ApiResponse<Void> body = ApiResponse.failure(
+                                    "Access denied: you do not have permission");
+                            res.getWriter().write(objectMapper.writeValueAsString(body));
                         })
                 )
 
-                // ── Route authorisation ────────────────────────────────────────
                 .authorizeHttpRequests(auth -> auth
-
                         // Public
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
@@ -76,7 +75,9 @@ public class SecurityConfig {
                         // Admin only
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        // Everything else requires authentication
+                        // Authenticated user profile
+                        .requestMatchers("/api/users/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
 

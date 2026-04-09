@@ -4,102 +4,116 @@ import com.zuply.common.ApiResponse;
 import com.zuply.modules.product.dto.ProductDto;
 import com.zuply.modules.product.dto.ProductRequest;
 import com.zuply.modules.product.service.ProductService;
+import com.zuply.modules.seller.model.Seller;
+import com.zuply.modules.seller.repository.SellerRepository;
+import com.zuply.modules.user.model.User;
+import com.zuply.modules.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired private ProductService productService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private SellerRepository sellerRepository;
 
-    // ── Public: Search, Filter, Sort ─────────────────────────────────
+    // ── Helper: resolve Seller from JWT ──────────────────────────────────────
+
+    private Seller getSellerFromAuth(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return sellerRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Seller record not found"));
+    }
+
+    // ── Public: Search, Filter, Sort ─────────────────────────────────────────
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String pincode,
             @RequestParam(required = false) String sortBy) {
 
-        List<ProductDto> products =
-                productService.searchProducts(name, pincode, sortBy);
-
+        List<ProductDto> products = productService.searchProducts(name, pincode, sortBy);
         if (products.isEmpty()) {
-            return ResponseEntity.ok(ApiResponse.success(
-                    products, "No products available in this location"));
+            return ResponseEntity.ok(
+                    ApiResponse.success(products, "No products available in this location"));
         }
-
-        return ResponseEntity.ok(
-                ApiResponse.success(products, "Products fetched"));
+        return ResponseEntity.ok(ApiResponse.success(products, "Products fetched"));
     }
 
-    // ── Public: Single Product ────────────────────────────────────────
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDto>> getProductById(
-            @PathVariable Long id) {
+    // ── Public: Single Product ────────────────────────────────────────────────
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDto>> getProductById(@PathVariable Long id) {
         Optional<ProductDto> product = productService.findById(id);
         return product
                 .map(p -> ResponseEntity.ok(ApiResponse.success(p, "Product found")))
-                .orElse(ResponseEntity.status(404)
-                        .body(ApiResponse.error("Product not found")));
+                .orElse(ResponseEntity.status(404).body(ApiResponse.error("Product not found")));
     }
 
-    // ── Seller: Create Product ────────────────────────────────────────
+    // ── Seller: Create Product ────────────────────────────────────────────────
+
     @PostMapping
     public ResponseEntity<ApiResponse<ProductDto>> createProduct(
-            @RequestBody ProductRequest request) {
+            @RequestBody ProductRequest request,
+            Authentication authentication) {   // ADDED: Authentication parameter
         try {
-            ProductDto created = productService.createProduct(request);
-            return ResponseEntity.ok(
-                    ApiResponse.success(created, "Product created successfully"));
+            // FIXED: sellerId is resolved from JWT, not from request body
+            Seller seller = getSellerFromAuth(authentication);
+            ProductDto created = productService.createProduct(request, seller.getId());
+            return ResponseEntity.ok(ApiResponse.success(created, "Product created successfully"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400)
-                    .body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
         }
     }
 
-    // ── Seller: Update Product ────────────────────────────────────────
+    // ── Seller: Update Product ────────────────────────────────────────────────
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductDto>> updateProduct(
             @PathVariable Long id,
             @RequestBody ProductRequest request,
-            @RequestParam Long sellerId) {
+            Authentication authentication) {   // FIXED: was @RequestParam Long sellerId
         try {
-            ProductDto updated = productService.updateProduct(id, request, sellerId);
-            return ResponseEntity.ok(
-                    ApiResponse.success(updated, "Product updated successfully"));
+            Seller seller = getSellerFromAuth(authentication);
+            ProductDto updated = productService.updateProduct(id, request, seller.getId());
+            return ResponseEntity.ok(ApiResponse.success(updated, "Product updated successfully"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400)
-                    .body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
         }
     }
 
-    // ── Seller: Delete Product ────────────────────────────────────────
+    // ── Seller: Delete Product ────────────────────────────────────────────────
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteProduct(
             @PathVariable Long id,
-            @RequestParam Long sellerId) {
+            Authentication authentication) {   // FIXED: was @RequestParam Long sellerId
         try {
-            productService.deleteProduct(id, sellerId);
-            return ResponseEntity.ok(
-                    ApiResponse.success("Deleted", "Product deleted successfully"));
+            Seller seller = getSellerFromAuth(authentication);
+            productService.deleteProduct(id, seller.getId());
+            return ResponseEntity.ok(ApiResponse.success("Deleted", "Product deleted successfully"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400)
-                    .body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
         }
     }
 
-    // ── Seller: Get Own Products ──────────────────────────────────────
+    // ── Seller: Get Own Products ──────────────────────────────────────────────
+
     @GetMapping("/seller/{sellerId}")
     public ResponseEntity<ApiResponse<List<ProductDto>>> getSellerProducts(
             @PathVariable Long sellerId) {
-
         List<ProductDto> products = productService.findBySellerId(sellerId);
-        return ResponseEntity.ok(
-                ApiResponse.success(products, "Seller products fetched"));
+        return ResponseEntity.ok(ApiResponse.success(products, "Seller products fetched"));
     }
 }
