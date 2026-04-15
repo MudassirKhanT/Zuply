@@ -1,0 +1,606 @@
+{
+  "info": {
+    "name": "Zuply API — Sprint 2",
+    "_postman_id": "zuply-sprint2-collection",
+    "description": "Complete Postman collection for Zuply backend.\n\n**Setup:**\n1. Set `baseUrl` variable to `http://localhost:9090`\n2. Register users (Customer, Seller, Admin)\n3. Login with each role — copy the returned token into `customerToken`, `sellerToken`, or `adminToken`\n4. All protected requests will automatically use those tokens.\n\n**Upload test (Module 1 — Mudassir):**\n- Login as Seller → copy token to `sellerToken`\n- Use *Upload Image* request with a JPEG or PNG file attached",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:9090",
+      "type": "string"
+    },
+    {
+      "key": "customerToken",
+      "value": "PASTE_CUSTOMER_JWT_HERE",
+      "type": "string"
+    },
+    {
+      "key": "sellerToken",
+      "value": "PASTE_SELLER_JWT_HERE",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "PASTE_ADMIN_JWT_HERE",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Customer\",\n  \"email\": \"customer@zuply.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9876543210\",\n  \"role\": \"CUSTOMER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Seller",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Seller\",\n  \"email\": \"seller@zuply.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9876543211\",\n  \"role\": \"SELLER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Admin\",\n  \"email\": \"admin@zuply.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9876543212\",\n  \"role\": \"ADMIN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login — Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('customerToken', json.data.token);",
+                  "    console.log('customerToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@zuply.com\",\n  \"password\": \"password123\",\n  \"role\": \"CUSTOMER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login — Seller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('sellerToken', json.data.token);",
+                  "    console.log('sellerToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller@zuply.com\",\n  \"password\": \"password123\",\n  \"role\": \"SELLER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login — Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.token) {",
+                  "    pm.collectionVariables.set('adminToken', json.data.token);",
+                  "    console.log('adminToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@zuply.com\",\n  \"password\": \"password123\",\n  \"role\": \"ADMIN\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 User Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users/profile", "host": ["{{baseUrl}}"], "path": ["api", "users", "profile"] }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users/profile", "host": ["{{baseUrl}}"], "path": ["api", "users", "profile"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"phone\": \"9999999999\",\n  \"address\": \"123 Main Street\",\n  \"city\": \"Mumbai\",\n  \"pincode\": \"400001\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🗂️ Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/categories", "host": ["{{baseUrl}}"], "path": ["api", "categories"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "Get All Products (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "name", "value": "shirt", "disabled": true },
+                { "key": "pincode", "value": "400001", "disabled": true },
+                { "key": "sortBy", "value": "price_asc", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          }
+        },
+        {
+          "name": "Get Products by Seller ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/products/seller/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "seller", "1"] }
+          }
+        },
+        {
+          "name": "Create Product (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Blue Denim Jacket\",\n  \"categoryId\": 1,\n  \"price\": 1499.99,\n  \"stock\": 50,\n  \"variations\": \"S, M, L, XL\",\n  \"deliveryMethod\": \"Standard\",\n  \"returnPolicy\": \"7 day return\",\n  \"imageUrl\": \"https://example.com/jacket.jpg\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 1299.99,\n  \"stock\": 40\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product (Seller)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛒 Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api", "cart"] }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api", "cart"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/1?quantity=3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", "1"],
+              "query": [{ "key": "quantity", "value": "3" }]
+            }
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/1", "host": ["{{baseUrl}}"], "path": ["api", "cart", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Wishlist",
+      "item": [
+        {
+          "name": "Get Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wishlist", "host": ["{{baseUrl}}"], "path": ["api", "wishlist"] }
+          }
+        },
+        {
+          "name": "Add to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wishlist/1", "host": ["{{baseUrl}}"], "path": ["api", "wishlist", "1"] }
+          }
+        },
+        {
+          "name": "Remove from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/wishlist/1", "host": ["{{baseUrl}}"], "path": ["api", "wishlist", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧾 Orders",
+      "item": [
+        {
+          "name": "Place Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": 1,\n  \"deliveryAddress\": {\n    \"street\": \"123 Main Street\",\n    \"city\": \"Mumbai\",\n    \"pincode\": \"400001\"\n  },\n  \"paymentMethod\": \"UPI\",\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2,\n      \"price\": 1499.99\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/orders/1", "host": ["{{baseUrl}}"], "path": ["api", "orders", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏪 Seller",
+      "item": [
+        {
+          "name": "Register as Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/seller/register", "host": ["{{baseUrl}}"], "path": ["api", "seller", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storeName\": \"My Zuply Store\",\n  \"location\": \"Mumbai, Maharashtra\",\n  \"pincode\": \"400001\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Seller Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seller/dashboard", "host": ["{{baseUrl}}"], "path": ["api", "seller", "dashboard"] }
+          }
+        },
+        {
+          "name": "Get My Products",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seller/products", "host": ["{{baseUrl}}"], "path": ["api", "seller", "products"] }
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seller/orders", "host": ["{{baseUrl}}"], "path": ["api", "seller", "orders"] }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/seller/orders/1/status?status=PROCESSING",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "seller", "orders", "1", "status"],
+              "query": [{ "key": "status", "value": "PROCESSING" }]
+            }
+          }
+        },
+        {
+          "name": "Get Seller by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seller/1", "host": ["{{baseUrl}}"], "path": ["api", "seller", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛠️ Admin",
+      "item": [
+        {
+          "name": "Get Admin Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/dashboard", "host": ["{{baseUrl}}"], "path": ["api", "admin", "dashboard"] }
+          }
+        },
+        {
+          "name": "Get All Sellers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/sellers", "host": ["{{baseUrl}}"], "path": ["api", "admin", "sellers"] }
+          }
+        },
+        {
+          "name": "Approve Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/sellers/1/approve", "host": ["{{baseUrl}}"], "path": ["api", "admin", "sellers", "1", "approve"] }
+          }
+        },
+        {
+          "name": "Suspend Seller",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/sellers/1/suspend", "host": ["{{baseUrl}}"], "path": ["api", "admin", "sellers", "1", "suspend"] }
+          }
+        },
+        {
+          "name": "Get All Products (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/products", "host": ["{{baseUrl}}"], "path": ["api", "admin", "products"] }
+          }
+        },
+        {
+          "name": "Approve Product",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/products/1/approve", "host": ["{{baseUrl}}"], "path": ["api", "admin", "products", "1", "approve"] }
+          }
+        },
+        {
+          "name": "Reject Product",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/products/1/reject", "host": ["{{baseUrl}}"], "path": ["api", "admin", "products", "1", "reject"] }
+          }
+        },
+        {
+          "name": "Get Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/reports", "host": ["{{baseUrl}}"], "path": ["api", "admin", "reports"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🖼️ Upload (Module 1 — Mudassir)",
+      "item": [
+        {
+          "name": "Upload Image ✅",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/upload", "host": ["{{baseUrl}}"], "path": ["api", "upload"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Select a JPEG or PNG file (max 10MB)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Image — Invalid Type (expects 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/upload", "host": ["{{baseUrl}}"], "path": ["api", "upload"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Attach a .pdf or .gif to trigger the 400 Invalid file type error"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Image — No Auth (expects 401)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/upload", "host": ["{{baseUrl}}"], "path": ["api", "upload"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "No Authorization header — should return 401"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Image — Customer Token (expects 403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/upload", "host": ["{{baseUrl}}"], "path": ["api", "upload"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Customer token — should return 403 Forbidden (only SELLER allowed)"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -71,6 +71,7 @@ public class SecurityConfig {
 
                         // Seller only
                         .requestMatchers("/api/seller/**").hasRole("SELLER")
+                        .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("SELLER")
 
                         // Admin only
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
