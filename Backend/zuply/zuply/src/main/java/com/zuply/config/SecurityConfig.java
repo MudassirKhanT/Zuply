@@ -1,7 +1,7 @@
 package com.zuply.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuply.common.ApiResponse;   // FIXED: was com.zuply.payload.ApiResponse
+import com.zuply.payload.ApiResponse;
 import com.zuply.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,28 +38,31 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s ->
-                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                // ── 401 handler (missing / invalid token) ──────────────────────
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, authEx) -> {
-                            res.setStatus(HttpStatus.UNAUTHORIZED.value());
-                            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             ApiResponse<Void> body = ApiResponse.failure(
-                                    "Unauthorized: " + authEx.getMessage());
-                            res.getWriter().write(objectMapper.writeValueAsString(body));
+                                    "Unauthorized: " + authException.getMessage());
+                            response.getWriter().write(objectMapper.writeValueAsString(body));
                         })
-                        .accessDeniedHandler((req, res, accessEx) -> {
-                            res.setStatus(HttpStatus.FORBIDDEN.value());
-                            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        // ── 403 handler (authenticated but wrong role) ─────────────
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                             ApiResponse<Void> body = ApiResponse.failure(
                                     "Access denied: you do not have permission");
-                            res.getWriter().write(objectMapper.writeValueAsString(body));
+                            response.getWriter().write(objectMapper.writeValueAsString(body));
                         })
                 )
 
+                // ── Route authorisation ───
                 .authorizeHttpRequests(auth -> auth
-                        // Public
+
+                        // Public routes
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
@@ -71,14 +74,17 @@ public class SecurityConfig {
 
                         // Seller only
                         .requestMatchers("/api/seller/**").hasRole("SELLER")
-                        .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("SELLER")
 
-                        // Admin only
+                        //  Seller only (NEW)
+                        // Upload: POST /api/upload — seller submits a product image
+                        .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("SELLER")
+                        // Listing: all listing endpoints — generate, preview, edit, publish
+                        .requestMatchers("/api/listing/**").hasRole("SELLER")
+
+                        //  — Admin only ─
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        // Authenticated user profile
-                        .requestMatchers("/api/users/**").authenticated()
-
+                        // ── Everything else requires authentication ───
                         .anyRequest().authenticated()
                 )
 
