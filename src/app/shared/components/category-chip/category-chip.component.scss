@@ -1,0 +1,22 @@
+@import 'styles';
+@import '../../../../styles';
+
+.chip {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 8px 4px; border-radius: 10px;
+  border: 1px solid #E0E0E0; background: #fff;
+  cursor: pointer; text-align: center; transition: all 0.15s ease;
+  user-select: none;
+  .chip-icon { font-size: 22px; line-height: 1; }
+  .chip-name { font-size: 10px; font-weight: 500; color: #5A6A6B; white-space: nowrap; }
+  &:hover { border-color: #0D5C63; background: #F0F9FA; }
+  &.active { border-width: 1.5px; .chip-name { font-weight: 600; } }
+  &.grocery.active,     &.grocery:hover     { border-color: #0D5C63; background: #E8F5F6; .chip-name { color: #0D5C63; } }
+  &.electronics.active, &.electronics:hover { border-color: #3730A3; background: #EEF2FF; .chip-name { color: #3730A3; } }
+  &.fashion.active,     &.fashion:hover     { border-color: #9D174D; background: #FFF0F9; .chip-name { color: #9D174D; } }
+  &.food.active,        &.food:hover        { border-color: #C9A84C; background: #FFFBEB; .chip-name { color: #C9A84C; } }
+  &.home.active,        &.home:hover        { border-color: #C2410C; background: #FFF7ED; .chip-name { color: #C2410C; } }
+  &.beauty.active,      &.beauty:hover      { border-color: #7E22CE; background: #FDF4FF; .chip-name { color: #7E22CE; } }
+  &.health.active,      &.health:hover      { border-color: #0F766E; background: #F0FDF4; .chip-name { color: #0F766E; } }
+  &.agriculture.active, &.agriculture:hover { border-color: #4D7C0F; background: #F7FEE7; .chip-name { color: #4D7C0F; } }
+}
