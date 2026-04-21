@@ -1,0 +1,45 @@
+@import 'styles';
+@import '../../../../styles';
+
+.footer {
+  background: $zuply-primary-deeper; color: rgba(255,255,255,0.85);
+  padding: $space-2xl $space-lg $space-md; margin-top: $space-3xl;
+
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; gap: $space-2xl; flex-wrap: wrap;
+    padding-bottom: $space-xl; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .footer-brand {
+    flex: 1; min-width: 220px;
+    .footer-logo { display: flex; align-items: center; gap: $space-sm; margin-bottom: $space-sm; }
+    .footer-logo-text { font-size: $text-xl; font-weight: 800; letter-spacing: -1px; color: #fff;
+      em { color: $zuply-accent; font-style: normal; } }
+    .footer-tagline { font-size: $text-base; font-weight: 600; color: $zuply-accent; margin-bottom: $space-xs; }
+    .footer-desc { font-size: $text-sm; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 260px; }
+  }
+
+  .footer-links { display: flex; gap: $space-xl; flex-wrap: wrap; }
+
+  .footer-col {
+    display: flex; flex-direction: column; gap: $space-sm; min-width: 120px;
+    .footer-col-title { font-size: $text-xs; font-weight: 600; color: $zuply-accent;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: $space-xs; }
+    a { font-size: $text-sm; color: rgba(255,255,255,0.65); text-decoration: none;
+      &:hover { color: #fff; } }
+  }
+
+  .footer-bottom {
+    max-width: 1200px; margin: $space-md auto 0;
+    display: flex; justify-content: space-between; flex-wrap: wrap;
+    gap: $space-sm; font-size: $text-xs; color: rgba(255,255,255,0.4);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer { padding-bottom: 96px; }
+  .footer-inner { flex-direction: column; gap: $space-lg; }
+  .footer-bottom { flex-direction: column; align-items: center; text-align: center; }
+}
+

@@ -1,0 +1,137 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-logo">
+      <svg width="34" height="34" viewBox="0 0 46 46" fill="none">
+        <rect x="3" y="13" width="40" height="30" rx="6" fill="#0D5C63"/>
+        <path d="M14 13C14 7 32 7 32 13" stroke="#0D5C63" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M15 23L21.5 23L15 32L31 32" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="logo-text">zu<em>ply</em></div>
+    </a>
+
+    <!-- Location -->
+    <div class="location-pill">
+      <span class="loc-dot"></span>
+      {{ location }}
+    </div>
+
+    <!-- Search -->
+    <div class="navbar-search">
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search products, shops..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+      />
+      <button class="search-btn" (click)="onSearch()">🔍</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+
+      <!-- Not logged in -->
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/login"    class="btn-outline-sm">Login</a>
+        <a routerLink="/register" class="btn-filled-sm">Sign Up</a>
+      </ng-container>
+
+      <!-- Customer icons -->
+      <ng-container *ngIf="isLoggedIn && isCustomer">
+        <a routerLink="/wishlist" class="icon-btn" title="Wishlist">❤️</a>
+        <a routerLink="/cart" class="icon-btn cart-icon-btn" title="Cart">
+          &#128722;
+          <span class="cart-count" *ngIf="(cartCount$ | async)! > 0">
+            {{ cartCount$ | async }}
+          </span>
+        </a>
+      </ng-container>
+
+      <!-- Seller button -->
+      <ng-container *ngIf="isLoggedIn && isSeller">
+        <a routerLink="/seller/upload" class="btn-filled-sm">+ List Product</a>
+      </ng-container>
+
+      <!-- User menu -->
+      <div class="user-menu-wrap" *ngIf="isLoggedIn">
+        <div class="user-avatar"
+             [class.seller]="isSeller"
+             [class.admin]="isAdmin"
+             (click)="toggleUserMenu()">
+          {{ userInitial }}
+        </div>
+
+        <div class="dropdown" *ngIf="showUserMenu">
+          <div class="dropdown-header">
+            <div class="dropdown-name">{{ userName }}</div>
+            <div class="dropdown-role">
+              {{ isCustomer ? 'Customer' : isSeller ? 'Seller' : 'Admin' }}
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+
+          <!-- Customer links -->
+          <ng-container *ngIf="isCustomer">
+            <a routerLink="/profile"  class="dropdown-item" (click)="closeUserMenu()">My Profile</a>
+            <a routerLink="/orders"   class="dropdown-item" (click)="closeUserMenu()">My Orders</a>
+            <a routerLink="/wishlist" class="dropdown-item" (click)="closeUserMenu()">Wishlist</a>
+          </ng-container>
+
+          <!-- Seller links -->
+          <ng-container *ngIf="isSeller">
+            <a routerLink="/seller/dashboard" class="dropdown-item" (click)="closeUserMenu()">Dashboard</a>
+            <a routerLink="/seller/products"  class="dropdown-item" (click)="closeUserMenu()">My Products</a>
+            <a routerLink="/seller/orders"    class="dropdown-item" (click)="closeUserMenu()">Orders</a>
+            <a routerLink="/seller/upload"    class="dropdown-item" (click)="closeUserMenu()">Upload Product</a>
+          </ng-container>
+
+          <!-- Admin links -->
+          <ng-container *ngIf="isAdmin">
+            <a routerLink="/admin/dashboard" class="dropdown-item" (click)="closeUserMenu()">Admin Dashboard</a>
+            <a routerLink="/admin/sellers"   class="dropdown-item" (click)="closeUserMenu()">Manage Sellers</a>
+            <a routerLink="/admin/products"  class="dropdown-item" (click)="closeUserMenu()">Manage Products</a>
+            <a routerLink="/admin/reports"   class="dropdown-item" (click)="closeUserMenu()">Reports</a>
+          </ng-container>
+
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item logout" (click)="logout()">Logout</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="bnav-inner">
+    <a routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact:true}" class="bnav-item">
+      <span class="bnav-icon">🏠</span>
+      <span>Home</span>
+      <div class="bnav-bar"></div>
+    </a>
+    <a routerLink="/products" routerLinkActive="active" class="bnav-item">
+      <span class="bnav-icon">🔍</span>
+      <span>Search</span>
+      <div class="bnav-bar"></div>
+    </a>
+    <a routerLink="/cart" routerLinkActive="active" class="bnav-item" *ngIf="isCustomer">
+      <span class="bnav-icon">🛒</span>
+      <span>Cart</span>
+      <div class="bnav-bar"></div>
+    </a>
+    <a routerLink="/orders" routerLinkActive="active" class="bnav-item" *ngIf="isCustomer">
+      <span class="bnav-icon">📦</span>
+      <span>Orders</span>
+      <div class="bnav-bar"></div>
+    </a>
+    <a routerLink="/profile" routerLinkActive="active" class="bnav-item">
+      <span class="bnav-icon">👤</span>
+      <span>Profile</span>
+      <div class="bnav-bar"></div>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+@import 'styles';
+.pcard {
+  background: $zuply-surface; border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light; overflow: hidden;
+  cursor: pointer; transition: $transition-fast;
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); }
+}
+
+.pcard-img {
+  position: relative; height: 150px;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: cover; }
+  .pcard-emoji { font-size: 44px; }
+  .wishlist-btn {
+    position: absolute; top: $space-sm; right: $space-sm;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.9); border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 14px;
+    &:hover { background: #fff; transform: scale(1.1); }
+  }
+  .ai-badge-wrap { position: absolute; bottom: $space-xs; left: $space-xs; }
+}
+
+.pcard-body { padding: $space-md; }
+
+.pcard-dist {
+  display: inline-block; background: $zuply-primary-light; color: $zuply-primary;
+  font-size: 9px; font-weight: 600; padding: 2px 8px;
+  border-radius: $radius-xs; margin-bottom: $space-xs;
+}
+
+.pcard-name {
+  font-size: $text-base; font-weight: 500; color: $zuply-text;
+  margin-bottom: 3px; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.pcard-seller { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-sm; }
+
+.pcard-footer { display: flex; align-items: center; justify-content: space-between; }
+
+.pcard-price { font-size: $text-lg; font-weight: 700; }
+
+.pcard-add {
+  width: 30px; height: 30px; border-radius: $radius-sm;
+  color: #fff; font-size: 20px; font-weight: 700;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: $transition-fast; line-height: 1;
+  &:hover { filter: brightness(0.88); transform: scale(1.05); }
+}
+
