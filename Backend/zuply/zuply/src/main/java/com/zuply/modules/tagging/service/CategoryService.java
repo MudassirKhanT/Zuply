@@ -19,7 +19,7 @@ import java.util.List;
  *  4. If no match, default to "Other"
  *  5. Return the matched category string
  */
-@Service
+@Service("taggingCategoryService")
 public class CategoryService {
 
     // Predefined Zuply categories (must match Sprint 1 category list exactly)

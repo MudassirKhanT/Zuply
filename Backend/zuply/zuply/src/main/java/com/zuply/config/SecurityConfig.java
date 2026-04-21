@@ -1,7 +1,7 @@
 package com.zuply.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuply.payload.ApiResponse;
+import com.zuply.common.ApiResponse;
 import com.zuply.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
