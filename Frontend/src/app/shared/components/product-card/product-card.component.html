@@ -1,0 +1,21 @@
+<div class="pcard" (click)="onCardClick()">
+  <div class="pcard-img" [style.background]="catBg">
+    <img *ngIf="product?.imageUrl" [src]="product.imageUrl" [alt]="product.name"/>
+    <span *ngIf="!product?.imageUrl" class="pcard-emoji">{{ catEmoji }}</span>
+    <button class="wishlist-btn" (click)="toggleWishlist($event)" *ngIf="showWishlist">
+      {{ wishlisted ? '❤️' : '🤍' }}
+    </button>
+    <span class="ai-badge-wrap" *ngIf="product?.aiGenerated">
+      <app-ai-badge></app-ai-badge>
+    </span>
+  </div>
+  <div class="pcard-body">
+    <div class="pcard-dist" *ngIf="product?.distance">📍 {{ product.distance }}</div>
+    <div class="pcard-name">{{ product.name }}</div>
+    <div class="pcard-seller" *ngIf="product?.sellerName">{{ product.sellerName }}</div>
+    <div class="pcard-footer">
+      <div class="pcard-price" [style.color]="catColor">₹ {{ product.price }}</div>
+      <button class="pcard-add" [style.background]="catColor" (click)="addToCart($event)">+</button>
+    </div>
+  </div>
+</div>
