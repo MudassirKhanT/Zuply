@@ -26,52 +26,52 @@ public class AdminController {
     public ResponseEntity<ApiResponse<AdminDashboardDto>> getDashboard() {
         AdminDashboardDto dto = adminService.getDashboard();
         return ResponseEntity.ok(
-                ApiResponse.success(dto, "Dashboard data fetched successfully"));
+                ApiResponse.success("Dashboard data fetched successfully", dto));
     }
 
     @GetMapping("/sellers")
     public ResponseEntity<ApiResponse<List<Seller>>> getAllSellers() {
         return ResponseEntity.ok(
-                ApiResponse.success(adminService.getAllSellers(), "Sellers fetched successfully"));
+                ApiResponse.success("Sellers fetched successfully", adminService.getAllSellers()));
     }
 
     @PatchMapping("/sellers/{id}/approve")
     public ResponseEntity<ApiResponse<Seller>> approveSeller(@PathVariable Long id) {
         Seller seller = adminService.approveSeller(id);
         return ResponseEntity.ok(
-                ApiResponse.success(seller, "Seller approved successfully"));
+                ApiResponse.success("Seller approved successfully", seller));
     }
 
     @PatchMapping("/sellers/{id}/suspend")
     public ResponseEntity<ApiResponse<Seller>> suspendSeller(@PathVariable Long id) {
         Seller seller = adminService.suspendSeller(id);
         return ResponseEntity.ok(
-                ApiResponse.success(seller, "Seller suspended successfully"));
+                ApiResponse.success("Seller suspended successfully", seller));
     }
 
     @GetMapping("/products")
     public ResponseEntity<ApiResponse<List<Product>>> getAllProducts() {
         return ResponseEntity.ok(
-                ApiResponse.success(adminService.getAllProducts(), "Products fetched successfully"));
+                ApiResponse.success("Products fetched successfully", adminService.getAllProducts()));
     }
 
     @PatchMapping("/products/{id}/approve")
     public ResponseEntity<ApiResponse<Product>> approveProduct(@PathVariable Long id) {
         Product product = adminService.approveProduct(id);
         return ResponseEntity.ok(
-                ApiResponse.success(product, "Product approved successfully"));
+                ApiResponse.success("Product approved successfully", product));
     }
 
     @PatchMapping("/products/{id}/reject")
     public ResponseEntity<ApiResponse<Product>> rejectProduct(@PathVariable Long id) {
         Product product = adminService.rejectProduct(id);
         return ResponseEntity.ok(
-                ApiResponse.success(product, "Product rejected successfully"));
+                ApiResponse.success("Product rejected successfully", product));
     }
 
     @GetMapping("/reports")
     public ResponseEntity<ApiResponse<AdminReportDto>> getReports() {
         return ResponseEntity.ok(
-                ApiResponse.success(adminService.getReports(), "Reports fetched successfully"));
+                ApiResponse.success("Reports fetched successfully", adminService.getReports()));
     }
 }

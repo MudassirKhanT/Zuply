@@ -46,9 +46,9 @@ public class ProductController {
         List<ProductDto> products = productService.searchProducts(name, pincode, sortBy);
         if (products.isEmpty()) {
             return ResponseEntity.ok(
-                    ApiResponse.success(products, "No products available in this location"));
+                    ApiResponse.success("No products available in this location", products));
         }
-        return ResponseEntity.ok(ApiResponse.success(products, "Products fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Products fetched", products));
     }
 
     // ── Public: Single Product ────────────────────────────────────────────────
@@ -57,8 +57,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductDto>> getProductById(@PathVariable Long id) {
         Optional<ProductDto> product = productService.findById(id);
         return product
-                .map(p -> ResponseEntity.ok(ApiResponse.success(p, "Product found")))
-                .orElse(ResponseEntity.status(404).body(ApiResponse.error("Product not found")));
+                .map(p -> ResponseEntity.ok(ApiResponse.success("Product found", p)))
+                .orElse(ResponseEntity.status(404).body(ApiResponse.failure("Product not found")));
     }
 
     // ── Seller: Create Product ────────────────────────────────────────────────
@@ -71,9 +71,9 @@ public class ProductController {
             // FIXED: sellerId is resolved from JWT, not from request body
             Seller seller = getSellerFromAuth(authentication);
             ProductDto created = productService.createProduct(request, seller.getId());
-            return ResponseEntity.ok(ApiResponse.success(created, "Product created successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Product created successfully", created));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -87,9 +87,9 @@ public class ProductController {
         try {
             Seller seller = getSellerFromAuth(authentication);
             ProductDto updated = productService.updateProduct(id, request, seller.getId());
-            return ResponseEntity.ok(ApiResponse.success(updated, "Product updated successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Product updated successfully", updated));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -102,9 +102,9 @@ public class ProductController {
         try {
             Seller seller = getSellerFromAuth(authentication);
             productService.deleteProduct(id, seller.getId());
-            return ResponseEntity.ok(ApiResponse.success("Deleted", "Product deleted successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Product deleted successfully", "Deleted"));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(400).body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -114,6 +114,6 @@ public class ProductController {
     public ResponseEntity<ApiResponse<List<ProductDto>>> getSellerProducts(
             @PathVariable Long sellerId) {
         List<ProductDto> products = productService.findBySellerId(sellerId);
-        return ResponseEntity.ok(ApiResponse.success(products, "Seller products fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Seller products fetched", products));
     }
 }

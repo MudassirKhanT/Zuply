@@ -21,9 +21,9 @@ public class UserController {
         try {
             String email = authentication.getName();
             UserProfileDto profile = userService.getProfile(email);
-            return ResponseEntity.ok(ApiResponse.success(profile, "Profile fetched successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Profile fetched successfully", profile));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -34,9 +34,9 @@ public class UserController {
         try {
             String email = authentication.getName();
             UserProfileDto updated = userService.updateProfile(email, dto);
-            return ResponseEntity.ok(ApiResponse.success(updated, "Profile updated successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Profile updated successfully", updated));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
     }
 }

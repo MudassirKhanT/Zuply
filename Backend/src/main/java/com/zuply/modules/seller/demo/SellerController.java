@@ -53,14 +53,14 @@ public class SellerController {
 
         if (user == null) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error("User not found"));
+                    .body(ApiResponse.failure("User not found"));
         }
 
         // Check if seller record already exists for this user
         Optional<Seller> existingSeller = sellerService.findByUserId(user.getId());
         if (existingSeller.isPresent()) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error("Seller record already exists for this user"));
+                    .body(ApiResponse.failure("Seller record already exists for this user"));
         }
 
         String storeName = (String) request.get("storeName");
@@ -68,7 +68,7 @@ public class SellerController {
         String pincode = (String) request.get("pincode");
 
         Seller seller = sellerService.registerSeller(user, storeName, location, pincode);
-        return ResponseEntity.ok(ApiResponse.success(seller, "Seller registered successfully. Awaiting admin approval."));
+        return ResponseEntity.ok(ApiResponse.success("Seller registered successfully. Awaiting admin approval.", seller));
     }
 
     // --- Seller Dashboard ---
@@ -78,16 +78,16 @@ public class SellerController {
         try {
             seller = getAuthenticatedSeller(authentication);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
 
         if (!seller.isActive()) {
             return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+                    .body(ApiResponse.failure("Account suspended"));
         }
 
         SellerDashboardDto dashboard = sellerService.getDashboard(seller.getId());
-        return ResponseEntity.ok(ApiResponse.success(dashboard, "Dashboard fetched successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Dashboard fetched successfully", dashboard));
     }
 
     // --- Seller Products (own products only) ---
@@ -97,16 +97,16 @@ public class SellerController {
         try {
             seller = getAuthenticatedSeller(authentication);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
 
         if (!seller.isActive()) {
             return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+                    .body(ApiResponse.failure("Account suspended"));
         }
 
         List<Product> products = sellerService.getSellerProducts(seller.getId());
-        return ResponseEntity.ok(ApiResponse.success(products, "Seller products fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Seller products fetched", products));
     }
 
     // --- Seller Orders (orders containing seller's products) ---
@@ -116,16 +116,16 @@ public class SellerController {
         try {
             seller = getAuthenticatedSeller(authentication);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
 
         if (!seller.isActive()) {
             return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+                    .body(ApiResponse.failure("Account suspended"));
         }
 
         List<SellerOrderDto> orders = sellerService.getSellerOrders(seller.getId());
-        return ResponseEntity.ok(ApiResponse.success(orders, "Seller orders fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Seller orders fetched", orders));
     }
 
     // --- Update Order Status (forward only: PLACED -> PROCESSING -> DELIVERED) ---
@@ -138,20 +138,20 @@ public class SellerController {
         try {
             seller = getAuthenticatedSeller(authentication);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
 
         if (!seller.isActive()) {
             return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+                    .body(ApiResponse.failure("Account suspended"));
         }
 
         try {
             Order updatedOrder = sellerService.updateOrderStatus(seller.getId(), id, status);
-            return ResponseEntity.ok(ApiResponse.success(updatedOrder, "Order status updated successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Order status updated successfully", updatedOrder));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -159,8 +159,8 @@ public class SellerController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Seller>> getSellerById(@PathVariable Long id) {
         Optional<Seller> seller = sellerService.findById(id);
-        return seller.map(s -> ResponseEntity.ok(ApiResponse.success(s, "Seller found")))
+        return seller.map(s -> ResponseEntity.ok(ApiResponse.success("Seller found", s)))
                 .orElse(ResponseEntity.status(404)
-                        .body(ApiResponse.error("Seller not found")));
+                        .body(ApiResponse.failure("Seller not found")));
     }
 }

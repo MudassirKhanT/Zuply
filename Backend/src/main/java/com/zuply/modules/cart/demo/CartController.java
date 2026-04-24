@@ -30,9 +30,9 @@ public class CartController {
         try {
             User user = getAuthUser(authentication);
             CartDto cart = cartService.getCart(user.getId());
-            return ResponseEntity.ok(ApiResponse.success(cart, "Cart fetched"));
+            return ResponseEntity.ok(ApiResponse.success("Cart fetched", cart));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -44,9 +44,9 @@ public class CartController {
         try {
             User user = getAuthUser(authentication);
             CartDto cart = cartService.addItem(user.getId(), request);
-            return ResponseEntity.ok(ApiResponse.success(cart, "Item added to cart"));
+            return ResponseEntity.ok(ApiResponse.success("Item added to cart", cart));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -59,9 +59,9 @@ public class CartController {
         try {
             User user = getAuthUser(authentication);
             CartDto cart = cartService.updateItemQuantity(user.getId(), itemId, quantity);
-            return ResponseEntity.ok(ApiResponse.success(cart, "Cart updated"));
+            return ResponseEntity.ok(ApiResponse.success("Cart updated", cart));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -73,9 +73,9 @@ public class CartController {
         try {
             User user = getAuthUser(authentication);
             CartDto cart = cartService.removeItem(user.getId(), itemId);
-            return ResponseEntity.ok(ApiResponse.success(cart, "Item removed from cart"));
+            return ResponseEntity.ok(ApiResponse.success("Item removed from cart", cart));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 }

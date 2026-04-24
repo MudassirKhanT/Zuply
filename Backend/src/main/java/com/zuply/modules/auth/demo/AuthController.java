@@ -23,9 +23,9 @@ public class AuthController {
                                                                    @Valid @RequestBody RegisterRequest request) {
         try {
             UserProfileDto saved = authService.register(request);  // FIXED: service now returns DTO
-            return ResponseEntity.ok(ApiResponse.success(saved, "User registered successfully"));
+            return ResponseEntity.ok(ApiResponse.success("User registered successfully", saved));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -34,9 +34,9 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request) {
         try {
             LoginResponse response = authService.login(request);
-            return ResponseEntity.ok(ApiResponse.success(response, "Login successful"));
+            return ResponseEntity.ok(ApiResponse.success("Login successful", response));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(401).body(ApiResponse.failure(e.getMessage()));
         }
     }
 }

@@ -34,16 +34,16 @@ public class ListingController {
             Long sellerId = getSellerIdFromUserDetails(userDetails);
             ListingResponse response = listingService.generateListing(imageId, sellerId);
             return ResponseEntity.ok(
-                    ApiResponse.success(response, "Listing generated successfully"));
+                    ApiResponse.success("Listing generated successfully", response));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(500)
-                    .body(ApiResponse.error("Pipeline failed: " + e.getMessage()));
+                    .body(ApiResponse.failure("Pipeline failed: " + e.getMessage()));
         }
     }
 
@@ -59,10 +59,10 @@ public class ListingController {
         try {
             ListingResponse response = listingService.getListing(imageId);
             return ResponseEntity.ok(
-                    ApiResponse.success(response, "Listing fetched successfully"));
+                    ApiResponse.success("Listing fetched successfully", response));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -80,13 +80,13 @@ public class ListingController {
             Long sellerId = getSellerIdFromUserDetails(userDetails);
             ListingResponse response = listingService.editListing(productId, sellerId, request);
             return ResponseEntity.ok(
-                    ApiResponse.success(response, "Listing updated successfully"));
+                    ApiResponse.success("Listing updated successfully", response));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -103,13 +103,13 @@ public class ListingController {
             Long sellerId = getSellerIdFromUserDetails(userDetails);
             PublishResponse response = listingService.publishListing(productId, sellerId);
             return ResponseEntity.ok(
-                    ApiResponse.success(response, "Product published successfully"));
+                    ApiResponse.success("Product published successfully", response));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error(e.getMessage()));
+                    .body(ApiResponse.failure(e.getMessage()));
         }
     }
 

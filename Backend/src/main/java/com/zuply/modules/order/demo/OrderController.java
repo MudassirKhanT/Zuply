@@ -34,9 +34,9 @@ public class OrderController {
         try {
             User user = getAuthUser(authentication);
             OrderDto order = orderService.placeOrder(request);
-            return ResponseEntity.ok(ApiResponse.success(order, "Order placed successfully"));
+            return ResponseEntity.ok(ApiResponse.success("Order placed successfully", order));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -46,7 +46,7 @@ public class OrderController {
             Authentication authentication) {
         User user = getAuthUser(authentication);
         List<OrderDto> orders = orderService.findByCustomerId(user.getId());
-        return ResponseEntity.ok(ApiResponse.success(orders, "Orders fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Orders fetched", orders));
     }
 
     // GET /api/orders/{id} — single order detail
@@ -57,9 +57,9 @@ public class OrderController {
         try {
             User user = getAuthUser(authentication);
             OrderDto order = orderService.findByIdAndCustomerId(id, user.getId());
-            return ResponseEntity.ok(ApiResponse.success(order, "Order found"));
+            return ResponseEntity.ok(ApiResponse.success("Order found", order));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.status(404).body(ApiResponse.failure(e.getMessage()));
         }
     }
 }

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn dependency:tree -q)",
+      "Bash(mvn dependency:tree)",
+      "Bash(mvn dependency:list)",
+      "Bash(./mvnw dependency:list)",
+      "Bash(./mvnw compile *)"
+    ]
+  }
+}

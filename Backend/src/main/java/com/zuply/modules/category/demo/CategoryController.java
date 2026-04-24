@@ -19,6 +19,6 @@ public class CategoryController {
     public ResponseEntity<ApiResponse<List<Category>>> getAllCategories() {
         List<Category> categories = categoryService.findAll();
         return ResponseEntity.ok(
-                ApiResponse.success(categories, "Categories fetched"));
+                ApiResponse.success("Categories fetched", categories));
     }
 }

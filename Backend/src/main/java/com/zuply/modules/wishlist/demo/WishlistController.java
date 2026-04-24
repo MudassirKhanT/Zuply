@@ -36,7 +36,7 @@ public class WishlistController {
             Authentication authentication) {
         User user = getAuthUser(authentication);
         List<Wishlist> wishlist = wishlistService.findByCustomerId(user.getId());
-        return ResponseEntity.ok(ApiResponse.success(wishlist, "Wishlist fetched"));
+        return ResponseEntity.ok(ApiResponse.success("Wishlist fetched", wishlist));
     }
 
     // ── POST /api/wishlist/{productId} ────────────────────────────────────────
@@ -50,7 +50,7 @@ public class WishlistController {
 
             if (wishlistService.existsByCustomerIdAndProductId(user.getId(), productId)) {
                 return ResponseEntity.badRequest()
-                        .body(ApiResponse.error("Product already in wishlist"));
+                        .body(ApiResponse.failure("Product already in wishlist"));
             }
 
             Product product = productRepository.findById(productId)
@@ -61,9 +61,9 @@ public class WishlistController {
             wishlist.setProduct(product);
 
             Wishlist saved = wishlistService.save(wishlist);
-            return ResponseEntity.ok(ApiResponse.success(saved, "Added to wishlist"));
+            return ResponseEntity.ok(ApiResponse.success("Added to wishlist", saved));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
@@ -75,6 +75,6 @@ public class WishlistController {
             Authentication authentication) {
         User user = getAuthUser(authentication);
         wishlistService.removeByCustomerIdAndProductId(user.getId(), productId);
-        return ResponseEntity.ok(ApiResponse.success("Removed", "Removed from wishlist"));
+        return ResponseEntity.ok(ApiResponse.success("Removed from wishlist", "Removed"));
     }
 }

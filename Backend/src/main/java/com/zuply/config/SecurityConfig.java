@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/wishlist/**").hasRole("CUSTOMER")
                         .requestMatchers("/api/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers("/api/payment/**").hasRole("CUSTOMER")
 
                         // Seller only
                         .requestMatchers("/api/seller/**").hasRole("SELLER")
