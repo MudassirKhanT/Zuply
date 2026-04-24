@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["angular:styles/component:css;d512ec4c8c623c1c46435ab1a111138e13dd849c678bc6e120627a7dbe73e500;C:/Users/2479309/Desktop/Zuply-Full/Zuply/Frontend/Zuply-FrontEnd/shared/components/ai-badge/ai-badge.component.ts"],
+  "sourcesContent": ["\n    .ai-badge-pill {\n      display: inline-block;\n      background: linear-gradient(135deg, #0D5C63, #C9A84C);\n      color: #fff;\n      font-size: 11px;\n      font-weight: 700;\n      padding: 2px 8px;\n      border-radius: 999px;\n      letter-spacing: .04em;\n    }\n  "],
+  "mappings": ";AACI,CAAC;AACC,WAAS;AACT;AAAA,IAAY;AAAA,MAAgB,MAAhB;AAAA,MAAwB,OAAxB;AAAA,MAAiC;AAC7C,SAAO;AACP,aAAW;AACX,eAAa;AACb,WAAS,IAAI;AACb,iBAAe;AACf,kBAAgB;AAClB;",
+  "names": []
+}

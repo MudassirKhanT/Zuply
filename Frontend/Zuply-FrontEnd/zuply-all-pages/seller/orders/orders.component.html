@@ -1,0 +1,35 @@
+<!-- src/app/pages/seller/orders/orders.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Customer Orders</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="orders-table" *ngIf="!loading && orders.length > 0">
+    <div class="table-row header">
+      <span>Order ID</span><span>Customer</span><span>Product</span><span>Status</span><span>Actions</span>
+    </div>
+    <div class="table-row" *ngFor="let order of orders">
+      <span class="order-id">#{{ order.orderId }}</span>
+      <span>{{ order.customerName || 'Customer' }}</span>
+      <span>{{ order.productName }}</span>
+      <span [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus | titlecase }}</span>
+      <div class="action-btns">
+        <button class="btn-primary btn-sm btn-pill"
+                *ngIf="order.orderStatus === 'PLACED'"
+                (click)="updateStatus(order.orderId, 'PROCESSING')">
+          Process
+        </button>
+        <button class="btn-accent btn-sm btn-pill"
+                *ngIf="order.orderStatus === 'PROCESSING'"
+                (click)="updateStatus(order.orderId, 'DELIVERED')">
+          Mark Delivered
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && orders.length === 0">
+    <div class="empty-icon">🛍️</div>
+    <div class="empty-title">No orders yet</div>
+    <div class="empty-desc">Orders from customers will appear here.</div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<!-- src/app/pages/orders/list/list.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">My Orders</h1>
+
+  <div class="tabs-row">
+    <button *ngFor="let tab of tabs" class="tab-btn" [class.active]="activeTab === tab" (click)="setTab(tab)">
+      {{ tab | titlecase }}
+    </button>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="orders-list" *ngIf="!loading && filtered.length > 0">
+    <div class="order-card" *ngFor="let order of filtered" (click)="viewDetail(order)">
+      <div class="order-top">
+        <div class="order-id">Order #{{ order.orderId }}</div>
+        <span [class]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
+      </div>
+      <div class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</div>
+      <div class="order-bottom">
+        <div class="order-total price-sm">₹ {{ order.totalAmount }}</div>
+        <button class="btn-secondary btn-sm btn-pill">View Details →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filtered.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No orders found</div>
+    <div class="empty-desc">Your orders will appear here once you place them.</div>
+    <a routerLink="/products" class="btn-primary btn-pill">Start Shopping</a>
+  </div>
+</div>

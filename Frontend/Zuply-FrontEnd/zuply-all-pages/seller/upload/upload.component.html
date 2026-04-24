@@ -1,0 +1,72 @@
+<!-- src/app/pages/seller/upload/upload.component.html -->
+<div class="page-container">
+  <div class="upload-wrap">
+
+    <div class="upload-header">
+      <h1 class="text-2xl">Upload Product</h1>
+      <span class="ai-badge">✦ AI Powered</span>
+    </div>
+    <p class="upload-desc">Upload a product photo and our AI will generate the title, description, category and tags automatically.</p>
+
+    <!-- Error -->
+    <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+    <!-- Processing steps -->
+    <div class="steps-row" *ngIf="uploading">
+      <div class="step" *ngFor="let step of statusSteps" [class]="getStepClass(step)">
+        <div class="step-dot"></div>
+        <div class="step-label">{{ step | titlecase }}</div>
+      </div>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="upload-zone"
+         [class.has-preview]="previewUrl"
+         [class.is-uploading]="uploading"
+         (drop)="onDrop($event)"
+         (dragover)="onDragOver($event)"
+         (click)="!uploading && fileInput.click()">
+
+      <input #fileInput type="file" accept="image/*" (change)="onFileSelect($event)" hidden/>
+
+      <!-- Preview -->
+      <div class="preview-wrap" *ngIf="previewUrl && !uploading">
+        <img [src]="previewUrl" alt="Preview" class="preview-img"/>
+        <div class="preview-name">{{ selectedFile?.name }}</div>
+      </div>
+
+      <!-- Processing animation -->
+      <div class="processing-wrap" *ngIf="uploading">
+        <div class="spinner-ring"></div>
+        <div class="processing-title">{{ statusMsg }}</div>
+        <div class="processing-sub">Please wait, this may take a few seconds...</div>
+      </div>
+
+      <!-- Default state -->
+      <div class="upload-default" *ngIf="!previewUrl && !uploading">
+        <div class="upload-icon">📸</div>
+        <div class="upload-title">Tap to upload product image</div>
+        <div class="upload-sub">or drag and drop here</div>
+        <div class="upload-hint">JPG or PNG • Max 10MB</div>
+      </div>
+    </div>
+
+    <!-- Info box -->
+    <div class="ai-info-box" *ngIf="previewUrl && !uploading">
+      <span style="font-size:18px">✦</span>
+      <span>AI will generate title, description, category and tags automatically from your photo.</span>
+    </div>
+
+    <!-- Generate button -->
+    <button
+      class="btn-primary btn-full btn-pill generate-btn"
+      (click)="upload()"
+      [disabled]="!selectedFile || uploading"
+      *ngIf="!uploading">
+      {{ selectedFile ? 'Generate Listing with AI →' : 'Select an image to continue' }}
+    </button>
+
+    <a routerLink="/seller/products" class="manual-link">← Back to my products</a>
+
+  </div>
+</div>

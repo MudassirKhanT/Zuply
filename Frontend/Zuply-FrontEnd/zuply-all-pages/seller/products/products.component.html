@@ -1,0 +1,31 @@
+<!-- src/app/pages/seller/products/products.component.html -->
+<div class="page-container">
+  <div class="page-top">
+    <h1 class="text-2xl">My Products</h1>
+    <a routerLink="/seller/upload" class="btn-accent btn-pill">+ Upload New</a>
+  </div>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="grid-4" *ngIf="!loading && products.length > 0">
+    <div class="prod-card" *ngFor="let p of products">
+      <div class="prod-img">
+        <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name"/>
+        <span *ngIf="!p.imageUrl" style="font-size:36px">🛒</span>
+      </div>
+      <div class="prod-body">
+        <span [class]="getStatusClass(p.status || 'PENDING')">{{ p.status || 'Pending' | titlecase }}</span>
+        <div class="prod-name">{{ p.name }}</div>
+        <div class="prod-price">₹ {{ p.price }}</div>
+        <div class="prod-stock">Stock: {{ p.stock }}</div>
+        <button class="btn-danger btn-sm btn-pill" (click)="deleteProduct(p.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && products.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No products yet</div>
+    <div class="empty-desc">Upload your first product using AI-powered listing.</div>
+    <a routerLink="/seller/upload" class="btn-primary btn-pill">Upload Now</a>
+  </div>
+</div>

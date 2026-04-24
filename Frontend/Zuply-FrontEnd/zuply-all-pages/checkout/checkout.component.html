@@ -1,0 +1,80 @@
+<!-- src/app/pages/checkout/checkout.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Checkout</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="checkout-layout" *ngIf="!loading">
+    <div class="checkout-left">
+
+      <!-- Delivery Address -->
+      <div class="form-card">
+        <div class="form-card-title">📍 Delivery Address</div>
+        <div class="input-group">
+          <label>Full Address *</label>
+          <textarea class="input" rows="3" placeholder="House no, Street, Area" [(ngModel)]="deliveryAddress"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label>City *</label>
+            <input class="input" type="text" placeholder="City" [(ngModel)]="city"/>
+          </div>
+          <div class="input-group">
+            <label>Pincode *</label>
+            <input class="input" type="text" placeholder="600001" [(ngModel)]="pincode"/>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Phone Number *</label>
+          <input class="input" type="tel" placeholder="9876543210" [(ngModel)]="phone"/>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-card">
+        <div class="form-card-title">💳 Payment Method</div>
+        <div class="payment-options">
+          <div
+            *ngFor="let opt of paymentOptions"
+            class="payment-option"
+            [class.active]="paymentMethod === opt.value"
+            (click)="paymentMethod = $any(opt.value)">
+            <span class="pay-icon">{{ opt.icon }}</span>
+            <span class="pay-label">{{ opt.label }}</span>
+            <span class="pay-radio">{{ paymentMethod === opt.value ? '🔵' : '⚪' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Order Summary -->
+    <div class="checkout-right">
+      <div class="form-card">
+        <div class="form-card-title">🧾 Order Summary</div>
+        <div *ngIf="cart">
+          <div class="summary-row" *ngFor="let item of cart.items">
+            <span>{{ item.productName }} × {{ item.quantity }}</span>
+            <span>₹ {{ item.totalPrice }}</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row"><span>Delivery</span><span class="text-success">Free</span></div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total">
+            <span>Grand Total</span>
+            <span class="price">₹ {{ cart.grandTotal }}</span>
+          </div>
+        </div>
+
+        <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+        <button
+          class="btn-primary btn-full btn-pill"
+          style="margin-top:16px; font-size:16px; padding:14px"
+          (click)="placeOrder()"
+          [disabled]="placing">
+          {{ placing ? 'Placing Order...' : '✅ Place Order' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

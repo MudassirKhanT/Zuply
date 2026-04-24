@@ -1,0 +1,52 @@
+<!-- src/app/pages/admin/dashboard/dashboard.component.html -->
+<div class="page-container">
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+    <div class="admin-banner">
+      <div>
+        <div class="admin-sup">Admin Panel</div>
+        <div class="admin-title">Platform Overview</div>
+        <div class="admin-sub">Manage sellers, products and platform health.</div>
+      </div>
+      <div class="admin-emoji">⚙️</div>
+    </div>
+
+    <div class="grid-3 stats-grid" *ngIf="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Sellers</div>
+        <div class="stat-value">{{ stats.totalSellers }}</div>
+        <div class="stat-sub">registered sellers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value" style="color:#C9A84C">{{ stats.totalProducts }}</div>
+        <div class="stat-sub">approved products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ stats.totalOrders }}</div>
+        <div class="stat-sub">orders placed</div>
+      </div>
+    </div>
+
+    <div class="grid-4 quick-actions">
+      <a routerLink="/admin/sellers"  class="action-card">
+        <div class="action-icon">👥</div>
+        <div class="action-label">Manage Sellers</div>
+      </a>
+      <a routerLink="/admin/products" class="action-card">
+        <div class="action-icon">📦</div>
+        <div class="action-label">Manage Products</div>
+      </a>
+      <a routerLink="/admin/reports"  class="action-card">
+        <div class="action-icon">📊</div>
+        <div class="action-label">Reports</div>
+      </a>
+      <a routerLink="/admin/sellers"  class="action-card pending">
+        <div class="action-icon">⏳</div>
+        <div class="action-label">Pending Approvals</div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+// src/app/pages/seller/dashboard/dashboard.component.scss
+@import 'styles';
+.welcome-banner { background:$zuply-primary-deeper; border-radius:$radius-xl; padding:$space-xl; color:#fff; display:flex; justify-content:space-between; align-items:center; margin-bottom:$space-xl;
+  .welcome-sup   { font-size:$text-xs; color:$zuply-accent; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:$space-xs; }
+  .welcome-title { font-size:$text-2xl; font-weight:700; margin-bottom:$space-xs; }
+  .welcome-sub   { font-size:$text-base; opacity:.8; }
+  .welcome-emoji { font-size:64px; opacity:.2; } }
+.stats-grid  { margin-bottom:$space-xl; }
+.action-card { background:$zuply-surface; border-radius:$radius-lg; padding:$space-xl; border:1px solid $zuply-border-light; text-align:center; text-decoration:none; display:block; transition:$transition-fast; cursor:pointer;
+  &:hover { box-shadow:$shadow-md; transform:translateY(-2px); border-color:$zuply-primary; }
+  .action-icon  { font-size:36px; margin-bottom:$space-sm; }
+  .action-label { font-size:$text-lg; font-weight:600; color:$zuply-primary; margin-bottom:4px; }
+  .action-desc  { font-size:$text-sm; color:$zuply-text-secondary; } }
+.orders-table { background:$zuply-surface; border-radius:$radius-lg; border:1px solid $zuply-border-light; overflow:hidden; }
+.table-row { display:grid; grid-template-columns:80px 1fr 1fr 120px; gap:$space-md; padding:$space-md $space-lg; border-bottom:1px solid $zuply-border-light; align-items:center; font-size:$text-sm;
+  &.header { background:$zuply-primary-mist; font-weight:600; color:$zuply-text-secondary; font-size:$text-xs; text-transform:uppercase; }
+  &:last-child { border-bottom:none; } }

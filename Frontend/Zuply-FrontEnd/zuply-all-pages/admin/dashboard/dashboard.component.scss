@@ -1,0 +1,14 @@
+// src/app/pages/admin/dashboard/dashboard.component.scss
+@import 'styles';
+.admin-banner { background:$zuply-primary-deeper; border-radius:$radius-xl; padding:$space-xl; color:#fff; display:flex; justify-content:space-between; align-items:center; margin-bottom:$space-xl;
+  .admin-sup   { font-size:$text-xs; color:$zuply-accent; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:$space-xs; }
+  .admin-title { font-size:$text-2xl; font-weight:700; margin-bottom:$space-xs; }
+  .admin-sub   { font-size:$text-base; opacity:.8; }
+  .admin-emoji { font-size:64px; opacity:.2; } }
+.stats-grid  { margin-bottom:$space-xl; }
+.quick-actions { margin-top:$space-xl; }
+.action-card { background:$zuply-surface; border-radius:$radius-lg; padding:$space-xl; border:1px solid $zuply-border-light; text-align:center; text-decoration:none; display:block; transition:$transition-fast;
+  &:hover { box-shadow:$shadow-md; transform:translateY(-2px); border-color:$zuply-primary; }
+  &.pending { border-color:$zuply-warning; background:$zuply-warning-light; }
+  .action-icon  { font-size:36px; margin-bottom:$space-sm; }
+  .action-label { font-size:$text-base; font-weight:600; color:$zuply-primary; } }

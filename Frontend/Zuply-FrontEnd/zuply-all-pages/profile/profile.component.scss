@@ -1,0 +1,8 @@
+// src/app/pages/profile/profile.component.scss
+@import 'styles';
+.profile-wrap { display:flex; justify-content:center; padding:$space-xl 0; }
+.profile-card { background:$zuply-surface; border-radius:$radius-xl; padding:$space-2xl; width:100%; max-width:400px; box-shadow:$shadow-lg; text-align:center; border:1px solid $zuply-border-light; }
+.profile-avatar { width:80px; height:80px; border-radius:50%; background:$zuply-primary; color:#fff; font-size:$text-3xl; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto $space-md; }
+.profile-name  { font-size:$text-xl; font-weight:700; color:$zuply-text; margin-bottom:$space-sm; }
+.profile-email { font-size:$text-base; color:$zuply-text-secondary; margin-top:$space-sm; margin-bottom:$space-xl; }
+.profile-actions { display:flex; flex-direction:column; gap:$space-sm; }

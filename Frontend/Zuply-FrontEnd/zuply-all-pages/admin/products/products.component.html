@@ -1,0 +1,43 @@
+<!-- src/app/pages/admin/products/products.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Manage Products</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="products-table" *ngIf="!loading && products.length > 0">
+    <div class="table-row header">
+      <span>ID</span>
+      <span>Product</span>
+      <span>Seller</span>
+      <span>Price</span>
+      <span>Status</span>
+      <span>Actions</span>
+    </div>
+    <div class="table-row" *ngFor="let p of products">
+      <span class="prod-id">#{{ p.id }}</span>
+      <span class="prod-name">{{ p.name }}</span>
+      <span>{{ p.sellerName || '—' }}</span>
+      <span class="price-sm">₹ {{ p.price }}</span>
+      <span [class]="getStatusClass(p.status)">{{ p.status | titlecase }}</span>
+      <div class="action-btns">
+        <button
+          class="btn-primary btn-sm btn-pill"
+          *ngIf="p.status !== 'APPROVED'"
+          (click)="approve(p.id)">
+          Approve
+        </button>
+        <button
+          class="btn-danger btn-sm btn-pill"
+          *ngIf="p.status !== 'REJECTED'"
+          (click)="reject(p.id)">
+          Reject
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && products.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No products pending review</div>
+    <div class="empty-desc">All products have been reviewed.</div>
+  </div>
+</div>
