@@ -1,0 +1,13 @@
+// src/app/pages/orders/detail/detail.component.scss
+@import 'styles';
+.back-btn      { background:transparent; border:none; color:$zuply-primary; font-size:$text-base; font-weight:500; cursor:pointer; margin-bottom:$space-lg; padding:0; &:hover{text-decoration:underline;} }
+.detail-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:$space-xl; flex-wrap:wrap; gap:$space-md; }
+.order-date    { font-size:$text-sm; color:$zuply-text-secondary; margin-top:4px; }
+.detail-grid   { display:grid; grid-template-columns:1fr 1fr; gap:$space-lg; }
+.order-item    { display:flex; align-items:center; gap:$space-md; padding:$space-sm 0; border-bottom:1px solid $zuply-border-light; }
+.item-name     { flex:1; font-size:$text-base; font-weight:500; color:$zuply-text; }
+.item-meta     { font-size:$text-sm; color:$zuply-text-secondary; }
+.order-total-row { display:flex; justify-content:space-between; align-items:center; margin-top:$space-md; padding-top:$space-md; border-top:2px solid $zuply-border-light; }
+.detail-row    { display:flex; gap:$space-md; padding:8px 0; border-bottom:1px solid $zuply-border-light; font-size:$text-base; }
+.detail-label  { font-weight:500; color:$zuply-text-secondary; min-width:100px; }
+@media(max-width:768px) { .detail-grid { grid-template-columns:1fr; } }

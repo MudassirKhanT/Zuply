@@ -1,0 +1,52 @@
+@import 'styles';
+
+.footer {
+  background: $zuply-primary-deeper;
+  color: rgba(255,255,255,.7);
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $space-xl $space-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-lg;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .brand-text {
+    font-size: $text-xl;
+    font-weight: 800;
+    color: #fff;
+    em { color: $zuply-accent; font-style: normal; }
+  }
+
+  .footer-tagline { font-size: $text-xs; opacity: .6; }
+}
+
+.footer-links {
+  display: flex;
+  gap: $space-lg;
+
+  a {
+    font-size: $text-sm;
+    color: rgba(255,255,255,.6);
+    text-decoration: none;
+    transition: $transition-fast;
+
+    &:hover { color: #fff; }
+  }
+}
+
+.footer-copy {
+  font-size: $text-xs;
+  opacity: .5;
+}

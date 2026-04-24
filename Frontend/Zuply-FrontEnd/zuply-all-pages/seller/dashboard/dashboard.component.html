@@ -1,0 +1,76 @@
+<!-- src/app/pages/seller/dashboard/dashboard.component.html -->
+<div class="page-container">
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+    <!-- Welcome banner -->
+    <div class="welcome-banner">
+      <div>
+        <div class="welcome-sup">Seller Dashboard</div>
+        <div class="welcome-title">Good morning, {{ userName }}! 👋</div>
+        <div class="welcome-sub">Manage your store and orders from here.</div>
+      </div>
+      <div class="welcome-emoji">🏪</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid-4 stats-grid" *ngIf="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value">{{ stats.totalProductsUploaded || 0 }}</div>
+        <div class="stat-sub">uploaded products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value" style="color:#C9A84C">{{ stats.totalOrdersReceived || 0 }}</div>
+        <div class="stat-sub">orders received</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending Orders</div>
+        <div class="stat-value" style="color:#F39C12">{{ stats.pendingOrders || 0 }}</div>
+        <div class="stat-sub">awaiting action</div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="section">
+      <div class="section-header"><div class="section-title">Quick Actions</div></div>
+      <div class="grid-3 actions-grid">
+        <a routerLink="/seller/upload" class="action-card">
+          <div class="action-icon">📸</div>
+          <div class="action-label">Upload Product</div>
+          <div class="action-desc">Add new product with AI</div>
+        </a>
+        <a routerLink="/seller/products" class="action-card">
+          <div class="action-icon">📦</div>
+          <div class="action-label">My Products</div>
+          <div class="action-desc">View and manage products</div>
+        </a>
+        <a routerLink="/seller/orders" class="action-card">
+          <div class="action-icon">🛍️</div>
+          <div class="action-label">View Orders</div>
+          <div class="action-desc">Manage customer orders</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent orders -->
+    <div class="section" *ngIf="orders.length > 0">
+      <div class="section-header">
+        <div class="section-title">Recent Orders</div>
+        <a class="section-link" routerLink="/seller/orders">View all →</a>
+      </div>
+      <div class="orders-table">
+        <div class="table-row header">
+          <span>Order ID</span><span>Customer</span><span>Product</span><span>Status</span>
+        </div>
+        <div class="table-row" *ngFor="let order of orders">
+          <span>#{{ order.orderId }}</span>
+          <span>{{ order.customerName || 'Customer' }}</span>
+          <span>{{ order.productName }}</span>
+          <span [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus | titlecase }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

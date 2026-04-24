@@ -1,0 +1,17 @@
+@import 'styles';
+
+.chip {
+  padding: 6px 16px;
+  border-radius: $radius-pill;
+  border: 1.5px solid $zuply-border;
+  background: $zuply-surface;
+  color: $zuply-text-secondary;
+  font-size: $text-sm;
+  font-weight: 500;
+  cursor: pointer;
+  transition: $transition-fast;
+  white-space: nowrap;
+
+  &:hover  { border-color: $zuply-primary; color: $zuply-primary; }
+  &.active { background: $zuply-primary; color: #fff; border-color: $zuply-primary; font-weight: 600; }
+}

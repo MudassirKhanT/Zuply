@@ -1,0 +1,46 @@
+<!-- src/app/pages/products/list/list.component.html -->
+<div class="page-container">
+  <div class="list-header">
+    <h1 class="text-2xl">{{ selectedCategory || 'All Products' }}</h1>
+    <div class="sort-wrap">
+      <label class="sort-label">Sort by:</label>
+      <select class="select sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
+        <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Category chips -->
+  <div class="chips-row">
+    <app-category-chip
+      *ngFor="let cat of categories"
+      [name]="cat.name"
+      [active]="selectedCategory === cat.name"
+      (chipClick)="onCategorySelect($event)">
+    </app-category-chip>
+  </div>
+
+  <div class="results-count" *ngIf="!loading">
+    {{ products.length }} product{{ products.length !== 1 ? 's' : '' }} found
+  </div>
+
+  <app-loading-spinner [show]="loading" message="Loading products..."></app-loading-spinner>
+
+  <div class="grid-4" *ngIf="!loading && products.length > 0">
+    <app-product-card
+      *ngFor="let p of products"
+      [product]="p"
+      (addToCartEvent)="addToCart($event)"
+      (cardClickEvt)="goToDetail($event)">
+    </app-product-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && products.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No products found</div>
+    <div class="empty-desc">Try a different category or search term.</div>
+    <button class="btn-primary btn-pill" (click)="selectedCategory = ''; loadProducts()">
+      Clear filters
+    </button>
+  </div>
+</div>

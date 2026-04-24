@@ -1,0 +1,45 @@
+<!-- src/app/pages/admin/sellers/sellers.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Manage Sellers</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="sellers-table" *ngIf="!loading && sellers.length > 0">
+    <div class="table-row header">
+      <span>ID</span>
+      <span>Name</span>
+      <span>Store</span>
+      <span>Contact</span>
+      <span>Status</span>
+      <span>Actions</span>
+    </div>
+    <div class="table-row" *ngFor="let seller of sellers">
+      <span class="seller-id">#{{ seller.id }}</span>
+      <span class="seller-name">{{ seller.name }}</span>
+      <span>{{ seller.storeName || '—' }}</span>
+      <span>{{ seller.contact || seller.email || '—' }}</span>
+      <span [class]="getStatusClass(seller.verificationStatus)">
+        {{ seller.verificationStatus | titlecase }}
+      </span>
+      <div class="action-btns">
+        <button
+          class="btn-primary btn-sm btn-pill"
+          *ngIf="seller.verificationStatus !== 'APPROVED'"
+          (click)="approve(seller.id)">
+          Approve
+        </button>
+        <button
+          class="btn-danger btn-sm btn-pill"
+          *ngIf="seller.verificationStatus !== 'SUSPENDED'"
+          (click)="suspend(seller.id)">
+          Suspend
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && sellers.length === 0">
+    <div class="empty-icon">👥</div>
+    <div class="empty-title">No sellers found</div>
+    <div class="empty-desc">Sellers who register will appear here for approval.</div>
+  </div>
+</div>

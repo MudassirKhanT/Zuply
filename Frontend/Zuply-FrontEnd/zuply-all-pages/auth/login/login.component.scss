@@ -1,0 +1,61 @@
+// src/app/pages/auth/login/login.component.scss
+@import 'styles';
+
+.auth-page {
+  min-height: calc(100vh - 64px);
+  display: flex; align-items: center; justify-content: center;
+  padding: $space-xl $space-md; background: $zuply-bg;
+}
+
+.auth-card {
+  background: $zuply-surface; border-radius: $radius-xl;
+  padding: $space-2xl; width: 100%; max-width: 440px;
+  box-shadow: $shadow-lg; border: 1px solid $zuply-border-light;
+}
+
+.auth-logo {
+  display: flex; align-items: center; gap: $space-sm;
+  justify-content: center; margin-bottom: $space-lg;
+  .auth-brand { font-size: $text-2xl; font-weight: 800; letter-spacing: -1px; color: $zuply-primary;
+    em { color: $zuply-accent; font-style: normal; } }
+}
+
+.auth-title    { font-size: $text-2xl; font-weight: 700; color: $zuply-text; text-align: center; margin-bottom: $space-xs; }
+.auth-subtitle { font-size: $text-base; color: $zuply-text-secondary; text-align: center; margin-bottom: $space-lg; }
+
+.role-selector {
+  display: flex; gap: $space-sm; margin-bottom: $space-lg;
+  .role-btn {
+    flex: 1; padding: 8px; border-radius: $radius-pill;
+    border: 1.5px solid $zuply-border; background: transparent;
+    color: $zuply-text-secondary; font-size: $text-sm; font-weight: 500;
+    cursor: pointer; transition: $transition-fast;
+    &:hover { border-color: $zuply-primary; color: $zuply-primary; }
+    &.active { background: $zuply-primary; color: #fff; border-color: $zuply-primary; font-weight: 600; }
+  }
+}
+
+.error-banner {
+  background: $zuply-error-light; color: $zuply-error;
+  border: 1px solid rgba($zuply-error, 0.2); border-radius: $radius-md;
+  padding: $space-sm $space-md; font-size: $text-sm;
+  margin-bottom: $space-md; font-weight: 500;
+}
+
+.password-wrap {
+  position: relative;
+  .input { padding-right: 44px; }
+  .password-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    cursor: pointer; font-size: 16px;
+  }
+}
+
+.login-btn { margin-top: $space-sm; font-size: $text-md; padding: 12px; }
+
+.auth-footer {
+  text-align: center; margin-top: $space-lg;
+  font-size: $text-sm; color: $zuply-text-secondary;
+  .auth-link { color: $zuply-accent; font-weight: 600; margin-left: 4px;
+    &:hover { text-decoration: underline; } }
+}

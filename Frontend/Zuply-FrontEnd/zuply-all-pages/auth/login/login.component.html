@@ -1,0 +1,76 @@
+<!-- src/app/pages/auth/login/login.component.html -->
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <svg width="48" height="48" viewBox="0 0 46 46" fill="none">
+        <rect x="3" y="13" width="40" height="30" rx="6" fill="#0D5C63"/>
+        <path d="M14 13C14 7 32 7 32 13" stroke="#0D5C63" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M15 23L21.5 23L15 32L31 32" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="auth-brand">zu<em>ply</em></div>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-subtitle">Login to shop from local stores near you</p>
+
+    <!-- Role selector -->
+    <div class="role-selector">
+      <button
+        *ngFor="let r of roles"
+        class="role-btn"
+        [class.active]="role === r"
+        (click)="role = r">
+        {{ r | titlecase }}
+      </button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-banner" *ngIf="errorMsg">
+      ⚠️ {{ errorMsg }}
+    </div>
+
+    <!-- Form -->
+    <div class="input-group">
+      <label>Email Address</label>
+      <input
+        class="input"
+        type="email"
+        placeholder="Enter your email"
+        [(ngModel)]="email"
+        [class.error]="errorMsg"
+      />
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <div class="password-wrap">
+        <input
+          class="input"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Enter your password"
+          [(ngModel)]="password"
+          [class.error]="errorMsg"
+        />
+        <span class="password-toggle" (click)="showPassword = !showPassword">
+          {{ showPassword ? '🙈' : '👁️' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Login button -->
+    <button
+      class="btn-primary btn-full btn-pill login-btn"
+      (click)="onLogin()"
+      [disabled]="loading">
+      {{ loading ? 'Logging in...' : 'Login' }}
+    </button>
+
+    <div class="auth-footer">
+      Don't have an account?
+      <a routerLink="/register" class="auth-link">Sign up</a>
+    </div>
+
+  </div>
+</div>

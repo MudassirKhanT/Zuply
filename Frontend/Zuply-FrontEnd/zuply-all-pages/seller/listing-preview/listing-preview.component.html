@@ -1,0 +1,130 @@
+<!-- src/app/pages/seller/listing-preview/listing-preview.component.html -->
+<div class="page-container">
+  <div class="preview-wrap">
+    <div class="preview-header">
+      <button class="back-btn" routerLink="/seller/upload">← Back</button>
+      <h1 class="text-2xl">AI Listing Preview</h1>
+      <span class="badge-primary">{{ listing?.status || 'Draft' | titlecase }}</span>
+    </div>
+
+    <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+    <div *ngIf="!loading && listing">
+
+      <!-- Success / Error banners -->
+      <div class="success-banner" *ngIf="successMsg">✅ {{ successMsg }}</div>
+      <div class="error-banner"   *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+      <!-- Image comparison -->
+      <div class="image-section">
+        <div class="image-card">
+          <div class="image-label">Before</div>
+          <div class="image-box original">
+            <img *ngIf="listing.originalImageUrl" [src]="listing.originalImageUrl" alt="Original"/>
+            <div *ngIf="!listing.originalImageUrl" class="img-placeholder">📷 Original</div>
+          </div>
+        </div>
+        <div class="image-arrow">→</div>
+        <div class="image-card">
+          <div class="image-label after-label">After <app-ai-badge></app-ai-badge></div>
+          <div class="image-box processed">
+            <img *ngIf="listing.processedImageUrl" [src]="listing.processedImageUrl" alt="Processed"/>
+            <div *ngIf="!listing.processedImageUrl" class="img-placeholder">✨ Processed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Listing fields — view mode -->
+      <div class="form-card" *ngIf="!editMode">
+        <div class="form-card-title">
+          ✦ AI Generated Listing
+          <button class="edit-btn" (click)="editMode = true">Edit</button>
+        </div>
+
+        <div class="field-row">
+          <div class="field-label">Title</div>
+          <div class="field-value">{{ listing.title }}</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Description</div>
+          <div class="field-value">{{ listing.description }}</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Category</div>
+          <div class="field-value">
+            <span class="badge-primary">{{ listing.category }}</span>
+            <span class="ai-tag" *ngIf="listing.aiSuggestedCategory">AI suggested</span>
+          </div>
+        </div>
+        <div class="field-row" *ngIf="listing.price">
+          <div class="field-label">Price</div>
+          <div class="field-value price">₹ {{ listing.price }}</div>
+        </div>
+        <div class="field-row" *ngIf="listing.suggestedPriceMin">
+          <div class="field-label">Suggested Range</div>
+          <div class="field-value">₹ {{ listing.suggestedPriceMin }} — ₹ {{ listing.suggestedPriceMax }}</div>
+        </div>
+
+        <!-- Tags -->
+        <div class="field-row" *ngIf="listing.tags?.length">
+          <div class="field-label">Tags</div>
+          <div class="tags-wrap">
+            <span class="tag-pill" *ngFor="let tag of listing.tags">{{ tag }}</span>
+          </div>
+        </div>
+
+        <!-- Highlights -->
+        <div class="field-row" *ngIf="listing.highlights?.length">
+          <div class="field-label">Highlights</div>
+          <ul class="highlights-list">
+            <li *ngFor="let h of listing.highlights">✓ {{ h }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Edit mode -->
+      <div class="form-card" *ngIf="editMode">
+        <div class="form-card-title">Edit Listing Fields</div>
+
+        <div class="input-group">
+          <label>Title</label>
+          <input class="input" type="text" [(ngModel)]="editTitle"/>
+        </div>
+        <div class="input-group">
+          <label>Description</label>
+          <textarea class="input" rows="4" [(ngModel)]="editDescription"></textarea>
+        </div>
+        <div class="input-group">
+          <label>Category</label>
+          <input class="input" type="text" [(ngModel)]="editCategory"/>
+        </div>
+        <div class="input-group">
+          <label>Price (₹)</label>
+          <input class="input" type="number" [(ngModel)]="editPrice"/>
+        </div>
+
+        <div class="edit-actions">
+          <button class="btn-secondary btn-pill" (click)="editMode = false">Cancel</button>
+          <button class="btn-primary btn-pill" (click)="saveEdit()">Save Changes</button>
+        </div>
+      </div>
+
+      <!-- Publish buttons -->
+      <div class="publish-row" *ngIf="listing.status !== 'PUBLISHED'">
+        <button class="btn-secondary btn-pill" routerLink="/seller/upload">Upload Another</button>
+        <button
+          class="btn-accent btn-pill publish-btn"
+          (click)="publish()"
+          [disabled]="publishing">
+          {{ publishing ? 'Publishing...' : '🚀 Publish Listing' }}
+        </button>
+      </div>
+
+      <div class="published-banner" *ngIf="listing.status === 'PUBLISHED'">
+        ✅ This product is already published and live on Zuply.
+        <a routerLink="/seller/products" class="auth-link">View my products →</a>
+      </div>
+
+    </div>
+  </div>
+</div>

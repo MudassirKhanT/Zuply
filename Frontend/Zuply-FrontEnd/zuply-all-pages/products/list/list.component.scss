@@ -1,0 +1,8 @@
+// src/app/pages/products/list/list.component.scss
+@import 'styles';
+.list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:$space-lg; flex-wrap:wrap; gap:$space-md; }
+.sort-wrap   { display:flex; align-items:center; gap:$space-sm; }
+.sort-label  { font-size:$text-sm; color:$zuply-text-secondary; font-weight:500; }
+.sort-select { width:auto; padding:7px 12px; }
+.chips-row   { display:flex; flex-wrap:wrap; gap:$space-sm; margin-bottom:$space-lg; }
+.results-count { font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:$space-md; }

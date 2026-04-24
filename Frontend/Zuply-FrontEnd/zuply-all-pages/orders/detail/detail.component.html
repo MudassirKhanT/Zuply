@@ -1,0 +1,38 @@
+<!-- src/app/pages/orders/detail/detail.component.html -->
+<div class="page-container">
+  <button class="back-btn" routerLink="/orders">← Back to Orders</button>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading && order">
+    <div class="detail-header">
+      <div>
+        <h1 class="text-2xl">Order #{{ order.orderId }}</h1>
+        <div class="order-date">{{ order.createdAt | date:'dd MMM yyyy, hh:mm a' }}</div>
+      </div>
+      <span [class]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
+    </div>
+
+    <div class="detail-grid">
+      <div class="form-card">
+        <div class="form-card-title">🛍️ Order Items</div>
+        <div class="order-item" *ngFor="let item of order.items">
+          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-meta">
+            Qty: {{ item.quantity }} × ₹ {{ item.price }}
+          </div>
+          <div class="item-total price-sm">₹ {{ item.lineTotal }}</div>
+        </div>
+        <div class="order-total-row">
+          <span class="font-bold">Grand Total</span>
+          <span class="price">₹ {{ order.totalAmount }}</span>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-title">📍 Delivery Details</div>
+        <div class="detail-row"><span class="detail-label">Address</span><span>{{ order.deliveryAddress }}</span></div>
+        <div class="detail-row"><span class="detail-label">Payment</span><span>{{ order.paymentMethod }}</span></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="card" (click)="cardClickEvt.emit(product)">
+  <div class="card-img">
+    <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name" loading="lazy"/>
+    <span *ngIf="!product.imageUrl" class="card-img-placeholder">🛒</span>
+    <app-ai-badge *ngIf="product.aiGenerated"></app-ai-badge>
+  </div>
+  <div class="card-body">
+    <span class="badge-primary card-cat">{{ product.categoryName || product.category }}</span>
+    <div class="card-name">{{ product.name }}</div>
+    <div class="card-seller" *ngIf="product.sellerName">🏪 {{ product.sellerName }}</div>
+    <div class="card-footer">
+      <div class="price">₹ {{ product.price }}</div>
+      <button
+        class="btn-primary btn-sm btn-pill"
+        (click)="$event.stopPropagation(); addToCartEvent.emit(product)">
+        Add
+      </button>
+    </div>
+  </div>
+</div>

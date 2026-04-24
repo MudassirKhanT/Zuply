@@ -1,0 +1,17 @@
+<!-- src/app/pages/profile/profile.component.html -->
+<div class="page-container">
+  <div class="profile-wrap">
+    <div class="profile-card" *ngIf="user">
+      <div class="profile-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
+      <div class="profile-name">{{ user.name }}</div>
+      <div class="badge-primary">{{ user.role | titlecase }}</div>
+      <div class="profile-email">{{ user.email }}</div>
+      <div class="profile-actions">
+        <a routerLink="/orders" class="btn-secondary btn-pill" *ngIf="user.role === 'CUSTOMER'">My Orders</a>
+        <a routerLink="/seller/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'SELLER'">Dashboard</a>
+        <a routerLink="/admin/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'ADMIN'">Admin Panel</a>
+        <button class="btn-danger btn-pill" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
