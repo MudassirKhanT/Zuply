@@ -1,23 +1,94 @@
 <div class="home-page">
 
-  <!-- ── Hero Banner ─────────────────────────────────── -->
-  <div class="page-container">
-    <div class="hero-banner">
-      <div class="hero-content">
-        <div class="hero-sup">AI Powered</div>
-        <div class="hero-title">Your local market,<br>now digital.</div>
-        <div class="hero-subtitle">Shop from retailers near you. Fast delivery, fresh products.</div>
-        <div class="hero-actions">
-          <button class="btn-primary btn-lg btn-pill" (click)="goToProducts()">
-            Explore Products →
-          </button>
+  <!-- ── HERO ──────────────────────────────────────────── -->
+  <section class="hero-section">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="page-container">
+      <div class="hero-inner">
+        <div class="hero-content animate-fade-up">
+          <div class="hero-badge">
+            <span class="badge-dot"></span> AI-Powered Local Marketplace
+          </div>
+          <h1 class="hero-heading">
+            Your local market,<br>
+            <span class="hero-accent">now digital.</span>
+          </h1>
+          <p class="hero-sub">
+            Discover fresh products from retailers near you. Smart search, instant delivery, real reviews.
+          </p>
+          <div class="hero-ctas">
+            <button class="btn-primary btn-lg btn-pill" (click)="goToProducts()">
+              Shop Now →
+            </button>
+            <a routerLink="/register" class="btn-secondary btn-lg btn-pill">
+              Sell with Us
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num">10K+</span>
+              <span class="stat-lbl">Products</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">500+</span>
+              <span class="stat-lbl">Sellers</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">50+</span>
+              <span class="stat-lbl">Cities</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual animate-fade-left">
+          <div class="hero-card hero-card-1">
+            <div class="hc-icon">🛒</div>
+            <div class="hc-text">
+              <div class="hc-title">Fresh Groceries</div>
+              <div class="hc-sub">Delivered in 2 hrs</div>
+            </div>
+          </div>
+          <div class="hero-card hero-card-2">
+            <div class="hc-icon">⚡</div>
+            <div class="hc-text">
+              <div class="hc-title">Electronics</div>
+              <div class="hc-sub">Best local prices</div>
+            </div>
+          </div>
+          <div class="hero-card hero-card-3">
+            <div class="hc-icon">✦</div>
+            <div class="hc-text">
+              <div class="hc-title">AI Listings</div>
+              <div class="hc-sub">Smart product tags</div>
+            </div>
+          </div>
+          <div class="hero-float-emoji">🏪</div>
         </div>
       </div>
-      <div class="hero-emoji">🏪</div>
     </div>
+  </section>
 
-    <!-- ── Categories ────────────────────────────────── -->
-    <div class="section">
+  <!-- ── FEATURES BAR ──────────────────────────────────── -->
+  <section class="features-bar animate-fade-up" #featuresRef>
+    <div class="page-container">
+      <div class="features-grid">
+        <div class="feature-item" *ngFor="let f of features">
+          <div class="feature-icon">{{ f.icon }}</div>
+          <div class="feature-body">
+            <div class="feature-title">{{ f.title }}</div>
+            <div class="feature-desc">{{ f.desc }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-container">
+
+    <!-- ── CATEGORIES ────────────────────────────────────── -->
+    <section class="section animate-fade-up" #catsRef>
       <div class="section-header">
         <div class="section-title">Shop by Category</div>
         <a class="section-link" (click)="goToProducts()">See all →</a>
@@ -30,22 +101,35 @@
           (chipClick)="onCategorySelect($event)">
         </app-category-chip>
       </div>
-    </div>
+    </section>
 
-    <!-- ── Products ──────────────────────────────────── -->
-    <div class="section">
+    <!-- ── HOW IT WORKS ───────────────────────────────────── -->
+    <section class="how-section section animate-fade-up" #howRef>
+      <div class="section-header">
+        <div class="section-title">How Zuply Works</div>
+      </div>
+      <div class="how-steps">
+        <div class="how-step" *ngFor="let step of howSteps; let i = index">
+          <div class="step-num">{{ i + 1 }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <div class="step-title">{{ step.title }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTS ────────────────────────────────────────── -->
+    <section class="section animate-fade-up" #productsRef>
       <div class="section-header">
         <div class="section-title">
-          {{ selectedCategory ? selectedCategory : 'Nearby Products' }}
+          {{ selectedCategory ? selectedCategory : 'Trending Products' }}
         </div>
         <a class="section-link" (click)="goToProducts()">See all →</a>
       </div>
 
-      <!-- Loading -->
       <app-loading-spinner [show]="loading" message="Finding products near you...">
       </app-loading-spinner>
 
-      <!-- Products grid -->
       <div class="grid-4" *ngIf="!loading && products.length > 0">
         <app-product-card
           *ngFor="let product of products"
@@ -55,33 +139,35 @@
         </app-product-card>
       </div>
 
-      <!-- Empty state -->
       <div class="empty-state" *ngIf="!loading && products.length === 0">
         <div class="empty-icon">🔍</div>
         <div class="empty-title">No products found</div>
-        <div class="empty-desc">
-          No products available in this category yet. Check back soon!
-        </div>
-        <button class="btn-primary btn-pill" (click)="onCategorySelect(selectedCategory)">
+        <div class="empty-desc">No products available in this category yet.</div>
+        <button class="btn-primary btn-pill" (click)="onCategorySelect('')">
           View all products
         </button>
       </div>
-    </div>
+    </section>
 
-    <!-- ── Sell on Zuply Banner ───────────────────────── -->
-    <div class="sell-banner">
+    <!-- ── SELL BANNER ────────────────────────────────────── -->
+    <section class="sell-banner animate-fade-up" #sellRef>
       <div class="sell-content">
+        <div class="sell-badge">For Sellers</div>
         <div class="sell-title">Are you a local retailer?</div>
         <div class="sell-desc">
-          List your products in 60 seconds using our AI-powered listing pipeline.
-          Upload a photo and we handle the rest.
+          List products in 60 seconds using AI. Upload a photo — we generate title, description, category, and pricing automatically.
         </div>
-        <a routerLink="/register" class="btn-accent btn-pill">
+        <a routerLink="/register" class="btn-accent btn-lg btn-pill">
           Start Selling Today →
         </a>
       </div>
-      <div class="sell-emoji">🤖</div>
-    </div>
+      <div class="sell-visual">
+        <div class="sell-step" *ngFor="let s of sellSteps">
+          <div class="ss-num">{{ s.num }}</div>
+          <div class="ss-text">{{ s.text }}</div>
+        </div>
+      </div>
+    </section>
 
   </div>
 </div>

@@ -22,6 +22,8 @@ public class Product {
     private Category category;
 
     private String name;
+    @Column(columnDefinition = "TEXT")
+    private String description;
     private Double price;
     private Integer stock;
     private String variations;
@@ -43,6 +45,9 @@ public class Product {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }

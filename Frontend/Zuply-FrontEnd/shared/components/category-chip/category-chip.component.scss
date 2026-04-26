@@ -1,17 +1,43 @@
 @import 'styles';
 
 .chip {
-  padding: 6px 16px;
-  border-radius: $radius-pill;
-  border: 1.5px solid $zuply-border;
-  background: $zuply-surface;
-  color: $zuply-text-secondary;
-  font-size: $text-sm;
-  font-weight: 500;
-  cursor: pointer;
-  transition: $transition-fast;
-  white-space: nowrap;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             6px;
+  padding:         8px 16px;
+  border-radius:   $radius-pill;
+  border:          1.5px solid $zuply-border;
+  background:      $zuply-surface;
+  color:           $zuply-text-secondary;
+  font-size:       $text-sm;
+  font-weight:     500;
+  cursor:          pointer;
+  transition:      all .2s ease;
+  white-space:     nowrap;
+  box-shadow:      0 1px 3px rgba(0,0,0,.04);
+  user-select:     none;
 
-  &:hover  { border-color: $zuply-primary; color: $zuply-primary; }
-  &.active { background: $zuply-primary; color: #fff; border-color: $zuply-primary; font-weight: 600; }
+  .chip-icon { font-size: 15px; line-height: 1; }
+  .chip-name { line-height: 1; }
+
+  &:hover {
+    border-color: $zuply-primary;
+    color:        $zuply-primary;
+    background:   $zuply-primary-mist;
+    transform:    translateY(-1px);
+    box-shadow:   0 4px 12px rgba($zuply-primary, 0.15);
+  }
+
+  &.active {
+    background:   linear-gradient(135deg, $zuply-primary 0%, darken($zuply-primary, 8%) 100%);
+    color:        #fff;
+    border-color: transparent;
+    font-weight:  600;
+    box-shadow:   0 4px 14px rgba($zuply-primary, 0.35);
+    transform:    translateY(-1px);
+
+    .chip-icon { filter: brightness(1.3); }
+  }
+
+  &:active { transform: translateY(0); }
 }

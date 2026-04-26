@@ -1,4 +1,8 @@
-<!-- src/app/pages/products/detail/detail.component.html -->
+<!-- Toast notification -->
+<div class="toast" *ngIf="toast" [class.toast-success]="toast.type === 'success'" [class.toast-error]="toast.type === 'error'">
+  {{ toast.msg }}
+</div>
+
 <div class="page-container">
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
@@ -17,18 +21,23 @@
 
       <!-- Info -->
       <div class="detail-info">
-        <div class="detail-cat badge-primary">{{ product.category }}</div>
+        <div class="detail-cat badge-primary">{{ product.categoryName || product.category }}</div>
         <h1 class="detail-name">{{ product.name }}</h1>
-        <div class="detail-seller">🏪 {{ product.sellerName }}</div>
+        <div class="detail-seller" *ngIf="product.sellerName">🏪 {{ product.sellerName }}</div>
         <div class="detail-dist badge-distance" *ngIf="product.distance">📍 {{ product.distance }}</div>
-        <div class="detail-price">₹ {{ product.price }}</div>
+        <div class="detail-price">₹ {{ product.price | number:'1.0-0' }}</div>
 
         <div class="detail-desc" *ngIf="product.description">
           <div class="desc-title">Description</div>
           <p>{{ product.description }}</p>
         </div>
 
-        <div class="qty-row">
+        <!-- Login prompt -->
+        <div class="login-prompt" *ngIf="!auth.isAuthenticated()">
+          <span>Please <a routerLink="/login" [queryParams]="{ returnUrl: '/products/' + product.id }">log in</a> to add items to cart or wishlist.</span>
+        </div>
+
+        <div class="qty-row" *ngIf="auth.isAuthenticated()">
           <div class="qty-selector">
             <button class="qty-btn" (click)="decrement()">−</button>
             <span class="qty-value">{{ quantity }}</span>
@@ -37,8 +46,14 @@
         </div>
 
         <div class="detail-btns">
-          <button class="btn-secondary btn-pill" (click)="addToWishlist()">❤️ Wishlist</button>
-          <button class="btn-primary btn-pill" (click)="addToCart()">🛒 Add to Cart</button>
+          <button class="btn-secondary btn-pill" (click)="addToWishlist()" [disabled]="addingWishlist">
+            <span *ngIf="!addingWishlist">❤️ Wishlist</span>
+            <span *ngIf="addingWishlist" class="spinner-sm"></span>
+          </button>
+          <button class="btn-primary btn-pill" (click)="addToCart()" [disabled]="addingCart">
+            <span *ngIf="!addingCart">🛒 Add to Cart</span>
+            <span *ngIf="addingCart" class="spinner-sm"></span>
+          </button>
         </div>
       </div>
     </div>

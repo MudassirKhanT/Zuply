@@ -16,69 +16,164 @@
       <a routerLink="/products" routerLinkActive="active" class="nav-link">Products</a>
 
       <ng-container *ngIf="isLoggedIn && role === 'CUSTOMER'">
-        <a routerLink="/cart" routerLinkActive="active" class="nav-link nav-cart">
-          🛒
-          <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        <a routerLink="/cart" routerLinkActive="active" class="nav-link nav-cart" title="Cart">
+          <div class="cart-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+          </div>
         </a>
         <a routerLink="/wishlist" routerLinkActive="active" class="nav-link">Wishlist</a>
-        <a routerLink="/orders" routerLinkActive="active" class="nav-link">Orders</a>
+        <a routerLink="/orders"   routerLinkActive="active" class="nav-link">Orders</a>
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn && role === 'SELLER'">
         <a routerLink="/seller/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-        <a routerLink="/seller/products" routerLinkActive="active" class="nav-link">Products</a>
-        <a routerLink="/seller/orders" routerLinkActive="active" class="nav-link">Orders</a>
-        <a routerLink="/seller/upload" routerLinkActive="active" class="nav-link nav-upload">+ Upload</a>
+        <a routerLink="/seller/products"  routerLinkActive="active" class="nav-link">Products</a>
+        <a routerLink="/seller/orders"    routerLinkActive="active" class="nav-link">Orders</a>
+        <a routerLink="/seller/upload"    routerLinkActive="active" class="nav-link nav-upload">+ Upload</a>
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn && role === 'ADMIN'">
         <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-        <a routerLink="/admin/sellers" routerLinkActive="active" class="nav-link">Sellers</a>
-        <a routerLink="/admin/products" routerLinkActive="active" class="nav-link">Products</a>
-        <a routerLink="/admin/reports" routerLinkActive="active" class="nav-link">Reports</a>
+        <a routerLink="/admin/sellers"   routerLinkActive="active" class="nav-link">Sellers</a>
+        <a routerLink="/admin/products"  routerLinkActive="active" class="nav-link">Products</a>
+        <a routerLink="/admin/reports"   routerLinkActive="active" class="nav-link">Reports</a>
       </ng-container>
     </div>
 
     <!-- Right actions -->
-    <div class="nav-actions hide-mobile">
+    <div class="nav-actions">
+
+      <!-- Not logged in -->
       <ng-container *ngIf="!isLoggedIn">
-        <a routerLink="/login" class="btn-secondary btn-sm btn-pill">Login</a>
-        <a routerLink="/register" class="btn-primary btn-sm btn-pill">Sign Up</a>
+        <a routerLink="/login"    class="btn-secondary btn-sm btn-pill hide-mobile">Login</a>
+        <a routerLink="/register" class="btn-primary btn-sm btn-pill hide-mobile">Sign Up</a>
       </ng-container>
-      <ng-container *ngIf="isLoggedIn">
-        <a routerLink="/profile" class="nav-avatar" title="Profile">
-          {{ userName?.charAt(0)?.toUpperCase() || 'U' }}
-        </a>
-        <button class="btn-secondary btn-sm btn-pill" (click)="logout()">Logout</button>
-      </ng-container>
+
+      <!-- Logged in — avatar dropdown only (no separate Logout button) -->
+      <div class="user-menu hide-mobile" *ngIf="isLoggedIn">
+        <button class="nav-avatar" (click)="userDropOpen = !userDropOpen" [class.open]="userDropOpen">
+          {{ userInitial }}
+        </button>
+        <div class="user-drop" *ngIf="userDropOpen">
+          <div class="drop-header">
+            <div class="drop-name">{{ userName }}</div>
+            <div class="drop-role">{{ role | titlecase }}</div>
+          </div>
+          <div class="drop-divider"></div>
+          <a routerLink="/profile" class="drop-item" (click)="userDropOpen = false">
+            <span class="drop-icon">👤</span> Profile
+          </a>
+          <div class="drop-divider"></div>
+          <button class="drop-item drop-logout" (click)="logout()">
+            <span class="drop-icon">🚪</span> Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button class="hamburger hide-desktop" (click)="mobileMenuOpen = !mobileMenuOpen" [class.is-open]="mobileMenuOpen">
+        <span></span><span></span><span></span>
+      </button>
     </div>
 
-    <!-- Mobile hamburger -->
-    <button class="hamburger hide-desktop" (click)="mobileMenuOpen = !mobileMenuOpen">
-      <span></span><span></span><span></span>
-    </button>
-
-  </div>
-
-  <!-- Mobile menu -->
-  <div class="mobile-menu" [class.open]="mobileMenuOpen" (click)="mobileMenuOpen = false">
-    <a routerLink="/products" class="mobile-link">Products</a>
-    <ng-container *ngIf="isLoggedIn && role === 'CUSTOMER'">
-      <a routerLink="/cart" class="mobile-link">🛒 Cart <span *ngIf="cartCount">({{ cartCount }})</span></a>
-      <a routerLink="/wishlist" class="mobile-link">Wishlist</a>
-      <a routerLink="/orders" class="mobile-link">Orders</a>
-    </ng-container>
-    <ng-container *ngIf="isLoggedIn && role === 'SELLER'">
-      <a routerLink="/seller/dashboard" class="mobile-link">Dashboard</a>
-      <a routerLink="/seller/upload" class="mobile-link">Upload Product</a>
-      <a routerLink="/seller/orders" class="mobile-link">Orders</a>
-    </ng-container>
-    <ng-container *ngIf="isLoggedIn && role === 'ADMIN'">
-      <a routerLink="/admin/dashboard" class="mobile-link">Admin Dashboard</a>
-    </ng-container>
-    <a routerLink="/profile" class="mobile-link" *ngIf="isLoggedIn">Profile</a>
-    <button class="mobile-link logout-link" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
-    <a routerLink="/login" class="mobile-link" *ngIf="!isLoggedIn">Login</a>
-    <a routerLink="/register" class="mobile-link" *ngIf="!isLoggedIn">Sign Up</a>
   </div>
 </nav>
+
+<!-- Mobile drawer overlay -->
+<div class="drawer-overlay" [class.open]="mobileMenuOpen" (click)="mobileMenuOpen = false"></div>
+
+<!-- Mobile drawer panel -->
+<div class="drawer" [class.open]="mobileMenuOpen">
+
+  <!-- Drawer header -->
+  <div class="drawer-header">
+    <div class="drawer-brand">
+      <svg width="24" height="24" viewBox="0 0 46 46" fill="none">
+        <rect x="3" y="13" width="40" height="30" rx="6" fill="#0D5C63"/>
+        <path d="M14 13C14 7 32 7 32 13" stroke="#0D5C63" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M15 23L21.5 23L15 32L31 32" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>zu<em>ply</em></span>
+    </div>
+    <button class="drawer-close" (click)="mobileMenuOpen = false">✕</button>
+  </div>
+
+  <!-- User identity (if logged in) -->
+  <div class="drawer-user" *ngIf="isLoggedIn">
+    <div class="drawer-avatar">{{ userInitial }}</div>
+    <div>
+      <div class="drawer-uname">{{ userName }}</div>
+      <div class="drawer-urole">{{ role | titlecase }}</div>
+    </div>
+  </div>
+
+  <!-- Nav section -->
+  <div class="drawer-section-label">Navigate</div>
+  <a routerLink="/products" class="drawer-link" (click)="mobileMenuOpen = false">
+    <span class="dl-icon">🏪</span> Products
+  </a>
+
+  <ng-container *ngIf="isLoggedIn && role === 'CUSTOMER'">
+    <a routerLink="/cart" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">🛒</span> Cart
+      <span class="dl-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+    </a>
+    <a routerLink="/wishlist" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">❤️</span> Wishlist
+    </a>
+    <a routerLink="/orders" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">📦</span> Orders
+    </a>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn && role === 'SELLER'">
+    <a routerLink="/seller/dashboard" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">📊</span> Dashboard
+    </a>
+    <a routerLink="/seller/upload" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">⬆️</span> Upload Product
+    </a>
+    <a routerLink="/seller/orders" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">📋</span> Orders
+    </a>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn && role === 'ADMIN'">
+    <a routerLink="/admin/dashboard" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">🛡️</span> Admin Dashboard
+    </a>
+    <a routerLink="/admin/sellers" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">👥</span> Sellers
+    </a>
+    <a routerLink="/admin/products" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">📦</span> Products
+    </a>
+  </ng-container>
+
+  <!-- Account section -->
+  <ng-container *ngIf="isLoggedIn">
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-label">Account</div>
+    <a routerLink="/profile" class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">👤</span> Profile
+    </a>
+    <button class="drawer-link drawer-logout" (click)="logout()">
+      <span class="dl-icon">🚪</span> Logout
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoggedIn">
+    <div class="drawer-divider"></div>
+    <a routerLink="/login"    class="drawer-link" (click)="mobileMenuOpen = false">
+      <span class="dl-icon">🔑</span> Login
+    </a>
+    <a routerLink="/register" class="drawer-cta" (click)="mobileMenuOpen = false">
+      Create Account
+    </a>
+  </ng-container>
+
+</div>

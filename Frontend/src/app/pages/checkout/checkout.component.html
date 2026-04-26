@@ -1,1 +1,135 @@
-<p>checkout works!</p>
+<div class="checkout-page page-container">
+
+  <!-- ── Success Modal ─────────────────────────────── -->
+  <div class="modal-overlay" *ngIf="orderSuccess">
+    <div class="success-modal">
+      <div class="success-icon">✅</div>
+      <h2 class="success-title">Order Placed!</h2>
+      <p class="success-desc">
+        Your order <strong>#{{ placedOrderId }}</strong> has been placed successfully.
+        <span *ngIf="paymentMethod === 'COD'"> Pay <strong>₹{{ grandTotal | number:'1.0-0' }}</strong> on delivery.</span>
+        <span *ngIf="paymentMethod !== 'COD'"> Payment of <strong>₹{{ grandTotal | number:'1.0-0' }}</strong> received.</span>
+      </p>
+      <div class="success-actions">
+        <button class="btn-primary btn-pill" routerLink="/orders">View Orders</button>
+        <button class="btn-secondary btn-pill" routerLink="/">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="page-heading">Checkout</h1>
+
+  <div class="checkout-layout" *ngIf="!orderSuccess">
+
+    <!-- ── Left: Address + Payment ──────────────────── -->
+    <div class="checkout-left">
+
+      <!-- Delivery Address -->
+      <div class="form-card">
+        <div class="form-card-title">📦 Delivery Address</div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>Full Name</label>
+            <input class="input" type="text" placeholder="Recipient's full name"
+                   [(ngModel)]="address.customerName" required/>
+          </div>
+          <div class="input-group">
+            <label>Phone</label>
+            <input class="input" type="tel" placeholder="10-digit mobile number"
+                   [(ngModel)]="address.phone" required/>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Full Address</label>
+          <textarea class="input" rows="2" placeholder="House no., street, area…"
+                    [(ngModel)]="address.address" required></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>City</label>
+            <input class="input" type="text" placeholder="City" [(ngModel)]="address.city" required/>
+          </div>
+          <div class="input-group">
+            <label>Pincode</label>
+            <input class="input" type="text" placeholder="6-digit pincode" maxlength="6"
+                   [(ngModel)]="address.pincode" required/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-card">
+        <div class="form-card-title">💳 Payment Method</div>
+        <div class="payment-options">
+
+          <label class="payment-option" [class.selected]="paymentMethod === 'COD'">
+            <input type="radio" name="payment" value="COD" [(ngModel)]="paymentMethod"/>
+            <div class="po-icon">💵</div>
+            <div class="po-body">
+              <div class="po-title">Cash on Delivery</div>
+              <div class="po-desc">Pay when your order arrives</div>
+            </div>
+            <div class="po-check" *ngIf="paymentMethod === 'COD'">✓</div>
+          </label>
+
+          <label class="payment-option" [class.selected]="paymentMethod === 'UPI'">
+            <input type="radio" name="payment" value="UPI" [(ngModel)]="paymentMethod"/>
+            <div class="po-icon">📱</div>
+            <div class="po-body">
+              <div class="po-title">UPI</div>
+              <div class="po-desc">Pay via GPay, PhonePe, Paytm & more</div>
+            </div>
+            <div class="po-check" *ngIf="paymentMethod === 'UPI'">✓</div>
+          </label>
+
+          <label class="payment-option" [class.selected]="paymentMethod === 'CARD'">
+            <input type="radio" name="payment" value="CARD" [(ngModel)]="paymentMethod"/>
+            <div class="po-icon">💳</div>
+            <div class="po-body">
+              <div class="po-title">Credit / Debit Card</div>
+              <div class="po-desc">Visa, Mastercard, RuPay accepted</div>
+            </div>
+            <div class="po-check" *ngIf="paymentMethod === 'CARD'">✓</div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="alert-error alert" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    </div>
+
+    <!-- ── Right: Order Summary ──────────────────────── -->
+    <div class="checkout-summary">
+      <div class="summary-title">Order Summary</div>
+
+      <app-loading-spinner [show]="loadingCart" message="Loading cart…"></app-loading-spinner>
+
+      <div class="summary-items" *ngIf="!loadingCart">
+        <div class="summary-item" *ngFor="let item of cartItems">
+          <span class="si-name">{{ item.productName }} × {{ item.quantity }}</span>
+          <span class="si-price">₹{{ item.lineTotal | number:'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <div class="summary-divider"></div>
+      <div class="summary-row"><span>Subtotal</span><span>₹{{ grandTotal | number:'1.0-0' }}</span></div>
+      <div class="summary-row"><span>Delivery</span><span class="free-tag">FREE</span></div>
+      <div class="summary-divider"></div>
+      <div class="summary-row total-row">
+        <span>Total</span><span>₹{{ grandTotal | number:'1.0-0' }}</span>
+      </div>
+
+      <button class="btn-primary btn-full btn-lg place-btn"
+              (click)="placeOrder()" [disabled]="placing">
+        <span *ngIf="!placing">
+          {{ paymentMethod === 'COD' ? '📦 Place Order (COD)' : '💳 Pay ₹' + (grandTotal | number:'1.0-0') }}
+        </span>
+        <span *ngIf="placing" class="spinner-sm"></span>
+      </button>
+
+      <div class="secure-note">🔒 Secure checkout · Powered by Razorpay</div>
+    </div>
+  </div>
+</div>

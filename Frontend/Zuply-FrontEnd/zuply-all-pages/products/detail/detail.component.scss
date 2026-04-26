@@ -14,4 +14,29 @@
 .detail-desc  { .desc-title { font-size:$text-base; font-weight:600; color:$zuply-primary; margin-bottom:$space-xs; } p { font-size:$text-base; color:$zuply-text-secondary; line-height:1.6; } }
 .qty-row     { display:flex; align-items:center; gap:$space-md; }
 .detail-btns { display:flex; gap:$space-md; flex-wrap:wrap; margin-top:$space-sm; .btn-secondary, .btn-primary { flex:1; justify-content:center; font-size:$text-md; padding:12px; } }
+.login-prompt {
+  background: $zuply-primary-light; border: 1px solid rgba($zuply-primary, 0.25);
+  border-radius: $radius-md; padding: $space-sm $space-md; font-size: $text-sm;
+  color: $zuply-text-secondary;
+  a { color: $zuply-primary; font-weight: 600; text-decoration: underline; }
+}
+
+.spinner-sm {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(0,0,0,0.2); border-top-color: currentColor;
+  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// Toast
+.toast {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+  padding: 12px 24px; border-radius: $radius-lg; font-size: $text-sm; font-weight: 600;
+  z-index: 9999; box-shadow: $shadow-md; animation: slideDown .25s ease;
+  white-space: nowrap;
+}
+.toast-success { background: $zuply-primary; color: #fff; }
+.toast-error   { background: $zuply-error;   color: #fff; }
+@keyframes slideDown { from { opacity: 0; top: 60px; } to { opacity: 1; top: 80px; } }
+
 @media(max-width:768px) { .detail-grid { grid-template-columns:1fr; } }

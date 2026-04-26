@@ -9,11 +9,13 @@
     <div class="card-name">{{ product.name }}</div>
     <div class="card-seller" *ngIf="product.sellerName">🏪 {{ product.sellerName }}</div>
     <div class="card-footer">
-      <div class="price">₹ {{ product.price }}</div>
+      <div class="price">₹ {{ product.price | number:'1.0-0' }}</div>
       <button
         class="btn-primary btn-sm btn-pill"
+        [disabled]="adding"
         (click)="$event.stopPropagation(); addToCartEvent.emit(product)">
-        Add
+        <span *ngIf="!adding">Add</span>
+        <span *ngIf="adding" class="card-spinner"></span>
       </button>
     </div>
   </div>

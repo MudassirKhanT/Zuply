@@ -4,6 +4,7 @@ public class ProductDto {
 
     private Long id;
     private String name;
+    private String description;
     private String categoryName;
     private Double price;
     private Integer stock;
@@ -20,6 +21,9 @@ public class ProductDto {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) {

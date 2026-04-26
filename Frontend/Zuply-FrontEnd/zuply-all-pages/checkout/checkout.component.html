@@ -1,9 +1,25 @@
-<!-- src/app/pages/checkout/checkout.component.html -->
+<!-- Success modal -->
+<div class="modal-overlay" *ngIf="orderSuccess">
+  <div class="success-modal">
+    <div class="success-icon">✅</div>
+    <h2 class="success-title">Order Placed!</h2>
+    <p class="success-desc">
+      Your order <strong *ngIf="placedOrderId">#{{ placedOrderId }}</strong> has been placed successfully.<br>
+      <span *ngIf="paymentMethod === 'COD'">Pay <strong>₹ {{ cart?.grandTotal | number:'1.0-0' }}</strong> on delivery.</span>
+      <span *ngIf="paymentMethod !== 'COD'">Payment received.</span>
+    </p>
+    <div class="success-actions">
+      <button class="btn-primary btn-pill" routerLink="/orders">View Orders</button>
+      <button class="btn-secondary btn-pill" routerLink="/">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
 <div class="page-container">
   <h1 class="text-2xl" style="margin-bottom:24px">Checkout</h1>
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
-  <div class="checkout-layout" *ngIf="!loading">
+  <div class="checkout-layout" *ngIf="!loading && !orderSuccess">
     <div class="checkout-left">
 
       <!-- Delivery Address -->
@@ -20,7 +36,7 @@
           </div>
           <div class="input-group">
             <label>Pincode *</label>
-            <input class="input" type="text" placeholder="600001" [(ngModel)]="pincode"/>
+            <input class="input" type="text" placeholder="600001" maxlength="6" [(ngModel)]="pincode"/>
           </div>
         </div>
         <div class="input-group">
@@ -40,7 +56,8 @@
             (click)="paymentMethod = $any(opt.value)">
             <span class="pay-icon">{{ opt.icon }}</span>
             <span class="pay-label">{{ opt.label }}</span>
-            <span class="pay-radio">{{ paymentMethod === opt.value ? '🔵' : '⚪' }}</span>
+            <span class="pay-check" *ngIf="paymentMethod === opt.value">✓</span>
+            <span class="pay-radio" *ngIf="paymentMethod !== opt.value"></span>
           </div>
         </div>
       </div>
@@ -54,26 +71,30 @@
         <div *ngIf="cart">
           <div class="summary-row" *ngFor="let item of cart.items">
             <span>{{ item.productName }} × {{ item.quantity }}</span>
-            <span>₹ {{ item.totalPrice }}</span>
+            <span>₹ {{ item.totalPrice | number:'1.0-0' }}</span>
           </div>
           <div class="summary-divider"></div>
           <div class="summary-row"><span>Delivery</span><span class="text-success">Free</span></div>
           <div class="summary-divider"></div>
           <div class="summary-row total">
             <span>Grand Total</span>
-            <span class="price">₹ {{ cart.grandTotal }}</span>
+            <span class="price">₹ {{ cart.grandTotal | number:'1.0-0' }}</span>
           </div>
         </div>
 
         <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
 
         <button
-          class="btn-primary btn-full btn-pill"
-          style="margin-top:16px; font-size:16px; padding:14px"
+          class="btn-primary btn-full btn-pill place-btn"
           (click)="placeOrder()"
           [disabled]="placing">
-          {{ placing ? 'Placing Order...' : '✅ Place Order' }}
+          <span *ngIf="!placing">
+            {{ paymentMethod === 'COD' ? '📦 Place Order (COD)' : '💳 Pay ₹' + (cart?.grandTotal | number:'1.0-0') }}
+          </span>
+          <span *ngIf="placing" class="spinner-sm"></span>
         </button>
+
+        <div class="secure-note">🔒 Secure checkout · Powered by Razorpay</div>
       </div>
     </div>
   </div>

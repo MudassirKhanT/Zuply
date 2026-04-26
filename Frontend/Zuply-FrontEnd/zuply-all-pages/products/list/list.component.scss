@@ -1,8 +1,68 @@
-// src/app/pages/products/list/list.component.scss
 @import 'styles';
-.list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:$space-lg; flex-wrap:wrap; gap:$space-md; }
-.sort-wrap   { display:flex; align-items:center; gap:$space-sm; }
-.sort-label  { font-size:$text-sm; color:$zuply-text-secondary; font-weight:500; }
-.sort-select { width:auto; padding:7px 12px; }
-.chips-row   { display:flex; flex-wrap:wrap; gap:$space-sm; margin-bottom:$space-lg; }
-.results-count { font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:$space-md; }
+
+.list-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: $space-lg; flex-wrap: wrap; gap: $space-md;
+
+  h1 { font-size: $text-2xl; font-weight: 700; color: $zuply-text; }
+}
+
+.sort-wrap  { display: flex; align-items: center; gap: $space-sm; }
+.sort-label { font-size: $text-sm; color: $zuply-text-secondary; font-weight: 500; }
+.sort-select { width: auto; padding: 7px 12px; }
+
+// ── Category filter bar ──────────────────────────────────────────
+.filter-bar {
+  position: relative;
+  margin-bottom: $space-lg;
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-md $space-lg;
+  box-shadow: $shadow-sm;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 48px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  &::before { left: 0; border-radius: $radius-xl 0 0 $radius-xl; background: linear-gradient(to right, $zuply-surface, transparent); }
+  &::after  { right: 0; border-radius: 0 $radius-xl $radius-xl 0; background: linear-gradient(to left, $zuply-surface, transparent); }
+}
+
+.filter-label {
+  font-size: $text-xs; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: $zuply-text-muted; margin-bottom: $space-sm;
+}
+
+.chips-row {
+  display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.results-count {
+  display: flex; align-items: center; gap: $space-sm;
+  font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-md;
+
+  .count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: $zuply-primary-light; color: $zuply-primary;
+    font-weight: 700; font-size: $text-xs;
+    padding: 2px 8px; border-radius: $radius-pill;
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────
+.list-toast {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+  padding: 12px 24px; border-radius: $radius-lg; font-size: $text-sm; font-weight: 600;
+  z-index: 9999; box-shadow: $shadow-md; white-space: nowrap;
+  animation: toastIn .25s ease;
+}
+.toast-success { background: $zuply-primary; color: #fff; }
+.toast-error   { background: $zuply-error;   color: #fff; }
+@keyframes toastIn { from { opacity:0; top:60px; } to { opacity:1; top:80px; } }

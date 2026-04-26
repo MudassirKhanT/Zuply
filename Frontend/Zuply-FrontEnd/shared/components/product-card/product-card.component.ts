@@ -8,6 +8,7 @@ import { Product } from '../../../core/models';
 })
 export class ProductCardComponent {
   @Input() product!: Product;
+  @Input() adding = false;
   @Output() addToCartEvent = new EventEmitter<Product>();
   @Output() cardClickEvt   = new EventEmitter<Product>();
 }

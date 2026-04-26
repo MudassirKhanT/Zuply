@@ -1,0 +1,72 @@
+@import 'styles';
+
+.wishlist-page { padding-top: $space-lg; padding-bottom: $space-3xl; }
+.page-heading  { font-size: $text-2xl; font-weight: 700; margin-bottom: $space-xl; }
+
+// Empty state
+.empty-state {
+  text-align: center; padding: $space-3xl $space-lg;
+  display: flex; flex-direction: column; align-items: center; gap: $space-md;
+}
+.empty-icon  { font-size: 72px; }
+.empty-title { font-size: $text-xl; font-weight: 700; color: $zuply-text; }
+.empty-desc  { font-size: $text-base; color: $zuply-text-secondary; max-width: 360px; }
+
+// Grid
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $space-lg;
+}
+
+.wish-card {
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: $transition-fast;
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); }
+}
+
+.wish-img {
+  height: 180px; background: $zuply-surface-2 center/cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.wish-img-placeholder { font-size: 48px; }
+
+.wish-body {
+  padding: $space-md; flex: 1; display: flex; flex-direction: column; gap: 4px;
+}
+.wish-name {
+  font-size: $text-base; font-weight: 600; color: $zuply-text;
+  cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  &:hover { color: $zuply-primary; }
+}
+.wish-seller { font-size: $text-xs; color: $zuply-text-muted; }
+.wish-price  { font-size: $text-lg; font-weight: 700; color: $zuply-accent; margin-top: auto; padding-top: 6px; }
+
+.wish-actions {
+  padding: $space-sm $space-md $space-md;
+  display: flex; align-items: center; gap: $space-sm;
+}
+.move-btn { flex: 1; }
+.remove-btn {
+  background: none; border: 1px solid $zuply-border-light;
+  border-radius: $radius-md; padding: 6px 10px; cursor: pointer; font-size: 16px;
+  transition: $transition-fast; flex-shrink: 0;
+  &:hover { background: $zuply-error-light; border-color: $zuply-error; }
+}
+
+.btn-sm { padding: 8px $space-md; font-size: $text-sm; }
+
+.spinner-sm {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid rgba(#fff,.4); border-top-color: #fff;
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 480px) {
+  .wishlist-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .wish-img { height: 140px; }
+}

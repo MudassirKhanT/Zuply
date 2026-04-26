@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -9,8 +9,9 @@ import { CartService } from '../../../core/services/cart.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  cartCount = 0;
+  cartCount      = 0;
   mobileMenuOpen = false;
+  userDropOpen   = false;
 
   constructor(
     public auth: AuthService,
@@ -27,10 +28,21 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.auth.logout();
+    this.mobileMenuOpen = false;
+    this.userDropOpen   = false;
     this.router.navigate(['/login']);
   }
 
-  get role(): string { return this.auth.getRole(); }
-  get isLoggedIn(): boolean { return this.auth.isAuthenticated(); }
-  get userName(): string { return this.auth.getUserName(); }
+  @HostListener('document:click', ['$event'])
+  onDocClick(e: Event): void {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.user-menu')) {
+      this.userDropOpen = false;
+    }
+  }
+
+  get role():     string  { return this.auth.getRole(); }
+  get isLoggedIn():boolean { return this.auth.isAuthenticated(); }
+  get userName(): string  { return this.auth.getUserName(); }
+  get userInitial(): string { return (this.userName?.charAt(0) || 'U').toUpperCase(); }
 }

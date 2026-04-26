@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -148,7 +149,9 @@ public class OrderService {
     private OrderDto toDto(Order order) {
         OrderDto dto = new OrderDto();
         dto.setOrderId(order.getId());
-        dto.setCreatedAt(order.getCreatedAt());
+        dto.setCreatedAt(order.getCreatedAt() != null
+                ? order.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                : null);
         dto.setStatus(order.getStatus().name());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setPaymentMethod(order.getPaymentMethod());

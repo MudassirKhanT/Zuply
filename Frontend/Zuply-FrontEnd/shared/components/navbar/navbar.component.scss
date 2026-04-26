@@ -1,163 +1,239 @@
 @import 'styles';
 
+// ── Navbar bar ────────────────────────────────────────────────
 .navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  position: sticky; top: 0; z-index: 500;
   background: $zuply-surface;
   border-bottom: 1px solid $zuply-border-light;
   box-shadow: $shadow-sm;
 }
 
 .nav-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 $space-lg;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: $space-lg;
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 $space-lg; height: 64px;
+  display: flex; align-items: center; gap: $space-lg;
 }
 
+// ── Brand ─────────────────────────────────────────────────────
 .nav-brand {
-  display: flex;
-  align-items: center;
-  gap: $space-sm;
-  text-decoration: none;
-  flex-shrink: 0;
-
+  display: flex; align-items: center; gap: $space-sm;
+  text-decoration: none; flex-shrink: 0;
   .brand-text {
-    font-size: $text-xl;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: $zuply-primary;
+    font-size: $text-xl; font-weight: 800; letter-spacing: -0.5px; color: $zuply-primary;
     em { color: $zuply-accent; font-style: normal; }
   }
 }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: $space-xs;
-  flex: 1;
-}
+// ── Desktop links ─────────────────────────────────────────────
+.nav-links { display: flex; align-items: center; gap: $space-xs; flex: 1; }
 
 .nav-link {
-  padding: 6px 12px;
-  border-radius: $radius-md;
-  font-size: $text-sm;
-  font-weight: 500;
-  color: $zuply-text-secondary;
-  text-decoration: none;
-  transition: $transition-fast;
-  white-space: nowrap;
-
+  padding: 6px 12px; border-radius: $radius-md;
+  font-size: $text-sm; font-weight: 500;
+  color: $zuply-text-secondary; text-decoration: none;
+  transition: $transition-fast; white-space: nowrap;
   &:hover { background: $zuply-primary-light; color: $zuply-primary; }
-  &.active { color: $zuply-primary; font-weight: 600; }
+  &.active { color: $zuply-primary; font-weight: 600; background: $zuply-primary-mist; }
 }
 
-.nav-cart {
-  position: relative;
-  font-size: $text-lg;
-  padding: 6px 10px;
+.nav-cart { padding: 4px 8px; }
+
+.cart-icon-wrap {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: $radius-md;
+  transition: $transition-fast; color: $zuply-text-secondary;
+  &:hover { background: $zuply-primary-light; color: $zuply-primary; }
 }
+.nav-cart.active .cart-icon-wrap { color: $zuply-primary; }
 
 .cart-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: $zuply-accent;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 3px;
+  position: absolute; top: -2px; right: -4px;
+  background: $zuply-accent; color: #fff;
+  font-size: 10px; font-weight: 700;
+  min-width: 18px; height: 18px; border-radius: $radius-pill;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; border: 2px solid $zuply-surface;
+  box-shadow: 0 2px 6px rgba($zuply-accent, 0.4);
+  animation: badgePop .2s cubic-bezier(0.34,1.56,0.64,1);
 }
+@keyframes badgePop { from { transform: scale(0); } to { transform: scale(1); } }
 
 .nav-upload {
-  background: $zuply-primary;
-  color: #fff !important;
-  border-radius: $radius-pill !important;
-  padding: 6px 14px !important;
-  font-weight: 600 !important;
-
+  background: $zuply-primary; color: #fff !important;
+  border-radius: $radius-pill !important; padding: 6px 14px !important; font-weight: 600 !important;
   &:hover { background: $zuply-primary-darker !important; }
 }
 
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: $space-sm;
-  flex-shrink: 0;
-}
+// ── Right actions ─────────────────────────────────────────────
+.nav-actions { display: flex; align-items: center; gap: $space-sm; flex-shrink: 0; margin-left: auto; }
+
+// ── Avatar + dropdown ─────────────────────────────────────────
+.user-menu { position: relative; }
 
 .nav-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: $zuply-primary;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: $text-sm;
-  text-decoration: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: $zuply-primary; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: $text-sm;
+  border: 2px solid transparent; cursor: pointer;
   transition: $transition-fast;
-  cursor: pointer;
-
-  &:hover { background: $zuply-primary-darker; }
-}
-
-.hamburger {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: $space-sm;
-  margin-left: auto;
-
-  span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: $zuply-text;
-    border-radius: 2px;
-    transition: $transition-fast;
+  &:hover, &.open {
+    border-color: $zuply-accent;
+    box-shadow: 0 0 0 3px rgba($zuply-accent, 0.2);
   }
 }
 
-.mobile-menu {
-  display: none;
-  flex-direction: column;
-  background: $zuply-surface;
-  border-top: 1px solid $zuply-border-light;
-  padding: $space-sm 0;
+.user-drop {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg; box-shadow: $shadow-lg;
+  min-width: 200px; z-index: 600;
+  animation: dropIn .15s ease;
+  overflow: hidden;
+}
+@keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
 
-  &.open { display: flex; }
+.drop-header {
+  padding: $space-md; background: $zuply-primary-mist;
+  .drop-name { font-size: $text-sm; font-weight: 700; color: $zuply-text; }
+  .drop-role { font-size: $text-xs; color: $zuply-text-muted; margin-top: 2px; }
 }
 
-.mobile-link {
-  padding: 12px $space-lg;
-  font-size: $text-base;
-  font-weight: 500;
-  color: $zuply-text;
-  text-decoration: none;
-  border: none;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-  width: 100%;
+.drop-divider { height: 1px; background: $zuply-border-light; }
+
+.drop-item {
+  display: flex; align-items: center; gap: $space-sm;
+  padding: 11px $space-md; width: 100%;
+  font-size: $text-sm; font-weight: 500; color: $zuply-text;
+  text-decoration: none; background: transparent; border: none;
+  cursor: pointer; transition: $transition-fast; text-align: left;
+  .drop-icon { font-size: 15px; width: 20px; }
+  &:hover { background: $zuply-primary-mist; color: $zuply-primary; }
+}
+
+.drop-logout { color: $zuply-error !important;
+  &:hover { background: $zuply-error-light !important; }
+}
+
+// ── Hamburger ─────────────────────────────────────────────────
+.hamburger {
+  background: transparent; border: none; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 5px; padding: $space-sm; border-radius: $radius-md;
   transition: $transition-fast;
+  &:hover { background: $zuply-primary-light; }
 
-  &:hover { background: $zuply-primary-light; color: $zuply-primary; }
+  span {
+    display: block; width: 22px; height: 2px;
+    background: $zuply-text; border-radius: 2px;
+    transition: all .25s ease; transform-origin: center;
+  }
+
+  &.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  &.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  &.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
 
-.logout-link { color: $zuply-error; &:hover { background: $zuply-error-light !important; } }
+// ── Drawer overlay ────────────────────────────────────────────
+.drawer-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 800;
+  backdrop-filter: blur(2px);
+  &.open { display: block; animation: fadeIn .2s ease; }
+}
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+// ── Drawer panel ──────────────────────────────────────────────
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(320px, 85vw);
+  background: $zuply-surface; z-index: 900;
+  display: flex; flex-direction: column; overflow-y: auto;
+  transform: translateX(100%); transition: transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow: -4px 0 24px rgba(0,0,0,.12);
+
+  &.open { transform: translateX(0); }
+}
+
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: $space-md $space-lg; border-bottom: 1px solid $zuply-border-light;
+  flex-shrink: 0;
+}
+
+.drawer-brand {
+  display: flex; align-items: center; gap: $space-sm;
+  font-size: $text-lg; font-weight: 800; color: $zuply-primary;
+  em { color: $zuply-accent; font-style: normal; }
+}
+
+.drawer-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: $zuply-border-light; border: none; cursor: pointer;
+  font-size: 13px; color: $zuply-text-secondary;
+  display: flex; align-items: center; justify-content: center;
+  transition: $transition-fast;
+  &:hover { background: $zuply-error-light; color: $zuply-error; }
+}
+
+.drawer-user {
+  display: flex; align-items: center; gap: $space-md;
+  padding: $space-md $space-lg;
+  background: linear-gradient(135deg, $zuply-primary 0%, darken($zuply-primary, 10%) 100%);
+}
+
+.drawer-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(#fff, 0.2); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: $text-lg; font-weight: 700; flex-shrink: 0;
+  border: 2px solid rgba(#fff, 0.35);
+}
+
+.drawer-uname { font-size: $text-base; font-weight: 700; color: #fff; }
+.drawer-urole { font-size: $text-xs; color: rgba(#fff, 0.7); margin-top: 2px; }
+
+.drawer-section-label {
+  padding: $space-md $space-lg $space-xs;
+  font-size: $text-xs; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: $zuply-text-muted;
+}
+
+.drawer-link {
+  display: flex; align-items: center; gap: $space-md;
+  padding: 13px $space-lg; width: 100%;
+  font-size: $text-base; font-weight: 500; color: $zuply-text;
+  text-decoration: none; background: transparent; border: none;
+  cursor: pointer; transition: $transition-fast; text-align: left;
+  border-left: 3px solid transparent;
+
+  .dl-icon { font-size: 18px; width: 24px; flex-shrink: 0; }
+
+  .dl-badge {
+    margin-left: auto; background: $zuply-accent; color: #fff;
+    font-size: 11px; font-weight: 700; min-width: 20px; height: 20px;
+    border-radius: $radius-pill; display: flex; align-items: center; justify-content: center;
+    padding: 0 5px;
+  }
+
+  &:hover {
+    background: $zuply-primary-mist; color: $zuply-primary;
+    border-left-color: $zuply-primary;
+  }
+}
+
+.drawer-logout {
+  color: $zuply-error !important;
+  &:hover { background: $zuply-error-light !important; border-left-color: $zuply-error !important; }
+}
+
+.drawer-divider { height: 1px; background: $zuply-border-light; margin: $space-xs 0; }
+
+.drawer-cta {
+  display: block; margin: $space-md $space-lg;
+  background: $zuply-primary; color: #fff;
+  text-align: center; padding: 12px; border-radius: $radius-pill;
+  font-size: $text-sm; font-weight: 700; text-decoration: none;
+  transition: $transition-fast;
+  &:hover { background: $zuply-primary-darker; }
+}

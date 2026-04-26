@@ -1,1 +1,161 @@
-<p>detail works!</p>
+<div class="detail-page page-container" *ngIf="product">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> /
+    <a routerLink="/products">Products</a> /
+    <span>{{ product.name }}</span>
+  </div>
+
+  <!-- ── Product Main ──────────────────────────────── -->
+  <div class="product-main">
+
+    <!-- Image -->
+    <div class="product-image-wrap">
+      <div class="product-image" [style.backgroundImage]="product.imageUrl ? 'url('+product.imageUrl+')' : 'none'">
+        <div class="no-img" *ngIf="!product.imageUrl">🛍️</div>
+      </div>
+      <div class="product-badges">
+        <span class="badge-success" *ngIf="product.stock && product.stock > 0">In Stock</span>
+        <span class="badge-error"   *ngIf="!product.stock || product.stock === 0">Out of Stock</span>
+        <span class="badge-primary" *ngIf="product.categoryName">{{ product.categoryName }}</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="product-info">
+      <div class="product-seller" *ngIf="product.sellerName">🏪 {{ product.sellerName }}</div>
+      <h1 class="product-name">{{ product.name }}</h1>
+
+      <!-- Rating summary -->
+      <div class="rating-row" *ngIf="reviewData">
+        <div class="stars">
+          <span *ngFor="let s of starsArray(reviewData.averageRating)" class="star filled">★</span>
+          <span *ngFor="let s of emptyStars(reviewData.averageRating)" class="star empty">★</span>
+        </div>
+        <span class="rating-num">{{ reviewData.averageRating | number:'1.1-1' }}</span>
+        <span class="rating-count">({{ reviewData.count }} {{ reviewData.count === 1 ? 'review' : 'reviews' }})</span>
+      </div>
+
+      <div class="product-price">₹{{ product.price | number:'1.0-0' }}</div>
+
+      <p class="product-desc" *ngIf="product.description">{{ product.description }}</p>
+
+      <!-- Details -->
+      <div class="detail-grid" *ngIf="product.variations || product.deliveryMethod || product.returnPolicy || product.sellerPincode">
+        <div class="detail-row" *ngIf="product.variations">
+          <span class="detail-key">Variations</span>
+          <span class="detail-val">{{ product.variations }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.deliveryMethod">
+          <span class="detail-key">Delivery</span>
+          <span class="detail-val">{{ product.deliveryMethod }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.returnPolicy">
+          <span class="detail-key">Returns</span>
+          <span class="detail-val">{{ product.returnPolicy }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.sellerPincode">
+          <span class="detail-key">📍 Pincode</span>
+          <span class="detail-val">{{ product.sellerPincode }}</span>
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="qty-row" *ngIf="product.stock && product.stock > 0">
+        <span class="qty-label">Quantity</span>
+        <div class="qty-selector">
+          <button class="qty-btn" (click)="decQty()">−</button>
+          <span class="qty-value">{{ qty }}</span>
+          <button class="qty-btn" (click)="incQty()">+</button>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-btns">
+        <button class="btn-primary btn-lg" (click)="addToCart()" [disabled]="!product.stock || product.stock === 0">
+          🛒 Add to Cart
+        </button>
+        <button class="btn-wishlist" [class.wishlisted]="isWishlisted" (click)="toggleWishlist()">
+          {{ isWishlisted ? '❤️' : '🤍' }} {{ isWishlisted ? 'Wishlisted' : 'Wishlist' }}
+        </button>
+      </div>
+
+      <!-- Login prompt -->
+      <div class="login-prompt" *ngIf="showLoginPrompt">
+        <span>Please <a routerLink="/login" [queryParams]="{returnUrl: currentUrl}">sign in</a> to add items to your cart or wishlist.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Reviews Section ───────────────────────────── -->
+  <div class="reviews-section">
+    <div class="reviews-header">
+      <h2 class="section-title">Customer Reviews</h2>
+      <div class="avg-badge" *ngIf="reviewData && reviewData.count > 0">
+        ★ {{ reviewData.averageRating | number:'1.1-1' }} · {{ reviewData.count }} reviews
+      </div>
+    </div>
+
+    <!-- Write review (customers only) -->
+    <div class="write-review" *ngIf="isCustomer && !alreadyReviewed">
+      <div class="wr-title">Write a Review</div>
+      <div class="star-picker">
+        <span *ngFor="let n of [1,2,3,4,5]" class="star-pick"
+              [class.selected]="reviewForm.rating >= n"
+              (click)="reviewForm.rating = n">★</span>
+      </div>
+      <textarea class="input review-textarea" rows="3" placeholder="Share your experience…"
+                [(ngModel)]="reviewForm.comment"></textarea>
+      <button class="btn-primary btn-sm" (click)="submitReview()" [disabled]="reviewForm.rating === 0 || submittingReview">
+        {{ submittingReview ? 'Posting…' : 'Post Review' }}
+      </button>
+      <div class="review-success" *ngIf="reviewSuccess">✓ Review posted!</div>
+    </div>
+
+    <div class="already-reviewed" *ngIf="isCustomer && alreadyReviewed">
+      ✓ You have already reviewed this product.
+    </div>
+
+    <div class="login-review-prompt" *ngIf="!isLoggedIn">
+      <a routerLink="/login" [queryParams]="{returnUrl: currentUrl}">Sign in</a> to write a review.
+    </div>
+
+    <!-- Reviews list -->
+    <div class="reviews-list" *ngIf="reviewData && reviewData.reviews.length > 0">
+      <div class="review-card" *ngFor="let r of reviewData.reviews">
+        <div class="review-top">
+          <div class="reviewer-avatar">{{ r.customerName.charAt(0).toUpperCase() }}</div>
+          <div class="reviewer-info">
+            <div class="reviewer-name">{{ r.customerName }}</div>
+            <div class="reviewer-date">{{ r.createdAt | date:'mediumDate' }}</div>
+          </div>
+          <div class="review-stars">
+            <span *ngFor="let s of starsArray(r.rating)" class="star filled">★</span>
+            <span *ngFor="let s of emptyStars(r.rating)" class="star empty">★</span>
+          </div>
+        </div>
+        <p class="review-comment" *ngIf="r.comment">{{ r.comment }}</p>
+      </div>
+    </div>
+
+    <div class="no-reviews" *ngIf="reviewData && reviewData.reviews.length === 0">
+      No reviews yet. Be the first to review!
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="page-container" *ngIf="!product && loading">
+  <app-loading-spinner [show]="true" message="Loading product…"></app-loading-spinner>
+</div>
+
+<!-- Not found -->
+<div class="page-container" *ngIf="!product && !loading">
+  <div class="empty-state">
+    <div class="empty-icon">😕</div>
+    <div class="empty-title">Product not found</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+</div>

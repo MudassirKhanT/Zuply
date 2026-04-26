@@ -21,6 +21,7 @@ export class AuthService {
         if (res.success && res.data) {
           localStorage.setItem('zuply_token', res.data.token);
           localStorage.setItem('zuply_user', JSON.stringify({
+            id:    res.data.id,
             name:  res.data.name,
             email: res.data.email,
             role:  res.data.role
@@ -38,6 +39,7 @@ export class AuthService {
   isLoggedIn(): boolean    { return !!localStorage.getItem('zuply_token'); }
   getCurrentUser(): any    { const u = localStorage.getItem('zuply_user'); return u ? JSON.parse(u) : null; }
   getRole(): string | null { return this.getCurrentUser()?.role ?? null; }
+  getUserId(): number | null { return this.getCurrentUser()?.id ?? null; }
   isCustomer(): boolean    { return this.getRole() === 'CUSTOMER'; }
   isSeller(): boolean      { return this.getRole() === 'SELLER'; }
   isAdmin(): boolean       { return this.getRole() === 'ADMIN'; }

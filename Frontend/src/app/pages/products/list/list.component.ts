@@ -1,10 +1,118 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Product, Category } from '../../../core/models';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrls: ['./list.component.scss']
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
 
+  allProducts: Product[] = [];
+  filtered:    Product[] = [];
+  categories:  Category[] = [];
+
+  selectedCategory = '';
+  searchQuery      = '';
+  sortBy           = '';
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  currentPincode   = '';
+  pincodeInput     = '';
+  loading          = true;
+  showLocationModal = false;
+
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.productService.getCategories().subscribe({
+      next: res => { if (res.success) this.categories = res.data; }
+    });
+    this.route.queryParams.subscribe(params => {
+      if (params['name'])     this.searchQuery      = params['name'];
+      if (params['category']) this.selectedCategory = params['category'];
+      if (params['pincode'])  { this.currentPincode = params['pincode']; this.pincodeInput = params['pincode']; }
+      this.loadProducts();
+    });
+  }
+
+  loadProducts(): void {
+    this.loading = true;
+    this.productService.getAll(this.currentPincode || undefined, undefined, this.sortBy || undefined).subscribe({
+      next: res => {
+        this.allProducts = res.success ? res.data : [];
+        this.applyFilters();
+        this.loading = false;
+      },
+      error: () => this.loading = false
+    });
+  }
+
+  applyFilters(): void {
+    let result = [...this.allProducts];
+
+    if (this.selectedCategory) {
+      result = result.filter(p => (p.categoryName || p.category) === this.selectedCategory);
+    }
+    if (this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase();
+      result = result.filter(p => p.name.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q));
+    }
+    if (this.minPrice !== null && this.minPrice > 0) {
+      result = result.filter(p => p.price >= this.minPrice!);
+    }
+    if (this.maxPrice !== null && this.maxPrice > 0) {
+      result = result.filter(p => p.price <= this.maxPrice!);
+    }
+    if (this.sortBy === 'price_asc')  result.sort((a, b) => a.price - b.price);
+    if (this.sortBy === 'price_desc') result.sort((a, b) => b.price - a.price);
+
+    this.filtered = result;
+  }
+
+  selectCategory(name: string): void {
+    this.selectedCategory = name;
+    this.applyFilters();
+  }
+
+  applyPincode(): void {
+    this.currentPincode = this.pincodeInput.trim();
+    this.loadProducts();
+  }
+
+  clearPincode(): void {
+    this.currentPincode = '';
+    this.pincodeInput   = '';
+    this.loadProducts();
+  }
+
+  clearFilters(): void {
+    this.selectedCategory = '';
+    this.searchQuery      = '';
+    this.sortBy           = '';
+    this.minPrice         = null;
+    this.maxPrice         = null;
+    this.applyFilters();
+  }
+
+  addToCart(product: Product): void {
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: '/products' } }); return;
+    }
+    this.cartService.addToCart(product.id).subscribe();
+  }
+
+  goToDetail(product: Product): void {
+    this.router.navigate(['/products', product.id]);
+  }
 }

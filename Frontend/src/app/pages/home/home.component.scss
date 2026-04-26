@@ -1,45 +1,191 @@
 @import 'styles';
 
-.home-page { padding-bottom: $space-3xl; }
+// ── Animations ────────────────────────────────────────────
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%       { transform: translateY(-18px) rotate(-6deg); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%       { opacity: 0.28; transform: scale(1.12); }
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($zuply-accent, 0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba($zuply-accent, 0); }
+}
 
-// Hero
-.hero-banner {
+.animate-fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+  &.visible { opacity: 1; transform: translateY(0); }
+}
+
+// ── Hero ──────────────────────────────────────────────────
+.hero-section {
+  position: relative;
   background: $zuply-primary-deeper;
-  border-radius: $radius-xl;
-  padding: $space-2xl $space-xl;
-  color: #fff;
+  overflow: hidden;
+  padding: $space-3xl 0 $space-2xl;
+  margin-bottom: $space-xl;
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: glow 4s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-glow-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba($zuply-primary, 0.5), transparent);
+  top: -100px; left: -100px;
+}
+.hero-glow-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba($zuply-accent, 0.25), transparent);
+  bottom: -80px; right: 10%;
+  animation-delay: 2s;
+}
+
+.hero-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
-  margin-bottom: $space-xl;
-  margin-top: $space-lg;
-
-  .hero-content { flex: 1; }
-
-  .hero-sup {
-    font-size: $text-sm; color: $zuply-accent;
-    font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; margin-bottom: $space-sm;
-  }
-
-  .hero-title {
-    font-size: $text-3xl; font-weight: 800;
-    line-height: 1.2; margin-bottom: $space-sm;
-    letter-spacing: -0.5px;
-  }
-
-  .hero-subtitle {
-    font-size: $text-md; opacity: 0.8;
-    margin-bottom: $space-lg;
-  }
-
-  .hero-actions { display: flex; gap: $space-sm; }
-
-  .hero-emoji { font-size: 100px; opacity: 0.15; flex-shrink: 0; }
+  gap: $space-xl;
+  animation: fadeInUp 0.8s ease both;
 }
 
-// Categories
+.hero-content { flex: 1; color: #fff; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  background: rgba($zuply-accent, 0.15);
+  border: 1px solid rgba($zuply-accent, 0.35);
+  color: $zuply-accent;
+  font-size: $text-sm;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: $radius-pill;
+  margin-bottom: $space-md;
+  animation: badgePulse 2.5s ease-in-out infinite;
+
+  .badge-dot {
+    width: 7px; height: 7px;
+    background: $zuply-accent;
+    border-radius: 50%;
+  }
+}
+
+.hero-heading {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: $space-md;
+  color: #fff;
+}
+.hero-accent { color: $zuply-accent; }
+
+.hero-sub {
+  font-size: $text-md;
+  opacity: 0.8;
+  margin-bottom: $space-lg;
+  max-width: 480px;
+  line-height: 1.65;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+  flex-wrap: wrap;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: $space-lg;
+}
+.stat-item { display: flex; flex-direction: column; gap: 2px; }
+.stat-num  { font-size: $text-xl; font-weight: 800; color: $zuply-accent; }
+.stat-lbl  { font-size: $text-xs; color: rgba(#fff, 0.6); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-divider { width: 1px; height: 32px; background: rgba(#fff, 0.15); }
+
+// ── Hero visual cards ────────────────────────────────────
+.hero-visual {
+  flex-shrink: 0;
+  position: relative;
+  width: 320px;
+  height: 300px;
+  animation: fadeInLeft 0.9s ease 0.2s both;
+}
+
+.hero-card {
+  position: absolute;
+  background: rgba(#fff, 0.08);
+  border: 1px solid rgba(#fff, 0.18);
+  backdrop-filter: blur(12px);
+  border-radius: $radius-lg;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  transition: transform 0.3s ease;
+  &:hover { transform: scale(1.04); }
+}
+.hero-card-1 { top: 0;    left: 0;   animation: fadeInUp 0.7s ease 0.4s both; }
+.hero-card-2 { top: 100px; right: 0; animation: fadeInUp 0.7s ease 0.6s both; }
+.hero-card-3 { bottom: 0; left: 30px; animation: fadeInUp 0.7s ease 0.8s both; }
+.hc-icon  { font-size: 28px; }
+.hc-title { font-size: $text-base; font-weight: 600; color: #fff; }
+.hc-sub   { font-size: $text-xs; color: rgba(#fff, 0.6); }
+
+.hero-float-emoji {
+  position: absolute;
+  font-size: 90px;
+  opacity: 0.12;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-6deg);
+  animation: float 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+// ── Features Bar ──────────────────────────────────────────
+.features-bar {
+  background: $zuply-surface;
+  border-top: 1px solid $zuply-border-light;
+  border-bottom: 1px solid $zuply-border-light;
+  padding: $space-xl 0;
+  margin-bottom: $space-xl;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-lg;
+}
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-md;
+}
+.feature-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.feature-title { font-size: $text-base; font-weight: 600; color: $zuply-text; margin-bottom: 2px; }
+.feature-desc  { font-size: $text-sm; color: $zuply-text-secondary; }
+
+// ── Categories ────────────────────────────────────────────
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
@@ -47,46 +193,113 @@
   margin-bottom: $space-sm;
 }
 
-// Sell banner
+// ── How It Works ──────────────────────────────────────────
+.how-section { }
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-lg;
+}
+.how-step {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  padding: $space-xl $space-lg;
+  text-align: center;
+  transition: $transition-normal;
+  &:hover { box-shadow: $shadow-md; transform: translateY(-3px); border-color: rgba($zuply-primary, 0.2); }
+}
+.step-num {
+  font-size: $text-xs; font-weight: 700;
+  color: $zuply-accent; letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: $space-sm;
+}
+.step-icon  { font-size: 36px; margin-bottom: $space-sm; }
+.step-title { font-size: $text-base; font-weight: 700; color: $zuply-primary; margin-bottom: $space-xs; }
+.step-desc  { font-size: $text-sm; color: $zuply-text-secondary; line-height: 1.5; }
+
+// ── Sell Banner ───────────────────────────────────────────
 .sell-banner {
-  background: $zuply-primary-light;
+  background: linear-gradient(135deg, $zuply-primary-deeper 0%, $zuply-primary 100%);
   border-radius: $radius-xl;
-  padding: $space-xl;
+  padding: $space-2xl $space-xl;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: $space-xl;
   margin-top: $space-xl;
-  border: 1px solid rgba($zuply-primary, 0.15);
-
-  .sell-content { flex: 1; }
-
-  .sell-title {
-    font-size: $text-xl; font-weight: 700;
-    color: $zuply-primary; margin-bottom: $space-sm;
+  margin-bottom: $space-3xl;
+  overflow: hidden;
+  position: relative;
+  &::after {
+    content: '🤖';
+    position: absolute;
+    right: $space-xl;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 100px;
+    opacity: 0.08;
+    pointer-events: none;
   }
-
-  .sell-desc {
-    font-size: $text-base; color: $zuply-text-secondary;
-    margin-bottom: $space-lg; max-width: 480px; line-height: 1.6;
-  }
-
-  .sell-emoji { font-size: 80px; opacity: 0.3; flex-shrink: 0; }
 }
+.sell-content { flex: 1; color: #fff; }
+.sell-badge {
+  display: inline-block;
+  background: rgba($zuply-accent, 0.2);
+  border: 1px solid rgba($zuply-accent, 0.4);
+  color: $zuply-accent;
+  font-size: $text-xs; font-weight: 700;
+  padding: 3px 12px;
+  border-radius: $radius-pill;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: $space-sm;
+}
+.sell-title { font-size: $text-2xl; font-weight: 800; margin-bottom: $space-sm; }
+.sell-desc  { font-size: $text-md; opacity: 0.8; margin-bottom: $space-lg; max-width: 500px; line-height: 1.6; }
+.sell-visual {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  flex-shrink: 0;
+}
+.sell-step {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  background: rgba(#fff, 0.08);
+  border: 1px solid rgba(#fff, 0.15);
+  border-radius: $radius-md;
+  padding: 10px 18px;
+  color: #fff;
+}
+.ss-num  { font-size: $text-sm; font-weight: 700; color: $zuply-accent; min-width: 28px; }
+.ss-text { font-size: $text-sm; font-weight: 500; }
 
-// Responsive
+// ── Responsive ────────────────────────────────────────────
 @media (max-width: 1024px) {
-  .categories-grid { grid-template-columns: repeat(4, 1fr); }
+  .features-grid    { grid-template-columns: repeat(2, 1fr); }
+  .how-steps        { grid-template-columns: repeat(2, 1fr); }
+  .categories-grid  { grid-template-columns: repeat(4, 1fr); }
+  .hero-heading     { font-size: 40px; }
+  .hero-visual      { width: 260px; }
 }
 
 @media (max-width: 768px) {
-  .hero-banner { flex-direction: column; padding: $space-xl $space-lg; }
-  .hero-emoji  { display: none; }
-  .hero-title  { font-size: $text-2xl; }
-  .categories-grid { grid-template-columns: repeat(4, 1fr); }
-  .sell-banner { flex-direction: column; }
-  .sell-emoji  { display: none; }
+  .hero-inner       { flex-direction: column; }
+  .hero-visual      { display: none; }
+  .hero-heading     { font-size: 32px; }
+  .features-grid    { grid-template-columns: repeat(2, 1fr); }
+  .how-steps        { grid-template-columns: repeat(2, 1fr); }
+  .categories-grid  { grid-template-columns: repeat(4, 1fr); }
+  .sell-banner      { flex-direction: column; &::after { display: none; } }
+  .sell-visual      { width: 100%; }
 }
 
 @media (max-width: 480px) {
-  .categories-grid { grid-template-columns: repeat(4, 1fr); }
+  .hero-heading     { font-size: 26px; }
+  .categories-grid  { grid-template-columns: repeat(4, 1fr); }
+  .how-steps        { grid-template-columns: 1fr; }
+  .features-grid    { grid-template-columns: 1fr; }
+  .hero-ctas        { flex-direction: column; }
+  .hero-stats       { gap: $space-md; }
 }

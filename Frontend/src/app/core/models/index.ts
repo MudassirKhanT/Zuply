@@ -28,6 +28,7 @@ export interface RegisterRequest {
 }
 
 export interface LoginResponse {
+  id: number;
   token: string;
   role: string;
   name: string;
@@ -45,11 +46,15 @@ export interface Product {
   description?: string;
   price: number;
   stock: number;
-  categoryId?: number;
+  categoryName?: string;
   category?: string;
   sellerId?: number;
   sellerName?: string;
+  sellerPincode?: string;
   imageUrl?: string;
+  variations?: string;
+  deliveryMethod?: string;
+  returnPolicy?: string;
   pincode?: string;
   status?: 'PENDING' | 'APPROVED' | 'REJECTED';
   distance?: string;
@@ -80,31 +85,76 @@ export interface WishlistItem {
   sellerName?: string;
 }
 
-export interface CheckoutRequest {
-  deliveryAddress: string;
+export interface DeliveryAddress {
+  customerName: string;
+  phone: string;
+  address: string;
   city: string;
   pincode: string;
-  phone: string;
+}
+
+export interface CheckoutRequest {
+  customerId?: number;
+  deliveryAddress: DeliveryAddress;
   paymentMethod: 'UPI' | 'CARD' | 'COD';
+  items?: CheckoutItem[];
+}
+
+export interface CheckoutItem {
+  productId: number;
+  quantity: number;
+  price: number;
 }
 
 export interface Order {
-  id: number;
-  customerId?: number;
-  orderDate: string;
+  orderId: number;
+  createdAt: string;
   status: 'PLACED' | 'PROCESSING' | 'DELIVERED';
-  grandTotal: number;
-  deliveryAddress?: string;
+  totalAmount: number;
   paymentMethod?: string;
+  deliveryAddress?: string;
+  city?: string;
+  pincode?: string;
   items?: OrderItem[];
 }
 
 export interface OrderItem {
-  id: number;
   productId: number;
   productName: string;
   quantity: number;
-  priceAtOrder: number;
+  price: number;
+  lineTotal: number;
+}
+
+export interface Review {
+  id: number;
+  customerName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export interface ReviewsResponse {
+  reviews: Review[];
+  averageRating: number;
+  count: number;
+}
+
+export interface ReviewRequest {
+  rating: number;
+  comment: string;
+}
+
+export interface PaymentOrderRequest {
+  amount: number;
+  orderId: number;
+}
+
+export interface PaymentOrderResponse {
+  razorpayOrderId: string;
+  amount: number;
+  currency: string;
+  keyId: string;
 }
 
 // ── Sprint 2 AI Listing models ────────────────────────
@@ -115,8 +165,7 @@ export interface UploadResponse {
   message: string;
 }
 
-export type ImageStatus =
-  'PENDING' | 'PROCESSING' | 'PROCESSED' | 'COMPLETED' | 'FAILED';
+export type ImageStatus = 'PENDING' | 'PROCESSING' | 'PROCESSED' | 'COMPLETED' | 'FAILED';
 
 export interface ListingResponse {
   productId: number;

@@ -17,4 +17,34 @@
 .summary-row { display:flex; justify-content:space-between; padding:8px 0; font-size:$text-base; color:$zuply-text-secondary; &.total { font-weight:700; color:$zuply-text; font-size:$text-lg; } }
 .summary-divider { height:1px; background:$zuply-border-light; margin:4px 0; }
 .error-banner { background:$zuply-error-light; color:$zuply-error; border:1px solid rgba($zuply-error,.2); border-radius:$radius-md; padding:$space-sm $space-md; font-size:$text-sm; margin-top:$space-md; }
+.place-btn  { margin-top: $space-md; padding: 14px; font-size: $text-base; }
+.secure-note { text-align:center; font-size:$text-xs; color:$zuply-text-muted; margin-top:$space-sm; }
+
+.pay-check { color: $zuply-primary; font-weight: 700; font-size: $text-lg; margin-left: auto; }
+.pay-radio  { width: 16px; height: 16px; margin-left: auto; }
+
+.spinner-sm {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid rgba(#fff,.4); border-top-color: #fff;
+  border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// Success modal
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  z-index: 1000; display: flex; align-items: center; justify-content: center;
+  padding: $space-lg;
+}
+.success-modal {
+  background: $zuply-surface; border-radius: $radius-xl; padding: $space-2xl;
+  max-width: 420px; width: 100%; text-align: center; box-shadow: $shadow-lg;
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
+.success-icon    { font-size: 64px; margin-bottom: $space-md; }
+.success-title   { font-size: $text-2xl; font-weight: 800; color: $zuply-primary; margin-bottom: $space-sm; }
+.success-desc    { font-size: $text-base; color: $zuply-text-secondary; line-height: 1.6; margin-bottom: $space-xl; }
+.success-actions { display: flex; gap: $space-sm; justify-content: center; flex-wrap: wrap; }
+
 @media(max-width:768px) { .checkout-layout { grid-template-columns:1fr; } .form-row { grid-template-columns:1fr; } }

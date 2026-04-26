@@ -33,6 +33,7 @@ public class OrderController {
             Authentication authentication) {
         try {
             User user = getAuthUser(authentication);
+            request.setCustomerId(user.getId());
             OrderDto order = orderService.placeOrder(request);
             return ResponseEntity.ok(ApiResponse.success("Order placed successfully", order));
         } catch (RuntimeException e) {

@@ -30,6 +30,7 @@ public class ProductService {
         ProductDto dto = new ProductDto();
         dto.setId(product.getId());
         dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setStock(product.getStock());
         dto.setVariations(product.getVariations());
@@ -98,6 +99,7 @@ public class ProductService {
 
         Product product = new Product();
         product.setName(request.getName());
+        product.setDescription(request.getDescription());
         product.setCategory(category);
         product.setSeller(seller);
         product.setPrice(request.getPrice());
@@ -120,6 +122,7 @@ public class ProductService {
             throw new RuntimeException("Forbidden: you can only edit your own products");
 
         if (request.getName()           != null) product.setName(request.getName());
+        if (request.getDescription()    != null) product.setDescription(request.getDescription());
         if (request.getPrice()          != null) product.setPrice(request.getPrice());
         if (request.getStock()          != null) product.setStock(request.getStock());
         if (request.getVariations()     != null) product.setVariations(request.getVariations());

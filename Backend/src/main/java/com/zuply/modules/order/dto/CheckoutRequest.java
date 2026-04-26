@@ -7,7 +7,6 @@ import java.util.List;
 
 public class CheckoutRequest {
 
-    @NotNull(message = "Customer ID is required")
     private Long customerId;
 
     @Valid

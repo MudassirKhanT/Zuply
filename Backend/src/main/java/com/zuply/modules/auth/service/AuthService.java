@@ -36,15 +36,12 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getRole().equals(request.getRole())) {
-            throw new RuntimeException("Invalid role");
-        }
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid username or password");
         }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
-        return new LoginResponse(token, user.getRole().name(), user.getName(), user.getEmail());
+        return new LoginResponse(user.getId(), token, user.getRole().name(), user.getName(), user.getEmail());
     }
 
     private UserProfileDto toDto(User user) {

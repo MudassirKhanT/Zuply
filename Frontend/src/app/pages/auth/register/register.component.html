@@ -1,1 +1,66 @@
-<p>register works!</p>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="#0D5C63"/>
+        <path d="M12 28L16 14h8l4 14" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="11" r="3" fill="#C9A84C"/>
+      </svg>
+      <div class="auth-brand-name">Zuply</div>
+    </div>
+
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-subtitle">Join thousands of shoppers and sellers</p>
+
+    <div class="alert alert-error"   *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+    <div class="role-tabs">
+      <button type="button" class="role-tab" [class.active]="form.role === 'CUSTOMER'" (click)="form.role = 'CUSTOMER'">🛒 Customer</button>
+      <button type="button" class="role-tab" [class.active]="form.role === 'SELLER'"   (click)="form.role = 'SELLER'">🏪 Seller</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #f="ngForm" class="auth-form" novalidate>
+      <div class="input-group">
+        <label>Full Name</label>
+        <input class="input" type="text" name="name" placeholder="Your full name"
+               [(ngModel)]="form.name" required #nameCtrl="ngModel"
+               [class.error]="nameCtrl.invalid && nameCtrl.touched"/>
+        <div class="error-msg" *ngIf="nameCtrl.invalid && nameCtrl.touched">Name is required.</div>
+      </div>
+      <div class="input-group">
+        <label>Email address</label>
+        <input class="input" type="email" name="email" placeholder="you@example.com"
+               [(ngModel)]="form.email" required email #emailCtrl="ngModel"
+               [class.error]="emailCtrl.invalid && emailCtrl.touched"/>
+        <div class="error-msg" *ngIf="emailCtrl.invalid && emailCtrl.touched">Enter a valid email.</div>
+      </div>
+      <div class="input-group">
+        <label>Phone Number</label>
+        <input class="input" type="tel" name="phone" placeholder="10-digit mobile number"
+               [(ngModel)]="form.phone" required #phoneCtrl="ngModel"
+               [class.error]="phoneCtrl.invalid && phoneCtrl.touched"/>
+        <div class="error-msg" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">Phone is required.</div>
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <div class="input-pass-wrap">
+          <input class="input" [type]="showPassword ? 'text' : 'password'" name="password"
+                 placeholder="Min. 6 characters" [(ngModel)]="form.password"
+                 required minlength="6" #passCtrl="ngModel"
+                 [class.error]="passCtrl.invalid && passCtrl.touched"/>
+          <button type="button" class="pass-toggle" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-msg" *ngIf="passCtrl.invalid && passCtrl.touched">Min 6 characters.</div>
+      </div>
+      <button class="btn-primary btn-full" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Create Account</span>
+        <span *ngIf="loading" class="spinner-sm"></span>
+      </button>
+    </form>
+
+    <div class="auth-footer">Already have an account? <a routerLink="/login">Sign in</a></div>
+  </div>
+</div>

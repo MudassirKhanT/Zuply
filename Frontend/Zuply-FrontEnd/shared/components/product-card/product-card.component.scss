@@ -52,3 +52,10 @@
   margin-top: auto;
   padding-top: $space-sm;
 }
+
+.card-spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(#fff, 0.4); border-top-color: #fff;
+  border-radius: 50%; animation: card-spin .7s linear infinite;
+}
+@keyframes card-spin { to { transform: rotate(360deg); } }
