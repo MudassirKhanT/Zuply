@@ -3,8 +3,8 @@ server.port=9090
 
 # MySQL
 spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/zuply_db}
-spring.datasource.username=root
-spring.datasource.password=Suvetha@2004
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD}
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 # JPA / Hibernate
@@ -12,8 +12,8 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 
-# JWT (used if you move secret to application.properties instead of hardcoding)
-app.jwt.secret=${JWT_SECRET:zuply-secret-key-that-is-at-least-256-bits-long-for-hs256}
+# JWT
+app.jwt.secret=${JWT_SECRET}
 app.jwt.expiration-ms=604800000
 
 # Disable default Spring Security form login
@@ -23,16 +23,16 @@ spring.security.user.password=disable
 # Multipart file upload
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=10MB
-upload.path=C:/zuply/uploads
+upload.path=${UPLOAD_PATH:C:/zuply/uploads}
 
 # Gemini Vision API
-gemini.api.key=AIzaSyAIC9CHDLR-weEqZtSUIyasOlarG9-vMrE
+gemini.api.key=${GEMINI_API_KEY}
 gemini.api.url=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent
 
-# Jackson — serialize LocalDateTime as ISO string, not array
+# Jackson
 spring.jackson.serialization.write-dates-as-timestamps=false
 spring.jackson.deserialization.fail-on-unknown-properties=false
 
 # Razorpay
-razorpay.key.id=rzp_test_SgWOid9c0fYBna
-razorpay.key.secret=604FUQi00YFohSkU5zXcldmf
+razorpay.key.id=${RAZORPAY_KEY_ID}
+razorpay.key.secret=${RAZORPAY_KEY_SECRET}
