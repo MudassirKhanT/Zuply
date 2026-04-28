@@ -1,5 +1,6 @@
 package com.zuply.modules.processing.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuply.modules.upload.dto.ImageStatus;
 import com.zuply.modules.upload.model.Image;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.ImageIO;
@@ -18,13 +18,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.RescaleOp;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -41,8 +40,9 @@ public class ProcessingService {
     @Value("${huggingface.api.key:}")
     private String hfApiKey;
 
-    private static final String HF_RMBG_URL =
-            "https://api-inference.huggingface.co/models/briaai/RMBG-1.4";
+    private static final String HF_SPACE_BASE = "https://not-lain-background-removal.hf.space";
+    private static final String QUEUE_JOIN_URL = HF_SPACE_BASE + "/queue/join";
+    private static final String QUEUE_DATA_URL = HF_SPACE_BASE + "/queue/data";
 
     // ── Entry point ───────────────────────────────────────────────────
     public void processImage(Long imageId) {
@@ -54,7 +54,6 @@ public class ProcessingService {
 
         try {
             Path originalPath = Paths.get(uploadPath).resolve(
-                    // Always read the originally uploaded file, not a previously processed one
                     image.getOriginalUrl().replace("/uploads/", ""));
             BufferedImage original = ImageIO.read(originalPath.toFile());
 
@@ -62,24 +61,19 @@ public class ProcessingService {
 
             BufferedImage withWhiteBg;
 
-            // ── Attempt HF background removal ─────────────────────────
-            if (hfApiKey != null && !hfApiKey.isBlank()) {
-                try {
-                    log.info("Calling Hugging Face RMBG-1.4 for image {}", imageId);
-                    byte[] originalBytes = Files.readAllBytes(originalPath);
-                    byte[] noBgBytes    = callHuggingFaceRmbg(originalBytes,
-                            image.getFileType() != null ? image.getFileType() : "image/jpeg");
+            // ── Attempt AI background removal via HF Space ────────────
+            try {
+                log.info("Calling HF Space (not-lain/background-removal) for image {}", imageId);
+                byte[] originalBytes = Files.readAllBytes(originalPath);
+                byte[] noBgBytes = callHfSpaceQueue(originalBytes,
+                        image.getFileType() != null ? image.getFileType() : "image/jpeg");
 
-                    BufferedImage transparent = ImageIO.read(new ByteArrayInputStream(noBgBytes));
-                    withWhiteBg = addWhiteBackground(transparent);
-                    log.info("HF background removal succeeded for image {}", imageId);
+                BufferedImage transparent = ImageIO.read(new ByteArrayInputStream(noBgBytes));
+                withWhiteBg = addWhiteBackground(transparent);
+                log.info("HF Space background removal succeeded for image {}", imageId);
 
-                } catch (Exception e) {
-                    log.warn("HF bg removal failed ({}), using enhancement only", e.getMessage());
-                    withWhiteBg = addWhiteBackground(original);
-                }
-            } else {
-                log.info("No HF API key — skipping bg removal, applying enhancement only");
+            } catch (Exception e) {
+                log.warn("HF Space bg removal failed ({}), using enhancement only", e.getMessage());
                 withWhiteBg = addWhiteBackground(original);
             }
 
@@ -87,7 +81,7 @@ public class ProcessingService {
             BufferedImage enhanced = enhance(withWhiteBg);
 
             // ── Save as PNG ────────────────────────────────────────────
-            String baseName         = image.getOriginalUrl()
+            String baseName          = image.getOriginalUrl()
                     .replace("/uploads/", "")
                     .replaceAll("(?i)\\.(jpg|jpeg|png)$", "");
             String processedFileName = "processed_" + baseName + ".png";
@@ -95,7 +89,7 @@ public class ProcessingService {
             ImageIO.write(enhanced, "PNG", processedPath.toFile());
 
             image.setProcessedUrl("/uploads/" + processedFileName);
-            image.setFileName(processedFileName);   // Gemini will analyse the cleaned image
+            image.setFileName(processedFileName);
             image.setStatus(ImageStatus.PROCESSED);
             log.info("Image {} processing complete → {}", imageId, processedFileName);
 
@@ -108,59 +102,104 @@ public class ProcessingService {
         imageRepository.save(image);
     }
 
-    // ── Hugging Face RMBG-1.4 API call ───────────────────────────────
-    // Sends image as JSON { "inputs": "<base64>" } which is the format RMBG-1.4 expects.
-    // Falls back to raw-bytes format if JSON returns a non-200.
-    private byte[] callHuggingFaceRmbg(byte[] imageBytes, String mimeType) throws Exception {
-        String base64 = Base64.getEncoder().encodeToString(imageBytes);
-        String jsonBody = objectMapper.writeValueAsString(Map.of("inputs", base64));
+    // ── Gradio Queue API ──────────────────────────────────────────────
+    // ZeroGPU spaces reject direct /run/predict — must go through the queue:
+    //   1. POST /queue/join  → {event_id}
+    //   2. GET  /queue/data?session_hash=<hash>  (SSE stream)
+    //      listen until msg == "process_completed"
+    //   3. Extract output image from the completed event
+    private byte[] callHfSpaceQueue(byte[] imageBytes, String mimeType) throws Exception {
+        String sessionHash = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+        String dataUrl = "data:" + mimeType + ";base64,"
+                + Base64.getEncoder().encodeToString(imageBytes);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + hfApiKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-wait-for-model", "true");
+        // Step 1 — join queue
+        Map<String, Object> joinBody = new HashMap<>();
+        joinBody.put("data", List.of(dataUrl));
+        joinBody.put("fn_index", 0);
+        joinBody.put("session_hash", sessionHash);
 
-        HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
+        HttpHeaders joinHeaders = new HttpHeaders();
+        joinHeaders.setContentType(MediaType.APPLICATION_JSON);
+        if (hfApiKey != null && !hfApiKey.isBlank()) {
+            joinHeaders.set("Authorization", "Bearer " + hfApiKey);
+        }
 
-        try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(
-                    HF_RMBG_URL, HttpMethod.POST, request, byte[].class);
+        HttpEntity<String> joinReq = new HttpEntity<>(
+                objectMapper.writeValueAsString(joinBody), joinHeaders);
+        restTemplate.exchange(QUEUE_JOIN_URL, HttpMethod.POST, joinReq, String.class);
+        log.debug("Joined HF Space queue, session={}", sessionHash);
 
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody();
+        // Step 2 — stream SSE until process_completed
+        String sseUrl = QUEUE_DATA_URL + "?session_hash=" + sessionHash;
+        String completedJson = restTemplate.execute(sseUrl, HttpMethod.GET,
+                req -> {
+                    req.getHeaders().set("Accept", "text/event-stream");
+                    req.getHeaders().set("Cache-Control", "no-cache");
+                    if (hfApiKey != null && !hfApiKey.isBlank()) {
+                        req.getHeaders().set("Authorization", "Bearer " + hfApiKey);
+                    }
+                },
+                response -> {
+                    try (BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(response.getBody()))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            if (!line.startsWith("data: ")) continue;
+                            String json = line.substring(6).trim();
+                            if (json.isEmpty()) continue;
+                            JsonNode event = objectMapper.readTree(json);
+                            String msg = event.path("msg").asText();
+                            log.debug("SSE event: {}", msg);
+                            if ("process_completed".equals(msg)) return json;
+                        }
+                    }
+                    return null;
+                });
+
+        if (completedJson == null) {
+            throw new RuntimeException("SSE stream ended without process_completed");
+        }
+
+        // Step 3 — extract result image
+        JsonNode outputData = objectMapper.readTree(completedJson)
+                .path("output").path("data");
+
+        if (!outputData.isArray() || outputData.isEmpty()) {
+            throw new RuntimeException("process_completed had no output: " + completedJson);
+        }
+
+        JsonNode output = outputData.get(0);
+
+        // Gradio 3 — base64 data URL
+        if (output.isTextual()) {
+            String text = output.asText();
+            if (text.startsWith("data:")) {
+                return Base64.getDecoder().decode(text.split(",", 2)[1]);
             }
-            throw new RuntimeException("HF API returned: " + response.getStatusCode());
-
-        } catch (HttpClientErrorException e) {
-            log.warn("HF JSON request failed ({} {}), trying raw-bytes fallback",
-                    e.getStatusCode().value(), e.getResponseBodyAsString());
-            return callHuggingFaceRmbgRawBytes(imageBytes, mimeType);
         }
-    }
 
-    // Raw-bytes fallback (Content-Type: image/jpeg|png)
-    private byte[] callHuggingFaceRmbgRawBytes(byte[] imageBytes, String mimeType) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + hfApiKey);
-        headers.setContentType(MediaType.parseMediaType(mimeType));
-        headers.set("x-wait-for-model", "true");
-
-        HttpEntity<byte[]> request = new HttpEntity<>(imageBytes, headers);
-        ResponseEntity<byte[]> response = restTemplate.exchange(
-                HF_RMBG_URL, HttpMethod.POST, request, byte[].class);
-
-        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new RuntimeException("HF API (raw) returned: " + response.getStatusCode());
+        // Gradio 4 — {"url":"..."} or {"path":"..."}
+        if (output.isObject()) {
+            String fileUrl = output.path("url").asText(null);
+            if (fileUrl == null || fileUrl.isBlank()) {
+                fileUrl = HF_SPACE_BASE + "/file=" + output.path("path").asText();
+            }
+            log.info("Downloading result from: {}", fileUrl);
+            ResponseEntity<byte[]> fileResp = restTemplate.getForEntity(fileUrl, byte[].class);
+            if (fileResp.getBody() == null) throw new RuntimeException("Empty file download");
+            return fileResp.getBody();
         }
-        return response.getBody();
+
+        throw new RuntimeException("Unrecognised output format: " + output);
     }
 
     // ── White canvas with padding ─────────────────────────────────────
     private BufferedImage addWhiteBackground(BufferedImage input) {
-        int w   = input.getWidth();
-        int h   = input.getHeight();
-        int padX = (int)(w * 0.04);
-        int padY = (int)(h * 0.04);
+        int w    = input.getWidth();
+        int h    = input.getHeight();
+        int padX = (int) (w * 0.04);
+        int padY = (int) (h * 0.04);
 
         BufferedImage canvas = new BufferedImage(w + padX * 2, h + padY * 2, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = canvas.createGraphics();

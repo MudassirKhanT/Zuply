@@ -32,12 +32,13 @@ public class GeminiService {
             "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent";
 
     // Models tried in order — first success wins.
-    // *-latest aliases were removed from the v1beta API; use versioned names instead.
+    // Only gemini-2.0-* are available on v1beta for this project type.
+    // gemini-1.5-* return 404 on v1beta without explicit project enablement.
     private static final List<String> MODEL_ROTATION = Arrays.asList(
             "gemini-2.0-flash-lite",
             "gemini-2.0-flash",
-            "gemini-1.5-flash",
-            "gemini-1.5-flash-8b"
+            "gemini-2.0-flash-exp",
+            "gemini-2.0-pro-exp-02-05"
     );
 
     private static final String GEMINI_PROMPT =
@@ -79,9 +80,9 @@ public class GeminiService {
             } catch (HttpClientErrorException e) {
                 int status = e.getStatusCode().value();
                 if (status == 429) {
-                    log.warn("Model {} hit rate limit (429), waiting 3 s before next model…", model);
+                    log.warn("Model {} hit rate limit (429): {}", model, e.getResponseBodyAsString());
                     lastError = e;
-                    try { Thread.sleep(3000); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+                    try { Thread.sleep(5000); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
                 } else if (status == 404) {
                     log.warn("Model {} not found (404), trying next model", model);
                     lastError = e;

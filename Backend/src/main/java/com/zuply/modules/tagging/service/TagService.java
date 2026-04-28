@@ -4,6 +4,7 @@ import com.zuply.modules.tagging.model.Tag;
 import com.zuply.modules.tagging.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
+    @Transactional
     public List<String> saveTags(Long productId, List<String> rawTags) {
 
         // Step 1 — Deduplicate and normalize tags

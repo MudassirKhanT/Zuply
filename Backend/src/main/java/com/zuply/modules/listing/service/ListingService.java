@@ -2,7 +2,7 @@ package com.zuply.modules.listing.service;
 
 import com.zuply.modules.ai.dto.AIGeneratedContent;
 import com.zuply.modules.ai.service.FallbackAnalysisService;
-import com.zuply.modules.ai.service.GeminiService;
+import com.zuply.modules.ai.service.GroqService;
 import com.zuply.modules.listing.dto.ListingEditRequest;
 import com.zuply.modules.listing.dto.ListingResponse;
 import com.zuply.modules.listing.dto.PublishResponse;
@@ -35,7 +35,7 @@ public class ListingService {
     private final ProductRepository productRepository;
     private final TagRepository tagRepository;
     private final ProcessingService processingService;
-    private final GeminiService geminiService;
+    private final GroqService groqService;
     private final FallbackAnalysisService fallbackAnalysisService;
     private final TagService tagService;
     private final CategoryService categoryService;
@@ -66,9 +66,9 @@ public class ListingService {
         AIGeneratedContent ai;
         boolean aiSucceeded = true;
         try {
-            ai = geminiService.generateContent(diskPath);
+            ai = groqService.generateContent(diskPath);
         } catch (Exception e) {
-            log.warn("All Gemini models failed — running local fallback analysis. Reason: {}", e.getMessage());
+            log.warn("All Groq models failed — running local fallback analysis. Reason: {}", e.getMessage());
             ai = fallbackAnalysisService.analyze(diskPath);
             aiSucceeded = false;
         }
