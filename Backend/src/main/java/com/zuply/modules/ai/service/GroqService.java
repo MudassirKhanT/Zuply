@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,11 +31,12 @@ public class GroqService {
     @Value("${groq.api.url}")
     private String groqApiUrl;
 
-    // Vision-capable models tried in order — first success wins
+    // Vision-capable models tried in order — first success wins.
+    // llama-3.2-11b is fastest; 90b is most accurate; scout is large multimodal.
     private static final List<String> MODELS = Arrays.asList(
-            "meta-llama/llama-4-scout-17b-16e-instruct",
             "llama-3.2-11b-vision-preview",
-            "llama-3.2-90b-vision-preview"
+            "llama-3.2-90b-vision-preview",
+            "meta-llama/llama-4-scout-17b-16e-instruct"
     );
 
     private static final String PROMPT =
@@ -56,10 +58,19 @@ public class GroqService {
             "Return ONLY the JSON object. No explanation, no markdown, no extra text.";
 
     public AIGeneratedContent generateContent(String imagePath) throws IOException {
-        byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+        // Resize to 800 px wide before encoding — keeps payload well under Groq's limit
+        // and avoids 413 / connection-abort errors on large processed PNGs.
+        File original   = Paths.get(imagePath).toFile();
+        File toSend     = ImageUtils.resizeForAI(original);   // no-op if already ≤ 800 px
+
+        byte[] imageBytes  = Files.readAllBytes(toSend.toPath());
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        String mimeType = imagePath.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+        // resizeForAI always writes a .jpg; only keep PNG for originals that weren't resized
+        String mimeType = toSend.getName().endsWith(".jpg") ? "image/jpeg"
+                        : (imagePath.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg");
         String dataUrl = "data:" + mimeType + ";base64," + base64Image;
+        log.info("Groq payload: original={} KB → resized={} KB",
+                original.length() / 1024, toSend.length() / 1024);
 
         Exception lastError = null;
         for (String model : MODELS) {
