@@ -1,5 +1,102 @@
 @import 'styles';
 
+// ── Search Hero ───────────────────────────────────────────────────
+.search-hero {
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-darker 100%);
+  border-radius: $radius-xl;
+  padding: $space-2xl $space-xl;
+  margin-bottom: $space-xl;
+  text-align: center;
+  color: #fff;
+}
+
+.search-title   { font-size: $text-2xl; font-weight: 800; margin-bottom: $space-xs; }
+.search-subtitle { font-size: $text-sm; opacity: .85; margin-bottom: $space-lg; }
+
+.search-bar {
+  display: flex; align-items: center;
+  background: #fff; border-radius: $radius-pill;
+  padding: 6px 6px 6px 0;
+  box-shadow: $shadow-lg;
+  max-width: 700px; margin: 0 auto;
+  gap: 0;
+}
+
+.search-field {
+  display: flex; align-items: center; gap: $space-sm;
+  flex: 1; padding: 0 $space-md;
+}
+
+.search-icon { font-size: 16px; }
+
+.search-input {
+  border: none; outline: none;
+  font-size: $text-sm; color: $zuply-text;
+  width: 100%; background: transparent;
+  font-family: $font-family;
+  &::placeholder { color: $zuply-text-secondary; }
+}
+
+.search-divider {
+  width: 1px; height: 28px;
+  background: $zuply-border;
+  flex-shrink: 0;
+}
+
+.search-btn { padding: 10px 24px; flex-shrink: 0; }
+
+.clear-link {
+  display: inline-block; margin-top: $space-md;
+  font-size: $text-xs; color: rgba(255,255,255,.75);
+  cursor: pointer; border: none; background: none;
+  &:hover { color: #fff; }
+}
+
+// ── Nearby Sellers ────────────────────────────────────────────────
+.sellers-section {
+  margin-top: $space-2xl;
+  padding-top: $space-xl;
+  border-top: 1px solid $zuply-border-light;
+}
+
+.sellers-header { margin-bottom: $space-lg; }
+.sellers-title  { font-size: $text-xl; font-weight: 700; color: $zuply-text; }
+.sellers-sub    { font-size: $text-sm; color: $zuply-text-secondary; margin-top: 4px; }
+
+.sellers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-md;
+
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.seller-card {
+  display: flex; align-items: center; gap: $space-md;
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  padding: $space-md;
+  box-shadow: $shadow-sm;
+  transition: $transition-fast;
+
+  &:hover { box-shadow: $shadow-md; border-color: $zuply-primary; }
+}
+
+.seller-avatar {
+  width: 44px; height: 44px;
+  border-radius: $radius-md;
+  background: $zuply-primary-light;
+  color: $zuply-primary;
+  font-size: $text-lg; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.seller-store { font-size: $text-sm; font-weight: 600; color: $zuply-text; }
+.seller-loc   { font-size: $text-xs; color: $zuply-text-secondary; margin-top: 2px; }
+
 .list-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: $space-lg; flex-wrap: wrap; gap: $space-md;

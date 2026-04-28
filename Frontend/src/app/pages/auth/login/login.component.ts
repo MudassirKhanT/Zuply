@@ -34,7 +34,7 @@ export class LoginComponent {
         this.loading = false;
         if (res.success) {
           if (res.data.role === 'CUSTOMER') this.cartService.getCart().subscribe();
-          this.router.navigate([this.returnUrl || (res.data.role === 'SELLER' ? '/seller/dashboard' : res.data.role === 'ADMIN' ? '/admin/dashboard' : '/')]);
+          this.router.navigate([this.returnUrl || '/']);
         } else {
           this.errorMsg = res.message || 'Login failed.';
         }

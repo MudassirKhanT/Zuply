@@ -1,8 +1,7 @@
 package com.zuply.modules.order.dto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 public class CheckoutRequest {
@@ -11,14 +10,17 @@ public class CheckoutRequest {
 
     @Valid
     @NotNull(message = "Delivery address is required")
-    private DeliveryAddressDto deliveryAddress;  // ✅ nested DTO, not a String
+    private DeliveryAddressDto deliveryAddress;
 
     @NotBlank(message = "Payment method must not be blank")
+    @Pattern(regexp = "^(ONLINE|COD|UPI|CARD|WALLET)$",
+             message = "Payment method must be one of: ONLINE, COD, UPI, CARD, WALLET")
     private String paymentMethod;
 
-    private List<CheckoutItemDto> items;
+    // items is optional — null means "use the customer's cart"
+    @Size(max = 50, message = "Order cannot contain more than 50 items")
+    private List<@Valid CheckoutItemDto> items;
 
-    // Getters & Setters
     public Long getCustomerId()                          { return customerId; }
     public void setCustomerId(Long customerId)           { this.customerId = customerId; }
 
@@ -31,10 +33,18 @@ public class CheckoutRequest {
     public List<CheckoutItemDto> getItems()              { return items; }
     public void setItems(List<CheckoutItemDto> items)    { this.items = items; }
 
-    // Inner DTO for cart-based checkout items
     public static class CheckoutItemDto {
+
+        @NotNull(message = "Product ID must not be null")
         private Long productId;
+
+        @NotNull(message = "Quantity must not be null")
+        @Min(value = 1, message = "Quantity must be at least 1")
+        @Max(value = 100, message = "Quantity cannot exceed 100")
         private Integer quantity;
+
+        @NotNull(message = "Price must not be null")
+        @DecimalMin(value = "0.01", message = "Price must be greater than 0")
         private Double price;
 
         public Long getProductId()           { return productId; }

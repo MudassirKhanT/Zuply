@@ -19,25 +19,42 @@ export class UploadComponent {
 
   constructor(private listingService: ListingService, private router: Router) {}
 
+  private readonly ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+  private readonly MAX_SIZE_MB   = 10;
+
+  private validateFile(file: File): string | null {
+    if (!this.ALLOWED_TYPES.includes(file.type)) {
+      return 'Only JPG and PNG images are accepted. Please select a valid file.';
+    }
+    if (file.size > this.MAX_SIZE_MB * 1024 * 1024) {
+      return `File size exceeds ${this.MAX_SIZE_MB} MB. Please choose a smaller image.`;
+    }
+    return null;
+  }
+
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
-    this.selectedFile = input.files[0];
+    const file = input.files[0];
+    const err  = this.validateFile(file);
+    if (err) { this.errorMsg = err; this.selectedFile = null; this.previewUrl = null; return; }
+    this.selectedFile = file;
+    this.errorMsg = '';
     const reader = new FileReader();
     reader.onload = () => this.previewUrl = reader.result as string;
     reader.readAsDataURL(this.selectedFile);
-    this.errorMsg = '';
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      const fakeEvent = { target: { files: dt.files } } as unknown as Event;
-      this.onFileSelect(fakeEvent);
-    }
+    if (!file) return;
+    const err = this.validateFile(file);
+    if (err) { this.errorMsg = err; return; }
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    const fakeEvent = { target: { files: dt.files } } as unknown as Event;
+    this.onFileSelect(fakeEvent);
   }
 
   onDragOver(event: DragEvent): void { event.preventDefault(); }

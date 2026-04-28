@@ -22,6 +22,7 @@ export interface RegisterRequest {
   password: string;
   phone: string;
   role: 'CUSTOMER' | 'SELLER' | 'ADMIN';
+  storeName?: string;
 }
 
 export interface LoginResponse {
@@ -204,4 +205,6 @@ export interface ListingEditRequest {
   description?: string;
   price?: number;
   category?: string;
+  tags?: string[];
+  highlights?: string[];
 }

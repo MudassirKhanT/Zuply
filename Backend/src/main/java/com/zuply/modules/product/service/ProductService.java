@@ -65,8 +65,9 @@ public class ProductService {
 
         if (sortBy != null) {
             switch (sortBy) {
-                case "price_asc"  -> products.sort(Comparator.comparingDouble(Product::getPrice));
-                case "price_desc" -> products.sort(Comparator.comparingDouble(Product::getPrice).reversed());
+                case "price_asc"   -> products.sort(Comparator.comparingDouble(Product::getPrice));
+                case "price_desc"  -> products.sort(Comparator.comparingDouble(Product::getPrice).reversed());
+                case "popularity"  -> products.sort(Comparator.comparingLong(Product::getId).reversed());
             }
         }
 

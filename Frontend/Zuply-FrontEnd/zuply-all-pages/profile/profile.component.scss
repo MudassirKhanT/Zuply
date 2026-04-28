@@ -6,3 +6,18 @@
 .profile-name  { font-size:$text-xl; font-weight:700; color:$zuply-text; margin-bottom:$space-sm; }
 .profile-email { font-size:$text-base; color:$zuply-text-secondary; margin-top:$space-sm; margin-bottom:$space-xl; }
 .profile-actions { display:flex; flex-direction:column; gap:$space-sm; }
+
+.profile-details {
+  width: 100%; margin: $space-lg 0; text-align: left;
+  display: flex; flex-direction: column; gap: $space-sm;
+}
+.detail-row   { display:flex; align-items:flex-start; gap:$space-sm; padding:$space-sm; background:$zuply-surface-2; border-radius:$radius-md; }
+.detail-label { font-size:$text-xs; font-weight:600; color:$zuply-text-secondary; min-width:80px; flex-shrink:0; }
+.detail-value { font-size:$text-sm; color:$zuply-text; }
+
+.edit-title { font-size:$text-xl; font-weight:700; color:$zuply-text; margin-bottom:$space-lg; }
+
+.form-actions { display:flex; gap:$space-sm; flex-wrap:wrap; justify-content:center; margin-top:$space-lg; }
+
+.profile-card .input-group { text-align:left; }
+.profile-card .input, .profile-card textarea.input { text-align:left; }

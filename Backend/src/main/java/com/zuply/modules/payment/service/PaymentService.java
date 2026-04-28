@@ -38,7 +38,7 @@ public class PaymentService {
         JSONObject options = new JSONObject();
         options.put("amount", (int)(request.getAmount() * 100)); // paise
         options.put("currency", "INR");
-        options.put("receipt", "order_" + request.getOrderId());
+        options.put("receipt", "rcpt_" + System.currentTimeMillis());
 
         com.razorpay.Order razorpayOrder = client.orders.create(options);
 

@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python)",
+      "Read(//c/Users/2479315/resource/Curriculum/**)",
+      "Read(//c/Users/2479315/resource/Curriculum//**)",
+      "Bash(python -m pip list)",
+      "Bash(python -c ' *)",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(py --version 2>&1)",
+      "PowerShell(python3 --version 2>&1)",
+      "Bash(./mvnw.cmd compile *)",
+      "PowerShell(taskkill /PID 25420 /F)",
+      "Bash(curl -s http://localhost:9090/api/products)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4200)",
+      "Bash(curl -s -X POST http://localhost:9090/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"admin@zuply.com\",\"password\":\"Admin@123\",\"role\":\"ADMIN\"}')",
+      "Bash(./mvnw.cmd clean *)",
+      "Bash(curl -s -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbmJvYkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzcyODgzMzMsImV4cCI6MTc3Nzg5MzEzM30.9iOINqxTlQUhT12GDxVMcy5ynG1OlWjashFZTLX5OiNMTlBD2I2s6iXvnkLdD5XP' http://localhost:9090/api/admin/products)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(p['id'], p.get\\('title'\\), p.get\\('status'\\)\\) for p in \\(d.get\\('data'\\) or []\\)]\")",
+      "PowerShell($p = \\(netstat -ano | Select-String \":9090 \" | Select-Object -First 1 -ExpandProperty Line\\).Trim\\(\\) -split '\\\\s+' | Select-Object -Last 1; taskkill /PID $p /F)",
+      "Bash(curl -s -X POST http://localhost:9090/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"ruby@gmail.com\",\"password\":\"Ruby@1234\",\"role\":\"CUSTOMER\"}')",
+      "Bash(curl -s -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJydWJ5QGdtYWlsLmNvbSIsInJvbGUiOiJDVVNUT01FUiIsImlhdCI6MTc3NzI4OTg1NywiZXhwIjoxNzc3ODk0NjU3fQ.dJ1a7SdcW3AMGOrttGmW4Vy_FWrJHDaIHqC7F7IBbYjoy8vPo3CExqahCUdus4PB' http://localhost:9090/api/cart)",
+      "Bash(curl -s -X DELETE -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJydWJ5QGdtYWlsLmNvbSIsInJvbGUiOiJDVVNUT01FUiIsImlhdCI6MTc3NzI4OTg1NywiZXhwIjoxNzc3ODk0NjU3fQ.dJ1a7SdcW3AMGOrttGmW4Vy_FWrJHDaIHqC7F7IBbYjoy8vPo3CExqahCUdus4PB' http://localhost:9090/api/cart/1)",
+      "Bash(curl -s -X POST http://localhost:9090/api/cart -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJydWJ5QGdtYWlsLmNvbSIsInJvbGUiOiJDVVNUT01FUiIsImlhdCI6MTc3NzI4OTg1NywiZXhwIjoxNzc3ODk0NjU3fQ.dJ1a7SdcW3AMGOrttGmW4Vy_FWrJHDaIHqC7F7IBbYjoy8vPo3CExqahCUdus4PB' -d '{\"productId\":1,\"quantity\":1}')",
+      "Bash(curl -s -X POST http://localhost:9090/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"ruby@gmail.com\",\"password\":\"Ruby@123\",\"role\":\"CUSTOMER\"}')",
+      "Bash(git add *)",
+      "Bash(mvn *)",
+      "Bash(./mvnw *)",
+      "Bash(./mvnw.cmd *)"
+    ]
+  }
+}

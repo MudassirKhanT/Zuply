@@ -5,12 +5,13 @@
 
   <div class="orders-table" *ngIf="!loading && orders.length > 0">
     <div class="table-row header">
-      <span>Order ID</span><span>Customer</span><span>Product</span><span>Status</span><span>Actions</span>
+      <span>Order ID</span><span>Customer</span><span>Product</span><span>Qty</span><span>Status</span><span>Actions</span>
     </div>
     <div class="table-row" *ngFor="let order of orders">
       <span class="order-id">#{{ order.orderId }}</span>
       <span>{{ order.customerName || 'Customer' }}</span>
       <span>{{ order.productName }}</span>
+      <span>{{ order.quantity }}</span>
       <span [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus | titlecase }}</span>
       <div class="action-btns">
         <button class="btn-primary btn-sm btn-pill"

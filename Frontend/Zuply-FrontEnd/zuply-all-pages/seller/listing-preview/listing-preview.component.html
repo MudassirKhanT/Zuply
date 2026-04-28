@@ -11,11 +11,11 @@
 
     <div *ngIf="!loading && listing">
 
-      <!-- Success / Error banners -->
+      <!-- Banners -->
       <div class="success-banner" *ngIf="successMsg">✅ {{ successMsg }}</div>
       <div class="error-banner"   *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
 
-      <!-- Image comparison -->
+      <!-- Image comparison: Before / After -->
       <div class="image-section">
         <div class="image-card">
           <div class="image-label">Before</div>
@@ -34,11 +34,11 @@
         </div>
       </div>
 
-      <!-- Listing fields — view mode -->
+      <!-- View mode -->
       <div class="form-card" *ngIf="!editMode">
         <div class="form-card-title">
           ✦ AI Generated Listing
-          <button class="edit-btn" (click)="editMode = true">Edit</button>
+          <button class="edit-btn" (click)="openEdit()">Edit</button>
         </div>
 
         <div class="field-row">
@@ -64,16 +64,12 @@
           <div class="field-label">Suggested Range</div>
           <div class="field-value">₹ {{ listing.suggestedPriceMin }} — ₹ {{ listing.suggestedPriceMax }}</div>
         </div>
-
-        <!-- Tags -->
         <div class="field-row" *ngIf="listing.tags?.length">
           <div class="field-label">Tags</div>
           <div class="tags-wrap">
             <span class="tag-pill" *ngFor="let tag of listing.tags">{{ tag }}</span>
           </div>
         </div>
-
-        <!-- Highlights -->
         <div class="field-row" *ngIf="listing.highlights?.length">
           <div class="field-label">Highlights</div>
           <ul class="highlights-list">
@@ -88,19 +84,31 @@
 
         <div class="input-group">
           <label>Title</label>
-          <input class="input" type="text" [(ngModel)]="editTitle"/>
+          <input class="input" type="text" [(ngModel)]="editTitle" placeholder="Product title"/>
         </div>
         <div class="input-group">
           <label>Description</label>
-          <textarea class="input" rows="4" [(ngModel)]="editDescription"></textarea>
+          <textarea class="input" rows="4" [(ngModel)]="editDescription" placeholder="Product description"></textarea>
         </div>
         <div class="input-group">
           <label>Category</label>
-          <input class="input" type="text" [(ngModel)]="editCategory"/>
+          <input class="input" type="text" [(ngModel)]="editCategory" placeholder="e.g. Electronics"/>
+          <small class="field-hint">You can override the AI-suggested category</small>
         </div>
         <div class="input-group">
-          <label>Price (₹)</label>
-          <input class="input" type="number" [(ngModel)]="editPrice"/>
+          <label>Price (₹) *</label>
+          <input class="input" type="number" [(ngModel)]="editPrice" placeholder="Set a price before publishing"/>
+          <small class="field-hint">Required before publishing · suggested range: ₹{{ listing.suggestedPriceMin }}–₹{{ listing.suggestedPriceMax }}</small>
+        </div>
+        <div class="input-group">
+          <label>Tags</label>
+          <input class="input" type="text" [(ngModel)]="editTagsRaw" placeholder="e.g. wireless, bluetooth, earphones"/>
+          <small class="field-hint">Comma-separated keywords · 5 to 10 tags · duplicates removed automatically</small>
+        </div>
+        <div class="input-group">
+          <label>Highlights</label>
+          <textarea class="input" rows="5" [(ngModel)]="editHighlightsRaw" placeholder="Enter one highlight per line&#10;e.g. Noise cancelling technology&#10;Up to 20 hours battery life"></textarea>
+          <small class="field-hint">One selling point per line · 3 to 5 highlights recommended</small>
         </div>
 
         <div class="edit-actions">
@@ -109,20 +117,26 @@
         </div>
       </div>
 
-      <!-- Publish buttons -->
-      <div class="publish-row" *ngIf="listing.status !== 'PUBLISHED'">
+      <!-- Publish / status -->
+      <div class="publish-row" *ngIf="listing.status === 'DRAFT' || listing.status === 'REJECTED'">
         <button class="btn-secondary btn-pill" routerLink="/seller/upload">Upload Another</button>
-        <button
-          class="btn-accent btn-pill publish-btn"
-          (click)="publish()"
-          [disabled]="publishing">
-          {{ publishing ? 'Publishing...' : '🚀 Publish Listing' }}
+        <button class="btn-accent btn-pill publish-btn" (click)="publish()" [disabled]="publishing">
+          {{ publishing ? 'Submitting...' : '🚀 Publish Listing' }}
         </button>
       </div>
 
-      <div class="published-banner" *ngIf="listing.status === 'PUBLISHED'">
-        ✅ This product is already published and live on Zuply.
+      <div class="published-banner" *ngIf="listing.status === 'PENDING'">
+        ⏳ Submitted for admin review. Your product will appear on the marketplace once approved.
         <a routerLink="/seller/products" class="auth-link">View my products →</a>
+      </div>
+
+      <div class="published-banner" *ngIf="listing.status === 'APPROVED'">
+        ✅ This product is approved and live on Zuply.
+        <a routerLink="/products" class="auth-link">Browse marketplace →</a>
+      </div>
+
+      <div class="published-banner" style="background:#fef2f2;color:#dc2626" *ngIf="listing.status === 'REJECTED'">
+        ❌ This listing was rejected by the admin. Please edit and resubmit.
       </div>
 
     </div>

@@ -1,17 +1,85 @@
 <!-- src/app/pages/profile/profile.component.html -->
 <div class="page-container">
   <div class="profile-wrap">
-    <div class="profile-card" *ngIf="user">
+
+    <!-- Profile Card (view mode) -->
+    <div class="profile-card" *ngIf="user && !editing">
       <div class="profile-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
       <div class="profile-name">{{ user.name }}</div>
       <div class="badge-primary">{{ user.role | titlecase }}</div>
       <div class="profile-email">{{ user.email }}</div>
+
+      <!-- Profile details -->
+      <div class="profile-details">
+        <div class="detail-row" *ngIf="user.phone">
+          <span class="detail-label">📱 Phone</span>
+          <span class="detail-value">{{ user.phone }}</span>
+        </div>
+        <div class="detail-row" *ngIf="user.address">
+          <span class="detail-label">🏠 Address</span>
+          <span class="detail-value">{{ user.address }}</span>
+        </div>
+        <div class="detail-row" *ngIf="user.pincode">
+          <span class="detail-label">📍 Pincode</span>
+          <span class="detail-value">{{ user.pincode }}</span>
+        </div>
+      </div>
+
+      <div class="success-banner" *ngIf="successMsg">✅ {{ successMsg }}</div>
+
       <div class="profile-actions">
+        <button class="btn-primary btn-pill" (click)="startEdit()">Edit Profile</button>
         <a routerLink="/orders" class="btn-secondary btn-pill" *ngIf="user.role === 'CUSTOMER'">My Orders</a>
         <a routerLink="/seller/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'SELLER'">Dashboard</a>
         <a routerLink="/admin/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'ADMIN'">Admin Panel</a>
         <button class="btn-danger btn-pill" (click)="logout()">Logout</button>
       </div>
     </div>
+
+    <!-- Edit form -->
+    <div class="profile-card" *ngIf="user && editing">
+      <div class="profile-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
+      <h2 class="edit-title">Edit Profile</h2>
+
+      <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+      <div class="input-group">
+        <label>Full Name</label>
+        <input class="input" type="text" [(ngModel)]="form.name" placeholder="Your full name" />
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input class="input" type="email" [(ngModel)]="form.email" placeholder="your@email.com" />
+        <small class="field-hint">Changing email may require re-login</small>
+      </div>
+
+      <div class="input-group">
+        <label>Phone Number</label>
+        <input class="input" type="tel" [(ngModel)]="form.phone" placeholder="10-digit mobile number" maxlength="10" />
+        <small class="field-hint">10-digit Indian mobile number starting with 6–9</small>
+      </div>
+
+      <div class="input-group">
+        <label>Address</label>
+        <textarea class="input" rows="3" [(ngModel)]="form.address" placeholder="House no., street, area"></textarea>
+        <small class="field-hint">Your delivery address · 10–250 characters</small>
+      </div>
+
+      <div class="input-group">
+        <label>Pincode</label>
+        <input class="input" type="text" [(ngModel)]="form.pincode" placeholder="e.g. 600001" maxlength="6" />
+        <small class="field-hint">6-digit Indian postal code</small>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary btn-pill" (click)="saveProfile()" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Submit' }}
+        </button>
+        <button class="btn-secondary btn-pill" (click)="resetForm()">Reset</button>
+        <button class="btn-danger btn-pill" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+
   </div>
 </div>

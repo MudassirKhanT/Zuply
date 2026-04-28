@@ -2,7 +2,6 @@
 <div class="auth-page">
   <div class="auth-card">
 
-    <!-- Logo -->
     <div class="auth-logo">
       <svg width="48" height="48" viewBox="0 0 46 46" fill="none">
         <rect x="3" y="13" width="40" height="30" rx="6" fill="#0D5C63"/>
@@ -15,51 +14,67 @@
     <h1 class="auth-title">Welcome back</h1>
     <p class="auth-subtitle">Login to shop from local stores near you</p>
 
-    <!-- Role selector -->
     <div class="role-selector">
-      <button
-        *ngFor="let r of roles"
-        class="role-btn"
-        [class.active]="role === r"
-        (click)="role = r">
+      <button *ngFor="let r of roles" class="role-btn" [class.active]="role === r" (click)="role = r">
         {{ r | titlecase }}
       </button>
     </div>
 
-    <!-- Error -->
-    <div class="error-banner" *ngIf="errorMsg">
-      ⚠️ {{ errorMsg }}
-    </div>
+    <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
 
-    <!-- Form -->
+    <!-- Email -->
     <div class="input-group">
       <label>Email Address</label>
       <input
         class="input"
+        [class.input-error]="emailRef.invalid && emailRef.touched"
+        [class.input-valid]="emailRef.valid && emailRef.touched"
         type="email"
-        placeholder="Enter your email"
+        name="email"
+        placeholder="e.g. ravi@example.com"
         [(ngModel)]="email"
-        [class.error]="errorMsg"
+        #emailRef="ngModel"
+        required
+        email
       />
+      <small class="field-hint">Enter the email address you registered with</small>
+      <small class="field-error" *ngIf="emailRef.touched && emailRef.errors?.['required']">
+        Email address is required
+      </small>
+      <small class="field-error" *ngIf="emailRef.touched && emailRef.errors?.['email']">
+        Invalid format — must look like name&#64;domain.com
+      </small>
     </div>
 
+    <!-- Password -->
     <div class="input-group">
       <label>Password</label>
       <div class="password-wrap">
         <input
           class="input"
+          [class.input-error]="passRef.invalid && passRef.touched"
+          [class.input-valid]="passRef.valid && passRef.touched"
           [type]="showPassword ? 'text' : 'password'"
+          name="password"
           placeholder="Enter your password"
           [(ngModel)]="password"
-          [class.error]="errorMsg"
+          #passRef="ngModel"
+          required
+          minlength="8"
         />
         <span class="password-toggle" (click)="showPassword = !showPassword">
           {{ showPassword ? '🙈' : '👁️' }}
         </span>
       </div>
+      <small class="field-hint">At least 8 characters · same password you used when signing up</small>
+      <small class="field-error" *ngIf="passRef.touched && passRef.errors?.['required']">
+        Password is required
+      </small>
+      <small class="field-error" *ngIf="passRef.touched && passRef.errors?.['minlength']">
+        Too short — your password must be at least 8 characters
+      </small>
     </div>
 
-    <!-- Login button -->
     <button
       class="btn-primary btn-full btn-pill login-btn"
       (click)="onLogin()"

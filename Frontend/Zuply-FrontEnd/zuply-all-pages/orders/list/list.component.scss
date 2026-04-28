@@ -11,3 +11,6 @@
 .order-id    { font-size:$text-base; font-weight:600; color:$zuply-primary; }
 .order-date  { font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:$space-md; }
 .order-bottom{ display:flex; justify-content:space-between; align-items:center; }
+.order-items-summary { font-size:$text-sm; color:$zuply-text; margin-bottom:$space-sm; }
+.order-item-name     { font-weight:500; }
+.order-more          { color:$zuply-text-secondary; font-size:$text-xs; }

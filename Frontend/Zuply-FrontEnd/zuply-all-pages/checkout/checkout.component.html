@@ -25,23 +25,113 @@
       <!-- Delivery Address -->
       <div class="form-card">
         <div class="form-card-title">📍 Delivery Address</div>
+
+        <!-- Full Address -->
         <div class="input-group">
           <label>Full Address *</label>
-          <textarea class="input" rows="3" placeholder="House no, Street, Area" [(ngModel)]="deliveryAddress"></textarea>
+          <textarea
+            class="input"
+            [class.input-error]="addrRef.invalid && addrRef.touched"
+            [class.input-valid]="addrRef.valid && addrRef.touched"
+            rows="3"
+            name="deliveryAddress"
+            placeholder="e.g. 12, Main Street, Anna Nagar"
+            [(ngModel)]="deliveryAddress"
+            #addrRef="ngModel"
+            required
+            minlength="10"
+            maxlength="250">
+          </textarea>
+          <small class="field-hint">Include house/flat number, street name and area · 10 to 250 characters</small>
+          <small class="field-error" *ngIf="addrRef.touched && addrRef.errors?.['required']">
+            Delivery address is required
+          </small>
+          <small class="field-error" *ngIf="addrRef.touched && addrRef.errors?.['minlength']">
+            Too short — please enter a more complete address (at least 10 characters)
+          </small>
         </div>
+
         <div class="form-row">
+          <!-- City -->
           <div class="input-group">
             <label>City *</label>
-            <input class="input" type="text" placeholder="City" [(ngModel)]="city"/>
+            <input
+              class="input"
+              [class.input-error]="cityRef.invalid && cityRef.touched"
+              [class.input-valid]="cityRef.valid && cityRef.touched"
+              type="text"
+              name="city"
+              placeholder="e.g. Chennai"
+              [(ngModel)]="city"
+              #cityRef="ngModel"
+              required
+              minlength="2"
+              maxlength="100"
+              pattern="^[a-zA-Z\s]+"
+            />
+            <small class="field-hint">City name · letters and spaces only</small>
+            <small class="field-error" *ngIf="cityRef.touched && cityRef.errors?.['required']">
+              City is required
+            </small>
+            <small class="field-error" *ngIf="cityRef.touched && cityRef.errors?.['pattern']">
+              City name cannot contain numbers or symbols
+            </small>
           </div>
+
+          <!-- Pincode -->
           <div class="input-group">
             <label>Pincode *</label>
-            <input class="input" type="text" placeholder="600001" maxlength="6" [(ngModel)]="pincode"/>
+            <input
+              class="input"
+              [class.input-error]="pinRef.invalid && pinRef.touched"
+              [class.input-valid]="pinRef.valid && pinRef.touched"
+              type="text"
+              name="pincode"
+              placeholder="e.g. 600001"
+              [(ngModel)]="pincode"
+              #pinRef="ngModel"
+              required
+              pattern="^[1-9][0-9]{5}$"
+              maxlength="6"
+            />
+            <small class="field-hint">6-digit Indian pincode · first digit cannot be 0</small>
+            <small class="field-error" *ngIf="pinRef.touched && pinRef.errors?.['required']">
+              Pincode is required
+            </small>
+            <small class="field-error" *ngIf="pinRef.touched && pinRef.errors?.['pattern']">
+              <span *ngIf="pincode.length > 0 && pincode.length < 6">Too short — pincode must be exactly 6 digits</span>
+              <span *ngIf="pincode.length === 6 && pincode[0] === '0'">Pincode cannot start with 0</span>
+              <span *ngIf="pincode.length === 6 && pincode[0] !== '0'">Contains invalid characters — digits only</span>
+            </small>
           </div>
         </div>
+
+        <!-- Phone -->
         <div class="input-group">
           <label>Phone Number *</label>
-          <input class="input" type="tel" placeholder="9876543210" [(ngModel)]="phone"/>
+          <input
+            class="input"
+            [class.input-error]="phoneRef.invalid && phoneRef.touched"
+            [class.input-valid]="phoneRef.valid && phoneRef.touched"
+            type="tel"
+            name="phone"
+            placeholder="e.g. 9876543210"
+            [(ngModel)]="phone"
+            #phoneRef="ngModel"
+            required
+            pattern="^[6-9][0-9]{9}$"
+            maxlength="10"
+          />
+          <small class="field-hint">10-digit mobile number · must start with 6, 7, 8 or 9</small>
+          <small class="field-error" *ngIf="phoneRef.touched && phoneRef.errors?.['required']">
+            Phone number is required
+          </small>
+          <small class="field-error" *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']">
+            <span *ngIf="phone.length > 0 && phone.length < 10">Too short — must be exactly 10 digits</span>
+            <span *ngIf="phone.length === 10 && !(''+phone).match('^[6-9]')">Must start with 6, 7, 8 or 9 — not a valid Indian mobile number</span>
+            <span *ngIf="phone.length > 10">Too long — only 10 digits allowed</span>
+            <span *ngIf="phone.length === 10 && (''+phone).match('^[6-9]')">Contains invalid characters — digits only</span>
+          </small>
         </div>
       </div>
 

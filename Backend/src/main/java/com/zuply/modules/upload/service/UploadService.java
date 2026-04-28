@@ -52,10 +52,13 @@ public class UploadService {
         Files.createDirectories(destination.getParent());
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
+        // Store as a relative URL path so the browser can fetch it via /uploads/**
+        String relativeUrl = "/uploads/" + uniqueFileName;
+
         // TODO 5 — Build and save Image entity with PENDING status
         Image image = Image.builder()
                 .userId(userId)
-                .originalUrl(destination.toString())
+                .originalUrl(relativeUrl)
                 .fileName(uniqueFileName)
                 .fileType(file.getContentType())
                 .status(ImageStatus.PENDING)

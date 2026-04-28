@@ -3,41 +3,91 @@
   <h1 class="text-2xl" style="margin-bottom:24px">Manage Products</h1>
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
+  <div *ngIf="actionMsg" class="action-toast" style="margin-bottom:16px">{{ actionMsg }}</div>
+
+  <!-- Edit Modal -->
+  <div *ngIf="editingProduct" class="modal-backdrop" (click)="cancelEdit()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <h2 class="modal-title">Edit Product #{{ editingProduct.id }}</h2>
+
+      <div class="form-field">
+        <label>Title</label>
+        <input [(ngModel)]="editForm.title" class="form-input" placeholder="Product title" />
+      </div>
+      <div class="form-field">
+        <label>Category</label>
+        <input [(ngModel)]="editForm.category" class="form-input" placeholder="Category" />
+      </div>
+      <div class="form-field">
+        <label>Price (₹)</label>
+        <input [(ngModel)]="editForm.price" type="number" class="form-input" placeholder="0.00" />
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select [(ngModel)]="editForm.status" class="form-input">
+          <option value="DRAFT">Draft</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Description</label>
+        <textarea [(ngModel)]="editForm.description" class="form-input" rows="3"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-primary btn-pill" (click)="saveEdit()">Save Changes</button>
+        <button class="btn-secondary btn-pill" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Table -->
   <div class="products-table" *ngIf="!loading && products.length > 0">
     <div class="table-row header">
       <span>ID</span>
-      <span>Product</span>
-      <span>Seller</span>
+      <span>Image</span>
+      <span>Title</span>
+      <span>Category</span>
       <span>Price</span>
+      <span>Seller ID</span>
       <span>Status</span>
       <span>Actions</span>
     </div>
     <div class="table-row" *ngFor="let p of products">
       <span class="prod-id">#{{ p.id }}</span>
-      <span class="prod-name">{{ p.name }}</span>
-      <span>{{ p.sellerName || '—' }}</span>
-      <span class="price-sm">₹ {{ p.price }}</span>
+      <span>
+        <img *ngIf="p.imageUrl" [src]="p.imageUrl" class="prod-thumb" (error)="p.imageUrl=null" />
+        <span *ngIf="!p.imageUrl" style="font-size:24px">🖼️</span>
+      </span>
+      <span class="prod-name">{{ p.title || '—' }}</span>
+      <span>{{ p.category || '—' }}</span>
+      <span class="price-sm">{{ formatPrice(p) }}</span>
+      <span>{{ p.sellerId }}</span>
       <span [class]="getStatusClass(p.status)">{{ p.status | titlecase }}</span>
       <div class="action-btns">
         <button
           class="btn-primary btn-sm btn-pill"
-          *ngIf="p.status !== 'APPROVED'"
+          *ngIf="isPending(p)"
           (click)="approve(p.id)">
-          Approve
+          ✅ Approve
         </button>
         <button
           class="btn-danger btn-sm btn-pill"
-          *ngIf="p.status !== 'REJECTED'"
+          *ngIf="isPending(p)"
           (click)="reject(p.id)">
-          Reject
+          ✗ Reject
         </button>
+        <button class="btn-secondary btn-sm btn-pill" (click)="openEdit(p)">Edit</button>
+        <button class="btn-danger btn-sm btn-pill" (click)="deleteProduct(p.id)">Delete</button>
       </div>
     </div>
   </div>
 
   <div class="empty-state" *ngIf="!loading && products.length === 0">
     <div class="empty-icon">📦</div>
-    <div class="empty-title">No products pending review</div>
-    <div class="empty-desc">All products have been reviewed.</div>
+    <div class="empty-title">No products found</div>
+    <div class="empty-desc">Products submitted by sellers will appear here for approval.</div>
   </div>
 </div>

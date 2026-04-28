@@ -11,6 +11,13 @@ import { UserService } from '../../core/services/user.service';
 })
 export class ProfileComponent implements OnInit {
   user: any = null;
+  editing = false;
+  saving  = false;
+  successMsg = '';
+  errorMsg   = '';
+
+  form = { name: '', email: '', phone: '', address: '', pincode: '' };
+  original = { ...this.form };
 
   constructor(
     private auth: AuthService,
@@ -27,8 +34,62 @@ export class ProfileComponent implements OnInit {
         } else {
           this.user = authUser;
         }
+        this.populateForm();
       },
-      error: () => { this.user = authUser; }
+      error: () => {
+        this.user = authUser;
+        this.populateForm();
+      }
+    });
+  }
+
+  private populateForm(): void {
+    this.form = {
+      name:    this.user?.name    || '',
+      email:   this.user?.email   || '',
+      phone:   this.user?.phone   || '',
+      address: this.user?.address || '',
+      pincode: this.user?.pincode || ''
+    };
+    this.original = { ...this.form };
+  }
+
+  startEdit(): void {
+    this.editing = true;
+    this.successMsg = '';
+    this.errorMsg   = '';
+  }
+
+  cancelEdit(): void {
+    this.form = { ...this.original };
+    this.editing = false;
+    this.errorMsg = '';
+  }
+
+  resetForm(): void {
+    this.form = { ...this.original };
+  }
+
+  saveProfile(): void {
+    this.saving = true;
+    this.errorMsg = '';
+    this.userService.updateProfile(this.form as any).subscribe({
+      next: res => {
+        this.saving = false;
+        if (res.success) {
+          this.user = { ...this.user, ...this.form };
+          this.original = { ...this.form };
+          this.editing = false;
+          this.successMsg = 'Profile updated successfully.';
+          setTimeout(() => this.successMsg = '', 3000);
+        } else {
+          this.errorMsg = res.message || 'Update failed.';
+        }
+      },
+      error: err => {
+        this.saving = false;
+        this.errorMsg = err?.error?.message || 'Update failed. Please try again.';
+      }
     });
   }
 

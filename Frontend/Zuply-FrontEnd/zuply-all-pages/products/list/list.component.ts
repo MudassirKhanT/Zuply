@@ -14,8 +14,10 @@ export class ListComponent implements OnInit {
 
   products:         Product[]  = [];
   categories:       Category[] = [];
+  nearbySellers:    any[]      = [];
   selectedCategory  = '';
   searchQuery       = '';
+  pincodeQuery      = '';
   sortBy            = '';
   loading           = true;
   toast: { msg: string; type: 'success' | 'error' } | null = null;
@@ -26,6 +28,7 @@ export class ListComponent implements OnInit {
     { label: 'Price: Low to High', value: 'price_asc' },
     { label: 'Price: High to Low', value: 'price_desc' },
     { label: 'Nearest First',      value: 'distance' },
+    { label: 'Most Popular',       value: 'popularity' },
   ];
 
   constructor(
@@ -40,8 +43,10 @@ export class ListComponent implements OnInit {
     this.productService.getCategories().subscribe({
       next: res => { if (res.success) this.categories = res.data; }
     });
+    this.loadNearbySellers();
     this.route.queryParams.subscribe(params => {
       this.searchQuery      = params['name']     || '';
+      this.pincodeQuery     = params['pincode']  || '';
       this.selectedCategory = params['category'] || '';
       this.loadProducts();
     });
@@ -49,7 +54,11 @@ export class ListComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    this.productService.getAll(undefined, this.searchQuery || undefined, this.sortBy || undefined).subscribe({
+    this.productService.getAll(
+      this.pincodeQuery || undefined,
+      this.searchQuery  || undefined,
+      this.sortBy       || undefined
+    ).subscribe({
       next: res => {
         if (res.success) {
           this.products = this.selectedCategory
@@ -60,6 +69,25 @@ export class ListComponent implements OnInit {
       },
       error: () => this.loading = false
     });
+  }
+
+  loadNearbySellers(): void {
+    this.productService.getPublicSellers().subscribe({
+      next: res => { if (res.success) this.nearbySellers = res.data.slice(0, 6); }
+    });
+  }
+
+  onSearch(): void {
+    this.selectedCategory = '';
+    this.loadProducts();
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.pincodeQuery = '';
+    this.selectedCategory = '';
+    this.sortBy = '';
+    this.loadProducts();
   }
 
   onCategorySelect(name: string): void {
@@ -90,6 +118,10 @@ export class ListComponent implements OnInit {
 
   goToDetail(product: Product): void {
     this.router.navigate(['/products', product.id]);
+  }
+
+  get isLocationSearch(): boolean {
+    return !!this.pincodeQuery;
   }
 
   private showToast(msg: string, type: 'success' | 'error'): void {

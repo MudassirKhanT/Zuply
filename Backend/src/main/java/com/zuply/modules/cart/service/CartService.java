@@ -115,47 +115,45 @@ public class CartService {
 
     @Transactional
     public CartDto updateItemQuantity(Long userId, Long itemId, int quantity) {
-        CartItem item = cartItemRepository.findById(itemId)
+        Cart cart = cartRepository.findByCustomer_Id(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+
+        CartItem item = cart.getItems().stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst()
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
-        if (!item.getCart().getCustomer().getId().equals(userId)) {
-            throw new RuntimeException("Forbidden: this item does not belong to your cart");
-        }
-
         if (quantity <= 0) {
-            cartItemRepository.deleteById(itemId);
+            cartItemRepository.deleteByItemId(itemId);
         } else {
             item.setQuantity(quantity);
             cartItemRepository.save(item);
         }
 
-        Cart cart = cartRepository.findByCustomer_Id(userId)
+        Cart updated = cartRepository.findByCustomer_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
-        return toDto(cart);
+        return toDto(updated);
     }
 
     @Transactional
     public CartDto removeItem(Long userId, Long itemId) {
-        CartItem item = cartItemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
-
-        if (!item.getCart().getCustomer().getId().equals(userId)) {
-            throw new RuntimeException("Forbidden: this item does not belong to your cart");
-        }
-
-        cartItemRepository.deleteById(itemId);
-
         Cart cart = cartRepository.findByCustomer_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
-        return toDto(cart);
+
+        boolean found = cart.getItems().stream().anyMatch(i -> i.getId().equals(itemId));
+        if (!found) throw new RuntimeException("Cart item not found");
+
+        cartItemRepository.deleteByItemId(itemId);
+
+        Cart updated = cartRepository.findByCustomer_Id(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        return toDto(updated);
     }
 
     @Transactional
     public void clearCart(Long userId) {
-        cartRepository.findByCustomer_Id(userId).ifPresent(cart -> {
-            if (cart.getItems() != null) {
-                cartItemRepository.deleteAll(cart.getItems());
-            }
-        });
+        cartRepository.findByCustomer_Id(userId).ifPresent(cart ->
+            cartItemRepository.deleteAllByCartId(cart.getId())
+        );
     }
 }

@@ -45,8 +45,10 @@ public class ProductController {
 
         List<ProductDto> products = productService.searchProducts(name, pincode, sortBy);
         if (products.isEmpty()) {
-            return ResponseEntity.ok(
-                    ApiResponse.success("No products available in this location", products));
+            String emptyMsg = (pincode != null && !pincode.isEmpty())
+                    ? "No products available in this location"
+                    : "No products available";
+            return ResponseEntity.ok(ApiResponse.success(emptyMsg, products));
         }
         return ResponseEntity.ok(ApiResponse.success("Products fetched", products));
     }

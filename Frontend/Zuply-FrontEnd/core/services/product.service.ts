@@ -44,4 +44,8 @@ export class ProductService {
   getCategories(): Observable<ApiResponse<Category[]>> {
     return this.http.get<ApiResponse<Category[]>>(`${this.API}/categories`);
   }
+
+  getPublicSellers(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.API}/seller/public`);
+  }
 }

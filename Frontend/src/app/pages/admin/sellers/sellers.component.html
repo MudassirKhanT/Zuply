@@ -1,1 +1,60 @@
-<p>sellers works!</p>
+<div class="admin-sellers">
+  <h2 class="page-title">Seller Management</h2>
+
+  <div *ngIf="actionMessage" class="action-msg">{{ actionMessage }}</div>
+  <div *ngIf="loading" class="loading">Loading sellers...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="!loading && sellers.length === 0 && !error" class="empty-state">
+    No sellers registered yet.
+  </div>
+
+  <div *ngIf="sellers.length > 0" class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Store</th>
+          <th>Location</th>
+          <th>Pincode</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let seller of sellers">
+          <td>{{ seller.id }}</td>
+          <td>{{ seller.name }}</td>
+          <td>{{ seller.email }}</td>
+          <td>{{ seller.phone || '—' }}</td>
+          <td>{{ seller.storeName || '—' }}</td>
+          <td>{{ seller.location || '—' }}</td>
+          <td>{{ seller.pincode || '—' }}</td>
+          <td>
+            <span [class]="'status-badge ' + getStatusClass(seller)">
+              {{ seller.active ? seller.verificationStatus : 'SUSPENDED' }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <button
+              *ngIf="seller.verificationStatus !== 'APPROVED' || !seller.active"
+              class="btn-approve"
+              (click)="approve(seller.id)">
+              Approve
+            </button>
+            <button
+              *ngIf="seller.active"
+              class="btn-suspend"
+              (click)="suspend(seller.id)">
+              Suspend
+            </button>
+            <button class="btn-delete" (click)="delete(seller.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

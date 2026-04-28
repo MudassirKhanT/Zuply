@@ -1,9 +1,8 @@
 package com.zuply.modules.seller.demo;
 
 import com.zuply.common.ApiResponse;
+import com.zuply.modules.listing.model.Product;
 import com.zuply.modules.order.model.Order;
-import com.zuply.modules.product.model.Product;
-import com.zuply.modules.product.service.ProductService;
 import com.zuply.modules.seller.dto.SellerDashboardDto;
 import com.zuply.modules.seller.dto.SellerOrderDto;
 import com.zuply.modules.seller.model.Seller;
@@ -27,12 +26,7 @@ public class SellerController {
     private SellerService sellerService;
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private UserService userService;
-
-    // ── Helper: extract Seller from JWT authenticated user ──────────────────
 
     private Seller getAuthenticatedSeller(Authentication authentication) {
         String email = authentication.getName();
@@ -42,21 +36,17 @@ public class SellerController {
                 .orElseThrow(() -> new RuntimeException("Seller record not found. Please register as seller first."));
     }
 
-    // --- Seller Registration ---
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Seller>> registerSeller(
             @RequestBody Map<String, Object> request,
             Authentication authentication) {
         String email = authentication.getName();
-        User user = userService.findByEmail(email)
-                .orElse(null);
+        User user = userService.findByEmail(email).orElse(null);
 
         if (user == null) {
-            return ResponseEntity.status(404)
-                    .body(ApiResponse.failure("User not found"));
+            return ResponseEntity.status(404).body(ApiResponse.failure("User not found"));
         }
 
-        // Check if seller record already exists for this user
         Optional<Seller> existingSeller = sellerService.findByUserId(user.getId());
         if (existingSeller.isPresent()) {
             return ResponseEntity.badRequest()
@@ -64,14 +54,13 @@ public class SellerController {
         }
 
         String storeName = (String) request.get("storeName");
-        String location = (String) request.get("location");
-        String pincode = (String) request.get("pincode");
+        String location  = (String) request.get("location");
+        String pincode   = (String) request.get("pincode");
 
         Seller seller = sellerService.registerSeller(user, storeName, location, pincode);
         return ResponseEntity.ok(ApiResponse.success("Seller registered successfully. Awaiting admin approval.", seller));
     }
 
-    // --- Seller Dashboard ---
     @GetMapping("/dashboard")
     public ResponseEntity<ApiResponse<SellerDashboardDto>> getDashboard(Authentication authentication) {
         Seller seller;
@@ -82,15 +71,13 @@ public class SellerController {
         }
 
         if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.failure("Account suspended"));
+            return ResponseEntity.status(403).body(ApiResponse.failure("Account suspended"));
         }
 
         SellerDashboardDto dashboard = sellerService.getDashboard(seller.getId());
         return ResponseEntity.ok(ApiResponse.success("Dashboard fetched successfully", dashboard));
     }
 
-    // --- Seller Products (own products only) ---
     @GetMapping("/products")
     public ResponseEntity<ApiResponse<List<Product>>> getSellerProducts(Authentication authentication) {
         Seller seller;
@@ -101,15 +88,13 @@ public class SellerController {
         }
 
         if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.failure("Account suspended"));
+            return ResponseEntity.status(403).body(ApiResponse.failure("Account suspended"));
         }
 
         List<Product> products = sellerService.getSellerProducts(seller.getId());
         return ResponseEntity.ok(ApiResponse.success("Seller products fetched", products));
     }
 
-    // --- Seller Orders (orders containing seller's products) ---
     @GetMapping("/orders")
     public ResponseEntity<ApiResponse<List<SellerOrderDto>>> getSellerOrders(Authentication authentication) {
         Seller seller;
@@ -120,15 +105,13 @@ public class SellerController {
         }
 
         if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.failure("Account suspended"));
+            return ResponseEntity.status(403).body(ApiResponse.failure("Account suspended"));
         }
 
         List<SellerOrderDto> orders = sellerService.getSellerOrders(seller.getId());
         return ResponseEntity.ok(ApiResponse.success("Seller orders fetched", orders));
     }
 
-    // --- Update Order Status (forward only: PLACED -> PROCESSING -> DELIVERED) ---
     @PatchMapping("/orders/{id}/status")
     public ResponseEntity<ApiResponse<Order>> updateOrderStatus(
             @PathVariable Long id,
@@ -142,25 +125,39 @@ public class SellerController {
         }
 
         if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.failure("Account suspended"));
+            return ResponseEntity.status(403).body(ApiResponse.failure("Account suspended"));
         }
 
         try {
             Order updatedOrder = sellerService.updateOrderStatus(seller.getId(), id, status);
             return ResponseEntity.ok(ApiResponse.success("Order status updated successfully", updatedOrder));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.failure(e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(e.getMessage()));
         }
     }
 
-    // --- Get Seller by ID ---
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Seller>> getSellerById(@PathVariable Long id) {
         Optional<Seller> seller = sellerService.findById(id);
         return seller.map(s -> ResponseEntity.ok(ApiResponse.success("Seller found", s)))
-                .orElse(ResponseEntity.status(404)
-                        .body(ApiResponse.failure("Seller not found")));
+                .orElse(ResponseEntity.status(404).body(ApiResponse.failure("Seller not found")));
+    }
+
+    /** Public endpoint — returns basic info for active/approved sellers (no auth required). */
+    @GetMapping("/public")
+    public ResponseEntity<ApiResponse<java.util.List<java.util.Map<String, Object>>>> getPublicSellers() {
+        java.util.List<java.util.Map<String, Object>> result = sellerService.findAll().stream()
+                .filter(s -> s.isActive() && "APPROVED".equals(s.getVerificationStatus()))
+                .map(s -> {
+                    java.util.Map<String, Object> m = new java.util.HashMap<>();
+                    m.put("id",        s.getId());
+                    m.put("storeName", s.getStoreName());
+                    m.put("location",  s.getLocation());
+                    m.put("pincode",   s.getPincode());
+                    m.put("name",      s.getUser() != null ? s.getUser().getName() : "");
+                    return m;
+                })
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("Sellers fetched", result));
     }
 }

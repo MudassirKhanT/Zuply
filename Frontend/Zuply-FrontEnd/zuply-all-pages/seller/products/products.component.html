@@ -9,15 +9,20 @@
   <div class="grid-4" *ngIf="!loading && products.length > 0">
     <div class="prod-card" *ngFor="let p of products">
       <div class="prod-img">
-        <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name"/>
+        <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.title" (error)="p.imageUrl=null"/>
         <span *ngIf="!p.imageUrl" style="font-size:36px">🛒</span>
       </div>
       <div class="prod-body">
-        <span [class]="getStatusClass(p.status || 'PENDING')">{{ p.status || 'Pending' | titlecase }}</span>
-        <div class="prod-name">{{ p.name }}</div>
-        <div class="prod-price">₹ {{ p.price }}</div>
-        <div class="prod-stock">Stock: {{ p.stock }}</div>
-        <button class="btn-danger btn-sm btn-pill" (click)="deleteProduct(p.id)">Delete</button>
+        <span [class]="getStatusClass(p.status)">{{ p.status | titlecase }}</span>
+        <div class="prod-name">{{ p.title || 'Untitled Product' }}</div>
+        <div class="prod-category" *ngIf="p.category">{{ p.category }}</div>
+        <div class="prod-price">{{ formatPrice(p) }}</div>
+        <div class="prod-tags" *ngIf="p.tags?.length">
+          <span *ngFor="let tag of p.tags?.slice(0,3)" class="tag-chip">{{ tag }}</span>
+        </div>
+        <button class="btn-primary btn-sm btn-pill" style="margin-top:8px" (click)="editProduct(p.id)">
+          Edit
+        </button>
       </div>
     </div>
   </div>

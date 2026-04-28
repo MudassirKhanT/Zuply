@@ -218,6 +218,66 @@ textarea.input { resize: vertical; min-height: 80px; }
   }
 }
 
+// ── Field validation feedback ─────────────────────────────────
+.input-error { border-color: $zuply-error !important;
+  &:focus { box-shadow: 0 0 0 3px rgba($zuply-error, .12) !important; } }
+.input-valid { border-color: $zuply-success !important;
+  &:focus { box-shadow: 0 0 0 3px rgba($zuply-success, .12) !important; } }
+
+.field-hint {
+  display: block;
+  font-size: 11px;
+  color: $zuply-text-secondary;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.field-error {
+  display: block;
+  font-size: 11px;
+  color: $zuply-error;
+  margin-top: 3px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+// ── Password rule checklist ───────────────────────────────────
+.pw-rules {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pw-rule {
+  font-size: 11px;
+  color: $zuply-error;
+  font-weight: 500;
+
+  &.pw-ok { color: $zuply-success; }
+}
+
+// ── Password strength bar ─────────────────────────────────────
+.strength-bar {
+  margin-top: 6px;
+
+  .strength-track {
+    height: 4px;
+    background: $zuply-border;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .strength-fill {
+    height: 4px;
+    border-radius: 2px;
+    transition: width .3s ease, background .3s ease;
+  }
+
+  small { font-size: 11px; font-weight: 500; }
+}
+
 .select {
   display: block;
   width: 100%;

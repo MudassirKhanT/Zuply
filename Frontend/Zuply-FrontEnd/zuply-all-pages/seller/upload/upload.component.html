@@ -27,7 +27,7 @@
          (dragover)="onDragOver($event)"
          (click)="!uploading && fileInput.click()">
 
-      <input #fileInput type="file" accept="image/*" (change)="onFileSelect($event)" hidden/>
+      <input #fileInput type="file" accept="image/jpeg,image/png" (change)="onFileSelect($event)" hidden/>
 
       <!-- Preview -->
       <div class="preview-wrap" *ngIf="previewUrl && !uploading">

@@ -1,6 +1,7 @@
 package com.zuply.modules.listing.service;
 
 import com.zuply.modules.ai.dto.AIGeneratedContent;
+import com.zuply.modules.ai.service.FallbackAnalysisService;
 import com.zuply.modules.ai.service.GeminiService;
 import com.zuply.modules.listing.dto.ListingEditRequest;
 import com.zuply.modules.listing.dto.ListingResponse;
@@ -15,13 +16,17 @@ import com.zuply.modules.upload.dto.ImageStatus;
 import com.zuply.modules.upload.model.Image;
 import com.zuply.modules.upload.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ListingService {
@@ -31,8 +36,12 @@ public class ListingService {
     private final TagRepository tagRepository;
     private final ProcessingService processingService;
     private final GeminiService geminiService;
+    private final FallbackAnalysisService fallbackAnalysisService;
     private final TagService tagService;
     private final CategoryService categoryService;
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     // -------------------------------------------------------
     // Trigger full pipeline for an uploaded image
@@ -51,14 +60,23 @@ public class ListingService {
         Image processed = imageRepository.findById(imageId)
                 .orElseThrow(() -> new RuntimeException("Image not found after processing"));
 
-        // Step 4 — Call Gemini Vision API with the processed image path
-        AIGeneratedContent ai = geminiService.generateContent(processed.getProcessedUrl());
+        // Step 4 — Attempt AI analysis; fall back to local analysis if all models fail
+        // GeminiService reads bytes from disk, so we resolve the actual file system path
+        String diskPath = Paths.get(uploadPath).resolve(processed.getFileName()).toString();
+        AIGeneratedContent ai;
+        boolean aiSucceeded = true;
+        try {
+            ai = geminiService.generateContent(diskPath);
+        } catch (Exception e) {
+            log.warn("All Gemini models failed — running local fallback analysis. Reason: {}", e.getMessage());
+            ai = fallbackAnalysisService.analyze(diskPath);
+            aiSucceeded = false;
+        }
 
-        // Step 5 — Map the AI-suggested category to a Zuply predefined category
+        // Step 5 — Map the suggested category to a Zuply predefined category
         String category = categoryService.mapCategory(ai.getSuggestedCategory());
 
-        // Step 6 — Build Product entity with all AI-generated fields and save as DRAFT
-        // Highlights list is joined into a pipe-separated string for DB storage
+        // Step 6 — Build Product entity and save as DRAFT
         String highlightsString = (ai.getHighlights() != null && !ai.getHighlights().isEmpty())
                 ? String.join("|", ai.getHighlights())
                 : "";
@@ -76,7 +94,7 @@ public class ListingService {
                 .suggestedPriceMax(ai.getSuggestedPriceMax())
                 .highlights(highlightsString)
                 .imageUrl(processed.getProcessedUrl())
-                .aiSuggestedCategory(true)
+                .aiSuggestedCategory(aiSucceeded)
                 .status("DRAFT")
                 .build();
 
@@ -163,14 +181,14 @@ public class ListingService {
                     "Cannot publish listing without a price. Please set a price before publishing.");
         }
 
-        product.setStatus("PUBLISHED");
+        product.setStatus("PENDING");
         productRepository.save(product);
 
         return PublishResponse.builder()
                 .productId(product.getId())
-                .status("PUBLISHED")
+                .status("PENDING")
                 .title(product.getTitle())
-                .message("Product published successfully to the marketplace.")
+                .message("Product submitted for admin approval. It will appear on the marketplace once approved.")
                 .build();
     }
 

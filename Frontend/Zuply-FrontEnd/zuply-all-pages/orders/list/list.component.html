@@ -17,6 +17,10 @@
         <span [class]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
       </div>
       <div class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</div>
+      <div class="order-items-summary" *ngIf="order.items?.length">
+        <span class="order-item-name">{{ order.items[0].productName }} × {{ order.items[0].quantity }}</span>
+        <span class="order-more" *ngIf="order.items.length > 1"> +{{ order.items.length - 1 }} more</span>
+      </div>
       <div class="order-bottom">
         <div class="order-total price-sm">₹ {{ order.totalAmount }}</div>
         <button class="btn-secondary btn-sm btn-pill">View Details →</button>

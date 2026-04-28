@@ -3,35 +3,42 @@
   <h1 class="text-2xl" style="margin-bottom:24px">Manage Sellers</h1>
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
+  <div *ngIf="actionMsg" class="action-toast">{{ actionMsg }}</div>
+
   <div class="sellers-table" *ngIf="!loading && sellers.length > 0">
     <div class="table-row header">
       <span>ID</span>
       <span>Name</span>
+      <span>Email</span>
+      <span>Phone</span>
       <span>Store</span>
-      <span>Contact</span>
       <span>Status</span>
       <span>Actions</span>
     </div>
     <div class="table-row" *ngFor="let seller of sellers">
       <span class="seller-id">#{{ seller.id }}</span>
-      <span class="seller-name">{{ seller.name }}</span>
+      <span class="seller-name">{{ seller.name || '—' }}</span>
+      <span>{{ seller.email || '—' }}</span>
+      <span>{{ seller.phone || '—' }}</span>
       <span>{{ seller.storeName || '—' }}</span>
-      <span>{{ seller.contact || seller.email || '—' }}</span>
-      <span [class]="getStatusClass(seller.verificationStatus)">
-        {{ seller.verificationStatus | titlecase }}
+      <span [class]="getStatusClass(seller)">
+        {{ !seller.active ? 'Suspended' : (seller.verificationStatus | titlecase) }}
       </span>
       <div class="action-btns">
         <button
           class="btn-primary btn-sm btn-pill"
-          *ngIf="seller.verificationStatus !== 'APPROVED'"
+          *ngIf="seller.verificationStatus !== 'APPROVED' || !seller.active"
           (click)="approve(seller.id)">
           Approve
         </button>
         <button
-          class="btn-danger btn-sm btn-pill"
-          *ngIf="seller.verificationStatus !== 'SUSPENDED'"
+          class="btn-warning btn-sm btn-pill"
+          *ngIf="seller.active"
           (click)="suspend(seller.id)">
           Suspend
+        </button>
+        <button class="btn-danger btn-sm btn-pill" (click)="delete(seller.id)">
+          Delete
         </button>
       </div>
     </div>

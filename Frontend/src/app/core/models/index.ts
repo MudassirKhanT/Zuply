@@ -220,3 +220,23 @@ export interface SellerRecord {
   contact?: string;
   verificationStatus: string;
 }
+
+export interface SellerAdminDto {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  storeName?: string;
+  location?: string;
+  pincode?: string;
+  verificationStatus: string;
+  active: boolean;
+}
+
+export interface AdminProductUpdateRequest {
+  title?: string;
+  description?: string;
+  category?: string;
+  price?: number;
+  status?: 'DRAFT' | 'PUBLISHED';
+}

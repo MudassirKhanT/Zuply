@@ -15,6 +15,8 @@ export class AdminService {
     return this.http.get<ApiResponse<AdminStats>>(`${this.url}/dashboard`);
   }
 
+  // ── Seller Management ────────────────────────────────────────────────────
+
   getSellers(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.url}/sellers`);
   }
@@ -27,17 +29,25 @@ export class AdminService {
     return this.http.patch<ApiResponse<any>>(`${this.url}/sellers/${id}/suspend`, {});
   }
 
+  deleteSeller(id: number): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.url}/sellers/${id}`);
+  }
+
+  // ── Product Management ───────────────────────────────────────────────────
+
   getProducts(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.url}/products`);
   }
 
-  approveProduct(id: number): Observable<ApiResponse<any>> {
-    return this.http.patch<ApiResponse<any>>(`${this.url}/products/${id}/approve`, {});
+  updateProduct(id: number, data: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(`${this.url}/products/${id}`, data);
   }
 
-  rejectProduct(id: number): Observable<ApiResponse<any>> {
-    return this.http.patch<ApiResponse<any>>(`${this.url}/products/${id}/reject`, {});
+  deleteProduct(id: number): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(`${this.url}/products/${id}`);
   }
+
+  // ── Reports ──────────────────────────────────────────────────────────────
 
   getReports(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.url}/reports`);

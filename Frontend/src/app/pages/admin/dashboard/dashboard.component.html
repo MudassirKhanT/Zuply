@@ -1,1 +1,33 @@
-<p>dashboard works!</p>
+<div class="admin-dashboard">
+  <h2 class="page-title">Admin Dashboard</h2>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="stats" class="stats-grid">
+    <div class="stat-card" (click)="navigate('/admin/sellers')" style="cursor:pointer">
+      <div class="stat-icon">🏪</div>
+      <div class="stat-value">{{ stats.totalSellers }}</div>
+      <div class="stat-label">Total Sellers</div>
+    </div>
+    <div class="stat-card" (click)="navigate('/admin/products')" style="cursor:pointer">
+      <div class="stat-icon">📦</div>
+      <div class="stat-value">{{ stats.totalProducts }}</div>
+      <div class="stat-label">Total Products</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🛒</div>
+      <div class="stat-value">{{ stats.totalOrders }}</div>
+      <div class="stat-label">Total Orders</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h3>Manage</h3>
+    <div class="action-buttons">
+      <a routerLink="/admin/sellers"  class="btn-action primary">Manage Sellers</a>
+      <a routerLink="/admin/products" class="btn-action primary">Manage Products</a>
+      <a routerLink="/admin/reports"  class="btn-action secondary">View Reports</a>
+    </div>
+  </div>
+</div>

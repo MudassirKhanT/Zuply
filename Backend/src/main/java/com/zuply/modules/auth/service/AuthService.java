@@ -1,8 +1,11 @@
 package com.zuply.modules.auth.service;
 
+import com.zuply.common.enums.Role;
 import com.zuply.modules.auth.dto.LoginRequest;
 import com.zuply.modules.auth.dto.LoginResponse;
 import com.zuply.modules.auth.dto.RegisterRequest;
+import com.zuply.modules.seller.model.Seller;
+import com.zuply.modules.seller.repository.SellerRepository;
 import com.zuply.modules.user.dto.UserProfileDto;
 import com.zuply.modules.user.model.User;
 import com.zuply.modules.user.repository.UserRepository;
@@ -10,14 +13,17 @@ import com.zuply.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
 
     @Autowired private UserRepository userRepository;
+    @Autowired private SellerRepository sellerRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JwtUtil jwtUtil;
 
+    @Transactional
     public UserProfileDto register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Email already registered");
@@ -29,6 +35,16 @@ public class AuthService {
         user.setPhone(request.getPhone());
         user.setRole(request.getRole());
         User saved = userRepository.save(user);
+
+        if (request.getRole() == Role.SELLER) {
+            Seller seller = new Seller();
+            seller.setUser(saved);
+            seller.setStoreName(request.getStoreName() != null ? request.getStoreName() : saved.getName() + "'s Store");
+            seller.setVerificationStatus("PENDING");
+            seller.setActive(false);
+            sellerRepository.save(seller);
+        }
+
         return toDto(saved);
     }
 

@@ -1,1 +1,42 @@
-<p>reports works!</p>
+<div class="admin-reports">
+  <h2 class="page-title">Reports & Analytics</h2>
+
+  <div *ngIf="loading" class="loading">Loading reports...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="report" class="reports-content">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">₹{{ report.totalSales | number:'1.0-0' }}</div>
+        <div class="stat-label">Total Sales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏪</div>
+        <div class="stat-value">{{ report.totalSellers }}</div>
+        <div class="stat-label">Total Sellers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👤</div>
+        <div class="stat-value">{{ report.totalCustomers }}</div>
+        <div class="stat-label">Total Customers</div>
+      </div>
+    </div>
+
+    <div *ngIf="categoryEntries.length > 0" class="category-section">
+      <h3>Products by Category</h3>
+      <div class="category-list">
+        <div class="category-row" *ngFor="let entry of categoryEntries">
+          <span class="category-name">{{ entry.name }}</span>
+          <div class="category-bar-wrap">
+            <div
+              class="category-bar"
+              [style.width.%]="(entry.count / categoryEntries[0].count) * 100">
+            </div>
+          </div>
+          <span class="category-count">{{ entry.count }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

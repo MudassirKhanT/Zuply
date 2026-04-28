@@ -4,10 +4,10 @@
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
   <div *ngIf="!loading && reports">
-    <div class="grid-4 stats-grid">
+    <div class="grid-3 stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Total Revenue</div>
-        <div class="stat-value">₹ {{ reports.totalRevenue || 0 }}</div>
+        <div class="stat-label">Total Sales</div>
+        <div class="stat-value">₹ {{ reports.totalSales | number:'1.0-0' }}</div>
         <div class="stat-sub">platform revenue</div>
       </div>
       <div class="stat-card">
@@ -18,25 +18,22 @@
       <div class="stat-card">
         <div class="stat-label">Total Sellers</div>
         <div class="stat-value">{{ reports.totalSellers || 0 }}</div>
-        <div class="stat-sub">active sellers</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Orders</div>
-        <div class="stat-value">{{ reports.totalOrders || 0 }}</div>
-        <div class="stat-sub">orders placed</div>
+        <div class="stat-sub">registered sellers</div>
       </div>
     </div>
 
-    <div class="report-section" *ngIf="reports.categoryBreakdown">
+    <div class="report-section" *ngIf="reports.productsByCategory">
       <div class="form-card">
-        <div class="form-card-title">📊 Sales by Category</div>
-        <div class="category-row" *ngFor="let cat of reports.categoryBreakdown">
-          <span class="cat-name">{{ cat.category }}</span>
-          <div class="cat-bar-wrap">
-            <div class="cat-bar" [style.width]="cat.percentage + '%'"></div>
+        <div class="form-card-title">📊 Products by Category</div>
+        <ng-container *ngFor="let entry of reports.productsByCategory | keyvalue">
+          <div class="category-row">
+            <span class="cat-name">{{ entry.key }}</span>
+            <div class="cat-bar-wrap">
+              <div class="cat-bar" [style.width.%]="100"></div>
+            </div>
+            <span class="cat-count">{{ entry.value }}</span>
           </div>
-          <span class="cat-count">{{ cat.count }} orders</span>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>
