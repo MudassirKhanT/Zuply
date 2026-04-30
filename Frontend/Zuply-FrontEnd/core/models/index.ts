@@ -59,6 +59,7 @@ export interface Product {
   deliveryMethod?: string;
   returnPolicy?: string;
   imageUrl?: string;
+  sellerId?: number;
   sellerName?: string;
   sellerPincode?: string;
   status?: string;
@@ -67,6 +68,7 @@ export interface Product {
   aiGenerated?: boolean;
   distance?: string;
   category?: string;    // alias populated from categoryName
+  pincode?: string;
 }
 
 // ── Category ─────────────────────────────────────────────────
@@ -95,9 +97,32 @@ export interface CartResponse {
 export interface OrderItem {
   productId: number;
   productName: string;
+  productImage?: string;
   quantity: number;
   price: number;
   lineTotal: number;
+}
+
+// ── Saved Address (localStorage) ─────────────────────────────
+export interface SavedAddress {
+  id: string;
+  label: 'Home' | 'Work' | 'Other';
+  customerName: string;
+  phone: string;
+  address: string;
+  city: string;
+  pincode: string;
+  isDefault: boolean;
+}
+
+// ── Seller summary (for local sellers section) ────────────────
+export interface SellerSummary {
+  sellerId: number;
+  sellerName: string;
+  pincode: string;
+  productCount: number;
+  categories: string[];
+  sampleImage?: string;
 }
 
 export interface Order {

@@ -275,6 +275,28 @@
 .ss-num  { font-size: $text-sm; font-weight: 700; color: $zuply-accent; min-width: 28px; }
 .ss-text { font-size: $text-sm; font-weight: 500; }
 
+// ── Category clear filter ─────────────────────────────────
+.section-header-right { display: flex; align-items: center; gap: 14px; }
+.clear-filter-btn {
+  padding: 4px 12px; border-radius: $radius-pill;
+  border: 1.5px solid $zuply-border; background: #fff;
+  font-size: $text-xs; font-weight: 600; color: $zuply-text-secondary; cursor: pointer;
+  &:hover { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-light; }
+}
+
+// ── Local Sellers row ─────────────────────────────────────
+.sellers-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: $space-md; }
+.seller-pill {
+  display: flex; align-items: center; gap: 10px;
+  background: $zuply-surface; border: 1px solid $zuply-border-light; border-radius: $radius-lg;
+  padding: 10px 16px; cursor: pointer; transition: $transition-fast; text-decoration: none;
+  &:hover { box-shadow: $shadow-md; border-color: $zuply-primary; }
+}
+.sp-avatar { width: 38px; height: 38px; border-radius: 50%; background: $zuply-primary; color: #fff;
+  font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sp-name { font-weight: 600; font-size: $text-sm; color: $zuply-text; }
+.sp-meta { font-size: $text-xs; color: $zuply-text-muted; }
+
 // ── Responsive ────────────────────────────────────────────
 @media (max-width: 1024px) {
   .features-grid    { grid-template-columns: repeat(2, 1fr); }

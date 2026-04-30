@@ -1,16 +1,90 @@
-// src/app/pages/orders/list/list.component.scss
 @import 'styles';
-.tabs-row    { display:flex; gap:$space-sm; margin-bottom:$space-lg; flex-wrap:wrap; }
-.tab-btn     { padding:7px 18px; border-radius:$radius-pill; border:1.5px solid $zuply-border; background:transparent; font-size:$text-sm; font-weight:500; color:$zuply-text-secondary; cursor:pointer; transition:$transition-fast;
-  &:hover  { border-color:$zuply-primary; color:$zuply-primary; }
-  &.active { background:$zuply-primary; color:#fff; border-color:$zuply-primary; } }
-.orders-list { display:flex; flex-direction:column; gap:$space-md; }
-.order-card  { background:$zuply-surface; border-radius:$radius-lg; padding:$space-lg; border:1px solid $zuply-border-light; cursor:pointer; transition:$transition-fast;
-  &:hover  { box-shadow:$shadow-md; transform:translateY(-2px); } }
-.order-top   { display:flex; justify-content:space-between; align-items:center; margin-bottom:$space-xs; }
-.order-id    { font-size:$text-base; font-weight:600; color:$zuply-primary; }
-.order-date  { font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:$space-md; }
-.order-bottom{ display:flex; justify-content:space-between; align-items:center; }
-.order-items-summary { font-size:$text-sm; color:$zuply-text; margin-bottom:$space-sm; }
-.order-item-name     { font-weight:500; }
-.order-more          { color:$zuply-text-secondary; font-size:$text-xs; }
+
+.page-heading { font-size: 1.9rem; font-weight: 800; color: $zuply-text; margin-bottom: 20px; }
+
+.tabs-row { display: flex; gap: $space-sm; margin-bottom: $space-lg; flex-wrap: wrap; }
+.tab-btn  { padding: 7px 18px; border-radius: $radius-pill; border: 1.5px solid $zuply-border;
+  background: transparent; font-size: $text-sm; font-weight: 500; color: $zuply-text-secondary;
+  cursor: pointer; transition: $transition-fast;
+  &:hover  { border-color: $zuply-primary; color: $zuply-primary; }
+  &.active { background: $zuply-primary; color: #fff; border-color: $zuply-primary; }
+}
+
+.orders-list { display: flex; flex-direction: column; gap: $space-lg; }
+
+.order-card {
+  background: $zuply-surface; border-radius: $radius-lg; padding: $space-lg;
+  border: 1px solid $zuply-border-light; box-shadow: $shadow-sm;
+}
+
+// Header
+.order-header       { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: $space-md; flex-wrap: wrap; gap: 8px; }
+.order-meta         { display: flex; flex-direction: column; gap: 2px; }
+.order-id           { font-size: $text-base; font-weight: 700; color: $zuply-primary; }
+.order-date         { font-size: $text-xs; color: $zuply-text-muted; }
+.order-header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+// Status badges
+.status-badge     { border-radius: $radius-pill; padding: 3px 12px; font-size: $text-xs; font-weight: 700; }
+.badge-placed     { background: #dbeafe; color: #1d4ed8; }
+.badge-processing { background: #fef9c3; color: #92400e; }
+.badge-delivered  { background: #dcfce7; color: #15803d; }
+.badge-cancelled  { background: #fee2e2; color: #b91c1c; }
+
+.pay-method-badge { background: $zuply-surface-2; color: $zuply-text-secondary; border-radius: $radius-pill;
+  padding: 3px 10px; font-size: $text-xs; font-weight: 600; }
+
+// Progress track
+.progress-track  { margin-bottom: $space-lg; position: relative; }
+.progress-line   { height: 4px; background: $zuply-border-light; border-radius: 2px; position: relative; margin: 0 20px 0 20px; overflow: hidden; }
+.progress-fill   { height: 100%; background: $zuply-primary; border-radius: 2px; transition: width 0.5s ease; }
+.progress-steps  { display: flex; justify-content: space-between; margin-top: 8px; }
+.progress-step   { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; position: relative; }
+.step-dot        {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: $zuply-border; border: 2px solid $zuply-border;
+  .progress-step.done & { background: $zuply-primary; border-color: $zuply-primary; }
+}
+.step-label      { font-size: 10px; color: $zuply-text-muted; font-weight: 500;
+  .progress-step.done & { color: $zuply-primary; font-weight: 700; }
+}
+
+.cancelled-banner { background: #fee2e2; color: #b91c1c; border-radius: $radius-md;
+  padding: 8px 14px; font-size: $text-sm; font-weight: 600; margin-bottom: $space-md; }
+
+// Items
+.order-items     { display: flex; flex-direction: column; gap: $space-sm; margin-bottom: $space-md; }
+.order-item-row  {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px; background: $zuply-surface-2; border-radius: $radius-md; flex-wrap: wrap;
+}
+.item-img-wrap   { flex-shrink: 0; }
+.item-thumb      { width: 56px; height: 56px; object-fit: cover; border-radius: $radius-sm; border: 1px solid $zuply-border-light; }
+.item-thumb-placeholder { width: 56px; height: 56px; border-radius: $radius-sm;
+  background: $zuply-border-light; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.item-info       { flex: 1; min-width: 0; }
+.item-name       { font-size: $text-sm; font-weight: 600; color: $zuply-text; margin-bottom: 2px; }
+.item-meta       { font-size: $text-xs; color: $zuply-text-muted; }
+.item-total      { font-size: $text-sm; font-weight: 700; color: $zuply-text; white-space: nowrap; }
+
+// Review
+.review-col      { width: 100%; margin-top: 8px; }
+.review-btn      { margin-bottom: 8px; }
+.review-form     { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.star-row        { display: flex; gap: 4px; }
+.star            { font-size: 1.4rem; cursor: pointer; color: $zuply-border; transition: color 0.15s;
+  &.filled { color: #f59e0b; }
+  &:hover  { color: #f59e0b; }
+}
+.review-input    { font-size: $text-sm; resize: vertical; }
+.review-done     { font-size: $text-sm; color: $zuply-success; font-weight: 600; }
+
+// Footer
+.order-footer    { display: flex; justify-content: space-between; align-items: center; padding-top: $space-md; border-top: 1px solid $zuply-border-light; flex-wrap: wrap; gap: 8px; }
+.order-total     { font-size: $text-base; color: $zuply-text-secondary; strong { color: $zuply-text; } }
+
+// Empty state
+.empty-state { text-align: center; padding: 40px 24px; }
+.empty-icon  { font-size: 3rem; margin-bottom: 12px; }
+.empty-title { font-size: 1.1rem; font-weight: 700; color: $zuply-text; margin-bottom: 8px; }
+.empty-desc  { color: $zuply-text-muted; font-size: $text-sm; margin-bottom: 20px; }

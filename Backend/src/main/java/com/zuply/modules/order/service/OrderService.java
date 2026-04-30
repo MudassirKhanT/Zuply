@@ -165,6 +165,7 @@ public class OrderService {
                         OrderDto.OrderItemDto itemDto = new OrderDto.OrderItemDto();
                         itemDto.setProductId(item.getProduct().getId());
                         itemDto.setProductName(item.getProduct().getName());
+                        itemDto.setProductImage(item.getProduct().getImageUrl());
                         itemDto.setQuantity(item.getQuantity());
                         itemDto.setPrice(item.getPrice());
                         itemDto.setLineTotal(item.getPrice() * item.getQuantity());

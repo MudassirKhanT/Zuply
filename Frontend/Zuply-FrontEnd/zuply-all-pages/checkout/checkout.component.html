@@ -1,16 +1,34 @@
 <!-- Success modal -->
 <div class="modal-overlay" *ngIf="orderSuccess">
   <div class="success-modal">
-    <div class="success-icon">✅</div>
+    <div class="success-icon">🎉</div>
     <h2 class="success-title">Order Placed!</h2>
-    <p class="success-desc">
-      Your order <strong *ngIf="placedOrderId">#{{ placedOrderId }}</strong> has been placed successfully.<br>
-      <span *ngIf="paymentMethod === 'COD'">Pay <strong>₹ {{ cart?.grandTotal | number:'1.0-0' }}</strong> on delivery.</span>
-      <span *ngIf="paymentMethod !== 'COD'">Payment received.</span>
-    </p>
+    <p class="success-order-id" *ngIf="placedOrderId">Order #{{ placedOrderId }}</p>
+
+    <!-- COD -->
+    <div *ngIf="paymentMethod === 'COD'" class="success-method-badge cod-badge">💵 Cash on Delivery</div>
+    <div *ngIf="paymentMethod === 'COD'" class="success-desc">
+      Your order is confirmed! Please keep <strong>₹ {{ cart?.grandTotal | number:'1.0-0' }}</strong> ready to pay the delivery partner.
+    </div>
+    <div *ngIf="paymentMethod === 'COD'" class="success-tip">💡 Tip: Keep exact change ready for a smooth handover.</div>
+
+    <!-- UPI -->
+    <div *ngIf="paymentMethod === 'UPI'" class="success-method-badge upi-badge">📱 UPI Payment</div>
+    <div *ngIf="paymentMethod === 'UPI'" class="success-desc">
+      Payment of <strong>₹ {{ cart?.grandTotal | number:'1.0-0' }}</strong> received via UPI. Your order is being prepared!
+    </div>
+    <div *ngIf="paymentMethod === 'UPI'" class="success-tip">✅ A payment confirmation has been sent to your UPI-linked account.</div>
+
+    <!-- CARD -->
+    <div *ngIf="paymentMethod === 'CARD'" class="success-method-badge card-badge">💳 Card Payment</div>
+    <div *ngIf="paymentMethod === 'CARD'" class="success-desc">
+      <strong>₹ {{ cart?.grandTotal | number:'1.0-0' }}</strong> has been charged to your card. Your order is on its way!
+    </div>
+    <div *ngIf="paymentMethod === 'CARD'" class="success-tip">🔒 Your card details are secure and never stored on our servers.</div>
+
     <div class="success-actions">
-      <button class="btn-primary btn-pill" routerLink="/orders">View Orders</button>
-      <button class="btn-secondary btn-pill" routerLink="/">Continue Shopping</button>
+      <button class="btn-primary btn-pill" routerLink="/orders">📦 Track My Order</button>
+      <button class="btn-secondary btn-pill" routerLink="/products">Continue Shopping</button>
     </div>
   </div>
 </div>
@@ -145,10 +163,16 @@
             [class.active]="paymentMethod === opt.value"
             (click)="paymentMethod = $any(opt.value)">
             <span class="pay-icon">{{ opt.icon }}</span>
-            <span class="pay-label">{{ opt.label }}</span>
+            <div class="pay-label-wrap">
+              <span class="pay-label">{{ opt.label }}</span>
+              <span class="pay-sublabel" *ngIf="opt.value !== 'COD'">Powered by Razorpay</span>
+            </div>
             <span class="pay-check" *ngIf="paymentMethod === opt.value">✓</span>
             <span class="pay-radio" *ngIf="paymentMethod !== opt.value"></span>
           </div>
+        </div>
+        <div class="razorpay-note" *ngIf="paymentMethod !== 'COD'">
+          🔒 You will be redirected to Razorpay's secure payment page to complete the transaction.
         </div>
       </div>
 

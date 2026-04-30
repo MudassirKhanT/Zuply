@@ -15,6 +15,7 @@ export class NavbarComponent implements OnInit {
   location     = 'Chennai, 600001';
   showUserMenu = false;
   cartCount$!: Observable<number>;
+  pfp          = '';   // base64 profile picture (stored in localStorage)
 
   get isLoggedIn():  boolean { return this.auth.isLoggedIn(); }
   get isCustomer():  boolean { return this.auth.isCustomer(); }
@@ -34,6 +35,12 @@ export class NavbarComponent implements OnInit {
     if (this.isCustomer) {
       this.cartService.getCart().subscribe();
     }
+    this.loadPfp();
+  }
+
+  loadPfp(): void {
+    const stored = localStorage.getItem('zuply_pfp');
+    if (stored) this.pfp = stored;
   }
 
   onSearch(): void {
@@ -45,12 +52,16 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  toggleUserMenu(): void { this.showUserMenu = !this.showUserMenu; }
+  toggleUserMenu(): void {
+    this.loadPfp();    // refresh PFP in case it was just updated
+    this.showUserMenu = !this.showUserMenu;
+  }
   closeUserMenu():  void { this.showUserMenu = false; }
 
   logout(): void {
     this.auth.logout();
     this.cartService.resetCount();
+    this.pfp = '';
     this.closeUserMenu();
     this.router.navigate(['/']);
   }

@@ -16,17 +16,14 @@
       <a routerLink="/products" routerLinkActive="active" class="nav-link">Products</a>
 
       <ng-container *ngIf="isLoggedIn && role === 'CUSTOMER'">
+        <a routerLink="/wishlist" routerLinkActive="active" class="nav-link">❤️ Wishlist</a>
+        <a routerLink="/orders"   routerLinkActive="active" class="nav-link">📦 Orders</a>
         <a routerLink="/cart" routerLinkActive="active" class="nav-link nav-cart" title="Cart">
           <div class="cart-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
+            🛒 Cart
             <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
           </div>
         </a>
-        <a routerLink="/wishlist" routerLinkActive="active" class="nav-link">Wishlist</a>
-        <a routerLink="/orders"   routerLinkActive="active" class="nav-link">Orders</a>
       </ng-container>
 
       <ng-container *ngIf="isLoggedIn && role === 'SELLER'">
@@ -53,24 +50,44 @@
         <a routerLink="/register" class="btn-primary btn-sm btn-pill hide-mobile">Sign Up</a>
       </ng-container>
 
-      <!-- Logged in — avatar dropdown only (no separate Logout button) -->
+      <!-- Logged in — avatar dropdown -->
       <div class="user-menu hide-mobile" *ngIf="isLoggedIn">
-        <button class="nav-avatar" (click)="userDropOpen = !userDropOpen" [class.open]="userDropOpen">
-          {{ userInitial }}
+        <button class="nav-avatar"
+                [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'"
+                [class.has-pfp]="!!pfp"
+                (click)="toggleDrop()">
+          <span *ngIf="!pfp">{{ userInitial }}</span>
         </button>
         <div class="user-drop" *ngIf="userDropOpen">
           <div class="drop-header">
-            <div class="drop-name">{{ userName }}</div>
-            <div class="drop-role">{{ role | titlecase }}</div>
+            <div class="drop-avatar"
+                 [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'"
+                 [class.has-pfp]="!!pfp">
+              <span *ngIf="!pfp">{{ userInitial }}</span>
+            </div>
+            <div>
+              <div class="drop-name">{{ userName }}</div>
+              <div class="drop-role">{{ role | titlecase }}</div>
+            </div>
           </div>
           <div class="drop-divider"></div>
-          <a routerLink="/profile" class="drop-item" (click)="userDropOpen = false">
-            <span class="drop-icon">👤</span> Profile
-          </a>
+          <ng-container *ngIf="role === 'CUSTOMER'">
+            <a routerLink="/profile"  class="drop-item" (click)="userDropOpen = false">👤 My Profile</a>
+            <a routerLink="/orders"   class="drop-item" (click)="userDropOpen = false">📦 My Orders</a>
+            <a routerLink="/wishlist" class="drop-item" (click)="userDropOpen = false">❤️ Wishlist</a>
+            <a routerLink="/profile" [queryParams]="{tab:'addresses'}" class="drop-item" (click)="userDropOpen = false">📍 My Addresses</a>
+          </ng-container>
+          <ng-container *ngIf="role === 'SELLER'">
+            <a routerLink="/seller/dashboard" class="drop-item" (click)="userDropOpen = false">Dashboard</a>
+            <a routerLink="/seller/products"  class="drop-item" (click)="userDropOpen = false">My Products</a>
+            <a routerLink="/seller/orders"    class="drop-item" (click)="userDropOpen = false">Orders</a>
+          </ng-container>
+          <ng-container *ngIf="role === 'ADMIN'">
+            <a routerLink="/admin/dashboard" class="drop-item" (click)="userDropOpen = false">Admin Dashboard</a>
+            <a routerLink="/admin/sellers"   class="drop-item" (click)="userDropOpen = false">Manage Sellers</a>
+          </ng-container>
           <div class="drop-divider"></div>
-          <button class="drop-item drop-logout" (click)="logout()">
-            <span class="drop-icon">🚪</span> Logout
-          </button>
+          <button class="drop-item drop-logout" (click)="logout()">🚪 Logout</button>
         </div>
       </div>
 
@@ -81,6 +98,17 @@
     </div>
 
   </div>
+
+  <!-- Secondary info bar -->
+  <div class="nav-secondary">
+    <div class="nav-secondary-inner">
+      <a routerLink="/become-a-seller" class="sec-link">🏪 Become a Seller</a>
+      <span class="sec-div">|</span>
+      <a href="tel:+918000000000" class="sec-link">📞 24/7 Customer Care</a>
+      <span class="sec-div">|</span>
+      <a routerLink="/advertise" class="sec-link">📢 Advertise on Zuply</a>
+    </div>
+  </div>
 </nav>
 
 <!-- Mobile drawer overlay -->
@@ -89,7 +117,6 @@
 <!-- Mobile drawer panel -->
 <div class="drawer" [class.open]="mobileMenuOpen">
 
-  <!-- Drawer header -->
   <div class="drawer-header">
     <div class="drawer-brand">
       <svg width="24" height="24" viewBox="0 0 46 46" fill="none">
@@ -102,78 +129,56 @@
     <button class="drawer-close" (click)="mobileMenuOpen = false">✕</button>
   </div>
 
-  <!-- User identity (if logged in) -->
   <div class="drawer-user" *ngIf="isLoggedIn">
-    <div class="drawer-avatar">{{ userInitial }}</div>
+    <div class="drawer-avatar"
+         [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'"
+         [class.has-pfp]="!!pfp">
+      <span *ngIf="!pfp">{{ userInitial }}</span>
+    </div>
     <div>
       <div class="drawer-uname">{{ userName }}</div>
       <div class="drawer-urole">{{ role | titlecase }}</div>
     </div>
   </div>
 
-  <!-- Nav section -->
   <div class="drawer-section-label">Navigate</div>
-  <a routerLink="/products" class="drawer-link" (click)="mobileMenuOpen = false">
-    <span class="dl-icon">🏪</span> Products
-  </a>
+  <a routerLink="/" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">🏠</span> Home</a>
+  <a routerLink="/products" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">🔍</span> Products</a>
 
   <ng-container *ngIf="isLoggedIn && role === 'CUSTOMER'">
+    <a routerLink="/wishlist" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">❤️</span> Wishlist</a>
+    <a routerLink="/orders"   class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">📦</span> Orders</a>
     <a routerLink="/cart" class="drawer-link" (click)="mobileMenuOpen = false">
       <span class="dl-icon">🛒</span> Cart
       <span class="dl-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
     </a>
-    <a routerLink="/wishlist" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">❤️</span> Wishlist
-    </a>
-    <a routerLink="/orders" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">📦</span> Orders
-    </a>
   </ng-container>
 
   <ng-container *ngIf="isLoggedIn && role === 'SELLER'">
-    <a routerLink="/seller/dashboard" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">📊</span> Dashboard
-    </a>
-    <a routerLink="/seller/upload" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">⬆️</span> Upload Product
-    </a>
-    <a routerLink="/seller/orders" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">📋</span> Orders
-    </a>
+    <a routerLink="/seller/dashboard" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">📊</span> Dashboard</a>
+    <a routerLink="/seller/upload"    class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">⬆️</span> Upload Product</a>
+    <a routerLink="/seller/orders"    class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">📋</span> Orders</a>
   </ng-container>
 
   <ng-container *ngIf="isLoggedIn && role === 'ADMIN'">
-    <a routerLink="/admin/dashboard" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">🛡️</span> Admin Dashboard
-    </a>
-    <a routerLink="/admin/sellers" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">👥</span> Sellers
-    </a>
-    <a routerLink="/admin/products" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">📦</span> Products
-    </a>
+    <a routerLink="/admin/dashboard" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">🛡️</span> Admin Dashboard</a>
+    <a routerLink="/admin/sellers"   class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">👥</span> Sellers</a>
+    <a routerLink="/admin/products"  class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">📦</span> Products</a>
   </ng-container>
 
-  <!-- Account section -->
   <ng-container *ngIf="isLoggedIn">
     <div class="drawer-divider"></div>
     <div class="drawer-section-label">Account</div>
-    <a routerLink="/profile" class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">👤</span> Profile
-    </a>
-    <button class="drawer-link drawer-logout" (click)="logout()">
-      <span class="dl-icon">🚪</span> Logout
-    </button>
+    <a routerLink="/profile" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">👤</span> Profile</a>
+    <ng-container *ngIf="role === 'CUSTOMER'">
+      <a routerLink="/profile" [queryParams]="{tab:'addresses'}" class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">📍</span> My Addresses</a>
+    </ng-container>
+    <button class="drawer-link drawer-logout" (click)="logout()"><span class="dl-icon">🚪</span> Logout</button>
   </ng-container>
 
   <ng-container *ngIf="!isLoggedIn">
     <div class="drawer-divider"></div>
-    <a routerLink="/login"    class="drawer-link" (click)="mobileMenuOpen = false">
-      <span class="dl-icon">🔑</span> Login
-    </a>
-    <a routerLink="/register" class="drawer-cta" (click)="mobileMenuOpen = false">
-      Create Account
-    </a>
+    <a routerLink="/login"    class="drawer-link" (click)="mobileMenuOpen = false"><span class="dl-icon">🔑</span> Login</a>
+    <a routerLink="/register" class="drawer-cta" (click)="mobileMenuOpen = false">Create Account</a>
   </ng-container>
-
 </div>

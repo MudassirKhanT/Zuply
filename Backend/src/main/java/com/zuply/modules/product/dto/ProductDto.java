@@ -12,6 +12,7 @@ public class ProductDto {
     private String deliveryMethod;
     private String returnPolicy;
     private String imageUrl;
+    private Long   sellerId;
     private String sellerName;
     private String sellerPincode;
     private String status;
@@ -48,6 +49,9 @@ public class ProductDto {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public Long getSellerId() { return sellerId; }
+    public void setSellerId(Long sellerId) { this.sellerId = sellerId; }
 
     public String getSellerName() { return sellerName; }
     public void setSellerName(String sellerName) { this.sellerName = sellerName; }

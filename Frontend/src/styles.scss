@@ -263,10 +263,25 @@ ul, ol { list-style: none; }
   &:hover { background: darken(#E74C3C, 10%); }
 }
 
-.btn-sm  { padding: 6px 14px !important;  font-size: $text-sm !important;  border-radius: $radius-sm !important; }
-.btn-lg  { padding: 14px 28px !important; font-size: $text-md !important;  border-radius: $radius-lg !important; }
+.btn-sm   { padding: 6px 14px !important;  font-size: $text-sm !important;  border-radius: $radius-sm !important; }
+.btn-lg   { padding: 14px 28px !important; font-size: $text-md !important;  border-radius: $radius-lg !important; }
 .btn-full { width: 100%; }
 .btn-pill { border-radius: $radius-pill !important; }
+.btn-ghost-sm {
+  background: transparent; border: 1px solid $zuply-border; color: $zuply-text-secondary;
+  border-radius: $radius-md; padding: 5px 12px; font-size: $text-xs; font-weight: 600;
+  cursor: pointer;
+  &:hover { border-color: $zuply-primary; color: $zuply-primary; }
+  &.danger:hover { border-color: $zuply-error; color: $zuply-error; }
+}
+.btn-outline-sm {
+  padding: 6px 14px; border-radius: $radius-md;
+  border: 1.5px solid $zuply-primary; color: $zuply-primary;
+  font-size: $text-sm; font-weight: 600; background: transparent;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 4px;
+  &:hover { background: $zuply-primary-light; }
+}
 
 // ═══════════════════════════════════════════════════════
 // INPUTS

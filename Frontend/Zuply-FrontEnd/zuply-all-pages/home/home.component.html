@@ -1,0 +1,157 @@
+<div class="home-page">
+
+  <!-- ── HERO ──────────────────────────────────────────── -->
+  <section class="hero-section">
+    <div class="page-container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span> AI-Powered Local Marketplace
+          </div>
+          <h1 class="hero-heading">
+            Your local market,<br>
+            <span class="hero-accent">now digital.</span>
+          </h1>
+          <p class="hero-sub">
+            Discover fresh products from retailers near you. Smart search, instant delivery, real reviews.
+          </p>
+          <div class="hero-ctas">
+            <button class="btn-primary btn-lg btn-pill" (click)="goToProducts()">
+              Shop Now →
+            </button>
+            <a routerLink="/register" class="btn-secondary btn-lg btn-pill">
+              Sell with Us
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item"><span class="stat-num">10K+</span><span class="stat-lbl">Products</span></div>
+            <div class="stat-div"></div>
+            <div class="stat-item"><span class="stat-num">500+</span><span class="stat-lbl">Sellers</span></div>
+            <div class="stat-div"></div>
+            <div class="stat-item"><span class="stat-num">50+</span><span class="stat-lbl">Cities</span></div>
+          </div>
+        </div>
+        <div class="hero-emoji">🏪</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-container">
+
+    <!-- ── FEATURES ─────────────────────────────────────── -->
+    <section class="features-bar">
+      <div class="features-grid">
+        <div class="feature-item" *ngFor="let f of features">
+          <div class="feature-icon">{{ f.icon }}</div>
+          <div>
+            <div class="feature-title">{{ f.title }}</div>
+            <div class="feature-desc">{{ f.desc }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CATEGORIES ────────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-title">Browse by Category</div>
+        <div class="section-header-right">
+          <button class="clear-filter-btn" *ngIf="selectedCategory" (click)="onCategorySelect('')">
+            ✕ Clear filter
+          </button>
+          <a class="section-link" (click)="goToProducts()">See all →</a>
+        </div>
+      </div>
+      <div class="categories-grid">
+        <app-category-chip
+          *ngFor="let cat of categories"
+          [name]="cat.name"
+          [active]="selectedCategory === cat.name"
+          (chipClick)="onCategorySelect($event)">
+        </app-category-chip>
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS ───────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-title">How Zuply Works</div>
+      </div>
+      <div class="how-grid">
+        <div class="how-step" *ngFor="let step of howSteps; let i = index">
+          <div class="step-num">{{ i + 1 }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <div class="step-title">{{ step.title }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PRODUCTS ────────────────────────────────────────── -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-title">
+          {{ selectedCategory ? selectedCategory : 'Trending Products' }}
+        </div>
+        <a class="section-link" (click)="goToProducts()">See all →</a>
+      </div>
+
+      <app-loading-spinner [show]="loading" message="Finding products near you...">
+      </app-loading-spinner>
+
+      <div class="grid-4" *ngIf="!loading && products.length > 0">
+        <app-product-card
+          *ngFor="let product of products"
+          [product]="product"
+          (addToCartEvent)="addToCart($event)"
+          (cardClickEvt)="goToDetail($event)">
+        </app-product-card>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && products.length === 0">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">No products found</div>
+        <div class="empty-desc">No products available in this category yet.</div>
+        <button class="btn-primary btn-pill" (click)="onCategorySelect('')">View all products</button>
+      </div>
+    </section>
+
+    <!-- ── LOCAL SELLERS ─────────────────────────────────── -->
+    <section class="section" *ngIf="localSellers.length > 0">
+      <div class="section-header">
+        <div class="section-title">🏪 Sellers Near You</div>
+        <a class="section-link" routerLink="/sellers">See all sellers →</a>
+      </div>
+      <div class="sellers-row">
+        <div class="seller-pill" *ngFor="let s of localSellers" [routerLink]="['/sellers', s.sellerId]">
+          <div class="sp-avatar">{{ s.sellerName.charAt(0).toUpperCase() }}</div>
+          <div>
+            <div class="sp-name">{{ s.sellerName }}</div>
+            <div class="sp-meta">{{ s.productCount }} products</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SELL BANNER ────────────────────────────────────── -->
+    <section class="sell-banner">
+      <div class="sell-content">
+        <div class="sell-badge">For Sellers</div>
+        <div class="sell-title">Are you a local retailer?</div>
+        <div class="sell-desc">
+          List products in 60 seconds using AI. Upload a photo — we generate title, description, category, and pricing automatically.
+        </div>
+        <a routerLink="/become-a-seller" class="btn-accent btn-lg btn-pill">
+          Start Selling Today →
+        </a>
+      </div>
+      <div class="sell-visual">
+        <div class="sell-step" *ngFor="let s of sellSteps">
+          <div class="ss-num">{{ s.num }}</div>
+          <div class="ss-text">{{ s.text }}</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

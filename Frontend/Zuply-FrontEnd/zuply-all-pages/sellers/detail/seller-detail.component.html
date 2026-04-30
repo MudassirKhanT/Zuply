@@ -1,0 +1,34 @@
+<div class="seller-detail-page page-container">
+
+  <app-loading-spinner [show]="loading" message="Loading seller store…"></app-loading-spinner>
+
+  <ng-container *ngIf="!loading">
+    <a routerLink="/sellers" class="back-btn">← All Sellers</a>
+
+    <div class="seller-header-card">
+      <div class="sdh-avatar">{{ sellerName.charAt(0).toUpperCase() }}</div>
+      <div class="sdh-info">
+        <h1 class="sdh-name">{{ sellerName }}</h1>
+        <div class="sdh-loc" *ngIf="pincode">📍 Pincode {{ pincode }}</div>
+        <div class="sdh-count">{{ products.length }} {{ products.length === 1 ? 'product' : 'products' }} listed</div>
+      </div>
+    </div>
+
+    <div class="section-label">Products from this seller</div>
+
+    <div class="grid-4" *ngIf="products.length > 0">
+      <app-product-card
+        *ngFor="let product of products"
+        [product]="product"
+        (addToCartEvent)="addToCart($event)"
+        (cardClickEvt)="goToProduct($event.id)">
+      </app-product-card>
+    </div>
+
+    <div class="empty-state" *ngIf="products.length === 0">
+      <div class="empty-icon">🛍️</div>
+      <div class="empty-title">No products listed yet</div>
+      <button class="btn-primary btn-pill" routerLink="/sellers">← Back to Sellers</button>
+    </div>
+  </ng-container>
+</div>

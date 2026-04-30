@@ -44,6 +44,11 @@ import { SellersComponent } from './pages/admin/sellers/sellers.component';
 import { ProductsComponent as AdminProductsComponent } from './pages/admin/products/products.component';
 import { ReportsComponent } from './pages/admin/reports/reports.component';
 
+// New pages
+import { BecomeASellerComponent } from './pages/become-a-seller/become-a-seller.component';
+import { SellersComponent as LocalSellersComponent } from './pages/sellers/sellers.component';
+import { SellerDetailComponent } from './pages/sellers/detail/seller-detail.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,6 +86,11 @@ import { ReportsComponent } from './pages/admin/reports/reports.component';
     SellersComponent,
     AdminProductsComponent,
     ReportsComponent,
+
+    // New pages
+    BecomeASellerComponent,
+    LocalSellersComponent,
+    SellerDetailComponent,
   ],
   imports: [
     BrowserModule,

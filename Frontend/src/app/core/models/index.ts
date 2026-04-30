@@ -121,9 +121,21 @@ export interface Order {
 export interface OrderItem {
   productId: number;
   productName: string;
+  productImage?: string;
   quantity: number;
   price: number;
   lineTotal: number;
+}
+
+export interface SavedAddress {
+  id: string;
+  label: 'Home' | 'Work' | 'Other';
+  customerName: string;
+  phone: string;
+  address: string;
+  city: string;
+  pincode: string;
+  isDefault: boolean;
 }
 
 export interface Review {
@@ -239,4 +251,13 @@ export interface AdminProductUpdateRequest {
   category?: string;
   price?: number;
   status?: 'DRAFT' | 'PUBLISHED';
+}
+
+export interface SellerSummary {
+  sellerId: number;
+  sellerName: string;
+  pincode: string;
+  productCount: number;
+  categories: string[];
+  sampleImage?: string;
 }

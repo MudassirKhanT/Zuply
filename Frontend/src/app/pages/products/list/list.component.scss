@@ -69,8 +69,22 @@
 .modal-desc { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-lg; }
 .modal-actions { display: flex; gap: $space-sm; justify-content: flex-end; margin-top: $space-lg; }
 
+// Toast
+.toast-msg {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: #1e293b; color: #fff; padding: 10px 24px;
+  border-radius: $radius-pill; font-size: $text-sm; font-weight: 500;
+  box-shadow: $shadow-lg; z-index: 1100;
+  animation: fadeInUp 0.2s ease;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 @media (max-width: 768px) {
   .products-layout { grid-template-columns: 1fr; }
   .filters-sidebar { position: static; }
   .top-bar { flex-direction: column; align-items: flex-start; }
 }
+

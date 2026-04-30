@@ -1,83 +1,142 @@
-<!-- src/app/pages/profile/profile.component.html -->
-<div class="page-container">
-  <div class="profile-wrap">
+<div class="profile-page page-container">
 
-    <!-- Profile Card (view mode) -->
-    <div class="profile-card" *ngIf="user && !editing">
-      <div class="profile-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
-      <div class="profile-name">{{ user.name }}</div>
-      <div class="badge-primary">{{ user.role | titlecase }}</div>
-      <div class="profile-email">{{ user.email }}</div>
+  <h1 class="page-heading">My Account</h1>
 
-      <!-- Profile details -->
-      <div class="profile-details">
-        <div class="detail-row" *ngIf="user.phone">
-          <span class="detail-label">📱 Phone</span>
-          <span class="detail-value">{{ user.phone }}</span>
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">👤 Profile</button>
+    <button class="tab-btn" [class.active]="activeTab === 'addresses'" (click)="activeTab = 'addresses'">📍 Saved Addresses</button>
+  </div>
+
+  <!-- ── PROFILE TAB ─────────────────────────────────── -->
+  <div *ngIf="activeTab === 'profile'">
+    <div class="profile-card" *ngIf="user">
+
+      <!-- PFP section -->
+      <div class="pfp-section">
+        <div class="pfp-wrap">
+          <div class="pfp-img" [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'">
+            <span *ngIf="!pfp" class="pfp-initial">{{ user.name?.charAt(0)?.toUpperCase() }}</span>
+          </div>
+          <div class="pfp-actions">
+            <label class="btn-secondary btn-sm pfp-upload-btn" for="pfp-input">
+              📷 {{ pfp ? 'Change Photo' : 'Upload Photo' }}
+            </label>
+            <input id="pfp-input" type="file" accept="image/*" hidden (change)="onPfpChange($event)"/>
+            <button *ngIf="pfp" class="btn-ghost-sm" (click)="removePfp()">Remove</button>
+          </div>
         </div>
-        <div class="detail-row" *ngIf="user.address">
-          <span class="detail-label">🏠 Address</span>
-          <span class="detail-value">{{ user.address }}</span>
-        </div>
-        <div class="detail-row" *ngIf="user.pincode">
-          <span class="detail-label">📍 Pincode</span>
-          <span class="detail-value">{{ user.pincode }}</span>
-        </div>
+        <p class="pfp-hint">Optional — your photo will appear in the navbar and account menu.</p>
       </div>
 
-      <div class="success-banner" *ngIf="successMsg">✅ {{ successMsg }}</div>
+      <div class="info-divider"></div>
+
+      <!-- User info grid -->
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Full Name</span>
+          <span class="info-val">{{ user.name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-val">{{ user.email }}</span>
+        </div>
+        <div class="info-row" *ngIf="user.phone">
+          <span class="info-label">Phone</span>
+          <span class="info-val">{{ user.phone }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Account Type</span>
+          <span class="info-val"><span class="role-badge">{{ user.role | titlecase }}</span></span>
+        </div>
+      </div>
+      <p class="profile-note">To update your name, email or phone, please contact support.</p>
 
       <div class="profile-actions">
-        <button class="btn-primary btn-pill" (click)="startEdit()">Edit Profile</button>
-        <a routerLink="/orders" class="btn-secondary btn-pill" *ngIf="user.role === 'CUSTOMER'">My Orders</a>
+        <a routerLink="/orders" class="btn-secondary btn-pill" *ngIf="user.role === 'CUSTOMER'">📦 My Orders</a>
         <a routerLink="/seller/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'SELLER'">Dashboard</a>
-        <a routerLink="/admin/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'ADMIN'">Admin Panel</a>
-        <button class="btn-danger btn-pill" (click)="logout()">Logout</button>
+        <a routerLink="/admin/dashboard"  class="btn-secondary btn-pill" *ngIf="user.role === 'ADMIN'">Admin Panel</a>
+        <button class="btn-danger btn-pill" (click)="logout()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ADDRESSES TAB ──────────────────────────────── -->
+  <div *ngIf="activeTab === 'addresses'">
+
+    <div class="addresses-header">
+      <div class="addr-title">Saved Addresses</div>
+      <button class="btn-primary btn-sm btn-pill" (click)="openAddForm()" *ngIf="!showAddressForm">
+        + Add New Address
+      </button>
+    </div>
+
+    <div class="toast-success" *ngIf="saveSuccess">✓ Address saved successfully!</div>
+
+    <!-- Address form -->
+    <div class="address-form-card" *ngIf="showAddressForm">
+      <div class="form-card-title">{{ editingAddressId ? 'Edit Address' : 'Add New Address' }}</div>
+
+      <div class="label-selector">
+        <button *ngFor="let lbl of labelOptions" class="label-btn"
+                [class.selected]="addressForm.label === lbl"
+                (click)="addressForm.label = lbl">
+          {{ labelIcon(lbl) }} {{ lbl }}
+        </button>
+      </div>
+
+      <div class="grid-2">
+        <div class="input-group">
+          <label>Full Name</label>
+          <input class="input" type="text" placeholder="Recipient's full name" [(ngModel)]="addressForm.customerName"/>
+        </div>
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input class="input" type="tel" placeholder="10-digit mobile number" [(ngModel)]="addressForm.phone" maxlength="10"/>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Full Address</label>
+        <textarea class="input" rows="2" placeholder="House no., street, area, landmark…" [(ngModel)]="addressForm.address"></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>City</label>
+          <input class="input" type="text" placeholder="City" [(ngModel)]="addressForm.city"/>
+        </div>
+        <div class="input-group">
+          <label>Pincode</label>
+          <input class="input" type="text" placeholder="6-digit pincode" maxlength="6" [(ngModel)]="addressForm.pincode"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary btn-pill" (click)="saveAddress()">{{ editingAddressId ? 'Update' : 'Save Address' }}</button>
+        <button class="btn-ghost-sm" (click)="cancelForm()">Cancel</button>
       </div>
     </div>
 
-    <!-- Edit form -->
-    <div class="profile-card" *ngIf="user && editing">
-      <div class="profile-avatar">{{ user.name?.charAt(0)?.toUpperCase() }}</div>
-      <h2 class="edit-title">Edit Profile</h2>
-
-      <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
-
-      <div class="input-group">
-        <label>Full Name</label>
-        <input class="input" type="text" [(ngModel)]="form.name" placeholder="Your full name" />
+    <!-- Address list -->
+    <div class="addresses-list" *ngIf="!showAddressForm">
+      <div class="address-card" *ngFor="let addr of addresses" [class.default-card]="addr.isDefault">
+        <div class="addr-header">
+          <span class="addr-label">{{ labelIcon(addr.label) }} {{ addr.label }}</span>
+          <span class="default-badge" *ngIf="addr.isDefault">Default</span>
+        </div>
+        <div class="addr-name">{{ addr.customerName }}</div>
+        <div class="addr-phone">📞 {{ addr.phone }}</div>
+        <div class="addr-text">{{ addr.address }}, {{ addr.city }} – {{ addr.pincode }}</div>
+        <div class="addr-actions">
+          <button class="btn-ghost-sm" (click)="editAddress(addr)">✏️ Edit</button>
+          <button class="btn-ghost-sm danger" (click)="removeAddress(addr.id)">🗑️ Remove</button>
+          <button class="btn-ghost-sm" *ngIf="!addr.isDefault" (click)="setDefault(addr.id)">☆ Set Default</button>
+        </div>
       </div>
 
-      <div class="input-group">
-        <label>Email Address</label>
-        <input class="input" type="email" [(ngModel)]="form.email" placeholder="your@email.com" />
-        <small class="field-hint">Changing email may require re-login</small>
-      </div>
-
-      <div class="input-group">
-        <label>Phone Number</label>
-        <input class="input" type="tel" [(ngModel)]="form.phone" placeholder="10-digit mobile number" maxlength="10" />
-        <small class="field-hint">10-digit Indian mobile number starting with 6–9</small>
-      </div>
-
-      <div class="input-group">
-        <label>Address</label>
-        <textarea class="input" rows="3" [(ngModel)]="form.address" placeholder="House no., street, area"></textarea>
-        <small class="field-hint">Your delivery address · 10–250 characters</small>
-      </div>
-
-      <div class="input-group">
-        <label>Pincode</label>
-        <input class="input" type="text" [(ngModel)]="form.pincode" placeholder="e.g. 600001" maxlength="6" />
-        <small class="field-hint">6-digit Indian postal code</small>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn-primary btn-pill" (click)="saveProfile()" [disabled]="saving">
-          {{ saving ? 'Saving...' : 'Submit' }}
-        </button>
-        <button class="btn-secondary btn-pill" (click)="resetForm()">Reset</button>
-        <button class="btn-danger btn-pill" (click)="cancelEdit()">Cancel</button>
+      <div class="empty-state" *ngIf="addresses.length === 0">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">No saved addresses</div>
+        <div class="empty-desc">Add an address to speed up checkout.</div>
+        <button class="btn-primary btn-pill" (click)="openAddForm()">+ Add Address</button>
       </div>
     </div>
 

@@ -1,0 +1,69 @@
+/* ── Become a Seller Page ───────────────────────────── */
+.bas-page { background: #f8fafc; padding-bottom: 60px; }
+
+/* Hero */
+.bas-hero { background: linear-gradient(135deg, #0D5C63 0%, #0a4a50 100%); padding: 72px 0 60px; color: #fff; }
+.bas-hero-inner { display: flex; gap: 48px; align-items: center; flex-wrap: wrap; }
+.bas-hero-content { flex: 1 1 380px; }
+.bas-badge { display: inline-block; background: rgba(201,168,76,.25); color: #C9A84C; border: 1px solid rgba(201,168,76,.4); border-radius: 20px; padding: 4px 14px; font-size: .8rem; font-weight: 600; margin-bottom: 18px; }
+.bas-heading { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; margin: 0 0 16px; }
+.bas-accent { color: #C9A84C; }
+.bas-sub { font-size: 1.05rem; opacity: .85; max-width: 480px; margin: 0 0 28px; line-height: 1.6; }
+.bas-hero-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat-box { background: rgba(255,255,255,.1); border-radius: 12px; padding: 18px 24px; text-align: center; }
+.sb-num { display: block; font-size: 1.8rem; font-weight: 800; color: #C9A84C; }
+.sb-lbl { font-size: .82rem; opacity: .85; }
+
+/* Section */
+.bas-section { padding: 56px 0; border-bottom: 1px solid #e8edf2; }
+.bas-section-title { font-size: 1.6rem; font-weight: 800; color: #0D5C63; margin-bottom: 10px; }
+.bas-section-sub { color: #6c757d; margin-bottom: 32px; font-size: .97rem; }
+
+/* Categories grid */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 18px; }
+.cat-card { background: #fff; border: 1px solid #e8edf2; border-radius: 14px; padding: 20px 18px; text-align: center; transition: box-shadow .2s, transform .2s; }
+.cat-card:hover { box-shadow: 0 6px 20px rgba(13,92,99,.1); transform: translateY(-3px); }
+.cat-icon { font-size: 2rem; margin-bottom: 8px; }
+.cat-name { font-weight: 700; font-size: .95rem; color: #1a2332; margin-bottom: 4px; }
+.cat-desc { font-size: .8rem; color: #6c757d; }
+
+/* Listing steps */
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
+.step-card { background: #fff; border-left: 4px solid #0D5C63; border-radius: 12px; padding: 24px 20px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.step-num { font-size: .72rem; font-weight: 700; color: #C9A84C; letter-spacing: 1px; margin-bottom: 8px; }
+.step-icon { font-size: 1.8rem; margin-bottom: 10px; }
+.step-title { font-weight: 700; font-size: 1rem; color: #1a2332; margin-bottom: 6px; }
+.step-desc { font-size: .85rem; color: #6c757d; line-height: 1.55; }
+
+/* Info cards */
+.info-cards-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.info-card { background: #fff; border-radius: 14px; padding: 24px 20px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.ic-icon { font-size: 2rem; margin-bottom: 12px; }
+.ic-title { font-weight: 700; font-size: .97rem; color: #1a2332; margin-bottom: 6px; }
+.ic-desc { font-size: .85rem; color: #6c757d; line-height: 1.55; }
+
+/* Payment grid */
+.pay-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.pay-card { background: linear-gradient(135deg,#f0fafa 0%,#fff 100%); border: 1px solid #d0ecea; border-radius: 14px; padding: 24px 20px; }
+.pay-icon { font-size: 2rem; margin-bottom: 10px; }
+.pay-title { font-weight: 700; font-size: .97rem; color: #0D5C63; margin-bottom: 6px; }
+.pay-desc { font-size: .85rem; color: #6c757d; line-height: 1.55; }
+
+/* CTA section */
+.bas-cta-section { padding: 56px 0; }
+.bas-cta-card { background: linear-gradient(135deg, #0D5C63, #0a4a50); border-radius: 20px; padding: 52px 48px; color: #fff; text-align: center; }
+.bas-cta-title { font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
+.bas-cta-desc { opacity: .85; margin-bottom: 32px; font-size: 1.02rem; }
+.bas-cta-steps { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 36px; }
+.cta-step { display: flex; align-items: center; gap: 10px; font-size: .95rem; }
+.cs-num { width: 28px; height: 28px; border-radius: 50%; background: #C9A84C; color: #fff; font-weight: 700; font-size: .8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* Help */
+.bas-help { border-bottom: none; }
+.help-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.help-card { background: #fff; border-radius: 14px; padding: 24px 20px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.hc-icon { font-size: 2rem; margin-bottom: 12px; }
+.hc-title { font-weight: 700; font-size: .97rem; color: #1a2332; margin-bottom: 6px; }
+.hc-desc { font-size: .85rem; color: #6c757d; line-height: 1.55; margin-bottom: 14px; }
+.hc-link { color: #0D5C63; font-weight: 600; font-size: .88rem; text-decoration: none; }
+.hc-link:hover { text-decoration: underline; }

@@ -1,23 +1,67 @@
-// src/app/pages/profile/profile.component.scss
 @import 'styles';
-.profile-wrap { display:flex; justify-content:center; padding:$space-xl 0; }
-.profile-card { background:$zuply-surface; border-radius:$radius-xl; padding:$space-2xl; width:100%; max-width:400px; box-shadow:$shadow-lg; text-align:center; border:1px solid $zuply-border-light; }
-.profile-avatar { width:80px; height:80px; border-radius:50%; background:$zuply-primary; color:#fff; font-size:$text-3xl; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto $space-md; }
-.profile-name  { font-size:$text-xl; font-weight:700; color:$zuply-text; margin-bottom:$space-sm; }
-.profile-email { font-size:$text-base; color:$zuply-text-secondary; margin-top:$space-sm; margin-bottom:$space-xl; }
-.profile-actions { display:flex; flex-direction:column; gap:$space-sm; }
 
-.profile-details {
-  width: 100%; margin: $space-lg 0; text-align: left;
-  display: flex; flex-direction: column; gap: $space-sm;
+.profile-page { padding: 32px 0 60px; max-width: 720px; margin: 0 auto; }
+.page-heading  { font-size: 1.9rem; font-weight: 800; color: $zuply-text; margin-bottom: 8px; }
+
+.tab-bar { display: flex; gap: 4px; background: $zuply-surface-2; border-radius: $radius-lg; padding: 4px; margin-bottom: 28px; }
+.tab-btn { flex: 1; padding: 9px; border: none; background: transparent; border-radius: $radius-md;
+  font-size: $text-sm; font-weight: 600; color: $zuply-text-secondary; cursor: pointer; transition: $transition-fast;
+  &.active { background: $zuply-surface; color: $zuply-primary; box-shadow: $shadow-sm; }
 }
-.detail-row   { display:flex; align-items:flex-start; gap:$space-sm; padding:$space-sm; background:$zuply-surface-2; border-radius:$radius-md; }
-.detail-label { font-size:$text-xs; font-weight:600; color:$zuply-text-secondary; min-width:80px; flex-shrink:0; }
-.detail-value { font-size:$text-sm; color:$zuply-text; }
 
-.edit-title { font-size:$text-xl; font-weight:700; color:$zuply-text; margin-bottom:$space-lg; }
+.profile-card { background: $zuply-surface; border-radius: $radius-lg; padding: 32px; box-shadow: $shadow-sm; border: 1px solid $zuply-border-light; }
 
-.form-actions { display:flex; gap:$space-sm; flex-wrap:wrap; justify-content:center; margin-top:$space-lg; }
+.pfp-section { margin-bottom: 24px; }
+.pfp-wrap    { display: flex; align-items: center; gap: 24px; margin-bottom: 8px; }
+.pfp-img     { width: 88px; height: 88px; border-radius: 50%; background: $zuply-primary;
+  background-size: cover; background-position: center;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pfp-initial { font-size: 2rem; font-weight: 800; color: #fff; }
+.pfp-actions { display: flex; flex-direction: column; gap: 8px; }
+.pfp-upload-btn { cursor: pointer; }
+.pfp-hint    { font-size: $text-xs; color: $zuply-text-muted; }
+.info-divider { height: 1px; background: $zuply-border-light; margin-bottom: 20px; }
 
-.profile-card .input-group { text-align:left; }
-.profile-card .input, .profile-card textarea.input { text-align:left; }
+.info-grid { display: flex; flex-direction: column; border: 1px solid $zuply-border-light; border-radius: $radius-md; overflow: hidden; margin-bottom: 16px; }
+.info-row  { display: flex; padding: 12px 16px; font-size: $text-sm; border-bottom: 1px solid $zuply-border-light;
+  &:last-child { border-bottom: none; }
+  &:nth-child(even) { background: $zuply-primary-mist; }
+}
+.info-label { min-width: 120px; color: $zuply-text-muted; font-weight: 500; flex-shrink: 0; }
+.info-val   { color: $zuply-text; font-weight: 500; }
+.role-badge { background: $zuply-primary-light; color: $zuply-primary; border-radius: $radius-pill; padding: 2px 12px; font-size: $text-xs; font-weight: 700; }
+.profile-note { font-size: $text-xs; color: $zuply-text-muted; margin-bottom: 20px; }
+.profile-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.addresses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.addr-title { font-size: 1.1rem; font-weight: 700; color: $zuply-text; }
+.toast-success { background: $zuply-success-light; color: $zuply-success; border-radius: $radius-md; padding: 10px 16px; font-weight: 600; font-size: $text-sm; margin-bottom: 16px; }
+
+.address-form-card { background: $zuply-surface; border-radius: $radius-lg; padding: 24px; box-shadow: $shadow-sm; margin-bottom: 20px; border: 1px solid $zuply-border-light; }
+.form-card-title   { font-weight: 700; font-size: 1rem; color: $zuply-text; margin-bottom: 16px; }
+.label-selector    { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.label-btn         { padding: 6px 16px; border-radius: $radius-pill; border: 1.5px solid $zuply-border; background: $zuply-surface;
+  font-size: $text-sm; font-weight: 600; cursor: pointer; color: $zuply-text-secondary; transition: $transition-fast;
+  &.selected, &:hover { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-light; }
+}
+.form-actions { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+
+.addresses-list { display: flex; flex-direction: column; gap: 16px; }
+.address-card   { background: $zuply-surface; border: 1.5px solid $zuply-border-light; border-radius: $radius-lg; padding: 20px 24px; transition: $transition-fast;
+  &.default-card { border-color: $zuply-primary; }
+}
+.addr-header  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.addr-label   { font-weight: 700; font-size: $text-sm; color: $zuply-text; }
+.default-badge { background: $zuply-primary-light; color: $zuply-primary; font-size: $text-xs; font-weight: 700; border-radius: $radius-pill; padding: 2px 10px; }
+.addr-name    { font-weight: 600; font-size: .95rem; color: $zuply-text; margin-bottom: 4px; }
+.addr-phone   { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: 4px; }
+.addr-text    { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: 12px; }
+.addr-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.empty-state { text-align: center; padding: 40px 24px; }
+.empty-icon  { font-size: 3rem; margin-bottom: 12px; }
+.empty-title { font-size: 1.1rem; font-weight: 700; color: $zuply-text; margin-bottom: 8px; }
+.empty-desc  { color: $zuply-text-muted; font-size: $text-sm; margin-bottom: 20px; }
+
+.success-banner { background: $zuply-success-light; color: $zuply-success; border-radius: $radius-md; padding: 10px 16px; font-weight: 600; font-size: $text-sm; margin-bottom: $space-md; }
+.error-banner   { background: $zuply-error-light; color: $zuply-error; border-radius: $radius-md; padding: 10px 16px; font-weight: 600; font-size: $text-sm; margin-bottom: $space-md; }

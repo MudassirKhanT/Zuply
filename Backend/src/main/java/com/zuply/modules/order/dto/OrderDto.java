@@ -17,24 +17,28 @@ public class OrderDto {
     public static class OrderItemDto {
         private Long   productId;
         private String productName;
+        private String productImage;
         private int    quantity;
         private Double price;
         private Double lineTotal;
 
-        public Long   getProductId()            { return productId; }
-        public void   setProductId(Long id)     { this.productId = id; }
+        public Long   getProductId()              { return productId; }
+        public void   setProductId(Long id)       { this.productId = id; }
 
-        public String getProductName()          { return productName; }
-        public void   setProductName(String n)  { this.productName = n; }
+        public String getProductName()            { return productName; }
+        public void   setProductName(String n)    { this.productName = n; }
 
-        public int    getQuantity()             { return quantity; }
-        public void   setQuantity(int q)        { this.quantity = q; }
+        public String getProductImage()           { return productImage; }
+        public void   setProductImage(String img) { this.productImage = img; }
 
-        public Double getPrice()                { return price; }
-        public void   setPrice(Double p)        { this.price = p; }
+        public int    getQuantity()               { return quantity; }
+        public void   setQuantity(int q)          { this.quantity = q; }
 
-        public Double getLineTotal()            { return lineTotal; }
-        public void   setLineTotal(Double t)    { this.lineTotal = t; }
+        public Double getPrice()                  { return price; }
+        public void   setPrice(Double p)          { this.price = p; }
+
+        public Double getLineTotal()              { return lineTotal; }
+        public void   setLineTotal(Double t)      { this.lineTotal = t; }
     }
 
     public Long   getOrderId()                       { return orderId; }

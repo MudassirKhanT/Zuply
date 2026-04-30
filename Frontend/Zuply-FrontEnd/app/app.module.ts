@@ -44,6 +44,12 @@ import { SellersComponent    as AdminSellersComponent }   from '../zuply-all-pag
 import { ProductsComponent   as AdminProductsComponent }  from '../zuply-all-pages/admin/products/products.component';
 import { ReportsComponent    as AdminReportsComponent }   from '../zuply-all-pages/admin/reports/reports.component';
 
+// New customer-facing pages
+import { HomeComponent }           from '../zuply-all-pages/home/home.component';
+import { BecomeASellerComponent }  from '../zuply-all-pages/become-a-seller/become-a-seller.component';
+import { SellersComponent         as LocalSellersComponent }  from '../zuply-all-pages/sellers/sellers.component';
+import { SellerDetailComponent }   from '../zuply-all-pages/sellers/detail/seller-detail.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,6 +86,12 @@ import { ReportsComponent    as AdminReportsComponent }   from '../zuply-all-pag
     AdminSellersComponent,
     AdminProductsComponent,
     AdminReportsComponent,
+
+    // New customer-facing pages
+    HomeComponent,
+    BecomeASellerComponent,
+    LocalSellersComponent,
+    SellerDetailComponent,
   ],
   imports: [
     BrowserModule,

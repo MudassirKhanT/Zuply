@@ -103,6 +103,11 @@ export class DetailComponent implements OnInit {
     });
   }
 
+  isCategory(name: string): boolean {
+    const cat = this.product?.categoryName || this.product?.category || '';
+    return cat.toLowerCase() === name.toLowerCase();
+  }
+
   starsArray(rating: number): number[] {
     return Array(Math.round(rating)).fill(0);
   }

@@ -1,1 +1,117 @@
-<p>list works!</p>
+<div class="orders-page page-container">
+
+  <h1 class="page-heading">My Orders</h1>
+
+  <app-loading-spinner [show]="loading" message="Loading your orders…"></app-loading-spinner>
+
+  <div class="alert-error alert" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && orders.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No orders yet</div>
+    <div class="empty-desc">Looks like you haven't placed any orders. Start shopping!</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+
+  <!-- Orders list -->
+  <div class="orders-list" *ngIf="!loading && orders.length > 0">
+    <div class="order-card" *ngFor="let order of orders">
+
+      <!-- Order header -->
+      <div class="order-header">
+        <div class="order-meta">
+          <div class="order-id">Order #{{ order.orderId }}</div>
+          <div class="order-date">{{ order.createdAt | date:'dd MMM yyyy, hh:mm a' }}</div>
+        </div>
+        <div class="order-status-wrap">
+          <span class="order-status-badge" [ngClass]="statusClass(order.status)">
+            {{ statusIcon(order.status) }} {{ order.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="order-progress">
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="(progressStep(order.status) / 3) * 100"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 1">
+            <div class="ps-dot"></div>
+            <div class="ps-label">Placed</div>
+          </div>
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 2">
+            <div class="ps-dot"></div>
+            <div class="ps-label">Processing</div>
+          </div>
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 3">
+            <div class="ps-dot"></div>
+            <div class="ps-label">Delivered</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order items -->
+      <div class="order-items" *ngIf="order.items && order.items.length > 0">
+        <div class="order-item" *ngFor="let item of order.items">
+
+          <!-- Product image / thumbnail -->
+          <div class="item-img" [style.backgroundImage]="item.productImage ? 'url('+item.productImage+')' : 'none'"
+               (click)="goToProduct(item.productId)">
+            <span *ngIf="!item.productImage" class="item-img-placeholder">🛍️</span>
+          </div>
+
+          <!-- Item details -->
+          <div class="item-body">
+            <div class="item-name" (click)="goToProduct(item.productId)">{{ item.productName }}</div>
+            <div class="item-meta">Qty: {{ item.quantity }} · ₹{{ item.price | number:'1.0-0' }} each</div>
+            <div class="item-total">₹{{ item.lineTotal | number:'1.0-0' }}</div>
+          </div>
+
+          <!-- Review button (only after delivery) -->
+          <div class="item-review-wrap" *ngIf="order.status === 'DELIVERED'">
+            <ng-container *ngIf="!reviewState(item.productId)">
+              <button class="btn-outline-sm review-btn" (click)="openReview(item.productId)">
+                ★ Write Review
+              </button>
+            </ng-container>
+
+            <!-- Review form (inline) -->
+            <div class="inline-review" *ngIf="reviewState(item.productId) as rv">
+              <ng-container *ngIf="!rv.done">
+                <div class="star-picker">
+                  <span *ngFor="let n of [1,2,3,4,5]"
+                        class="star-pick" [class.selected]="rv.rating >= n"
+                        (click)="setRating(item.productId, n)">★</span>
+                </div>
+                <textarea class="input review-ta" rows="2" placeholder="Your experience…"
+                          [(ngModel)]="rv.comment"></textarea>
+                <div class="rv-actions">
+                  <button class="btn-primary btn-sm" (click)="submitReview(item.productId)"
+                          [disabled]="rv.rating === 0 || rv.submitting">
+                    {{ rv.submitting ? 'Posting…' : 'Post' }}
+                  </button>
+                  <button class="btn-ghost-sm" (click)="closeReview(item.productId)">Cancel</button>
+                </div>
+              </ng-container>
+              <div class="review-done" *ngIf="rv.done">✓ Review posted! Thank you.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order footer -->
+      <div class="order-footer">
+        <div class="order-footer-row">
+          <div class="footer-info">
+            <span class="payment-badge">{{ order.paymentMethod || 'COD' }}</span>
+            <span class="delivery-addr" *ngIf="order.city">📍 {{ order.city }}</span>
+          </div>
+          <div class="order-total">Total: <strong>₹{{ order.totalAmount | number:'1.0-0' }}</strong></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

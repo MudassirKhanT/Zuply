@@ -1,7 +1,7 @@
-<!-- src/app/pages/orders/list/list.component.html -->
 <div class="page-container">
-  <h1 class="text-2xl" style="margin-bottom:24px">My Orders</h1>
+  <h1 class="page-heading">My Orders</h1>
 
+  <!-- Tab bar -->
   <div class="tabs-row">
     <button *ngFor="let tab of tabs" class="tab-btn" [class.active]="activeTab === tab" (click)="setTab(tab)">
       {{ tab | titlecase }}
@@ -10,24 +10,105 @@
 
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
+  <!-- Orders list -->
   <div class="orders-list" *ngIf="!loading && filtered.length > 0">
-    <div class="order-card" *ngFor="let order of filtered" (click)="viewDetail(order)">
-      <div class="order-top">
-        <div class="order-id">Order #{{ order.orderId }}</div>
-        <span [class]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
+    <div class="order-card" *ngFor="let order of filtered">
+
+      <!-- Order header -->
+      <div class="order-header">
+        <div class="order-meta">
+          <span class="order-id">Order #{{ order.orderId }}</span>
+          <span class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</span>
+        </div>
+        <div class="order-header-right">
+          <span [class]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
+          <span class="pay-method-badge">{{ order.paymentMethod }}</span>
+        </div>
       </div>
-      <div class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</div>
-      <div class="order-items-summary" *ngIf="order.items?.length">
-        <span class="order-item-name">{{ order.items[0].productName }} × {{ order.items[0].quantity }}</span>
-        <span class="order-more" *ngIf="order.items.length > 1"> +{{ order.items.length - 1 }} more</span>
+
+      <!-- Progress bar (hide if CANCELLED) -->
+      <div class="progress-track" *ngIf="order.status !== 'CANCELLED'">
+        <div class="progress-line">
+          <div class="progress-fill" [style.width.%]="progressStep(order.status) * 33.33"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 0">
+            <div class="step-dot"></div>
+            <span class="step-label">Placed</span>
+          </div>
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 1">
+            <div class="step-dot"></div>
+            <span class="step-label">Processing</span>
+          </div>
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 2">
+            <div class="step-dot"></div>
+            <span class="step-label">Shipped</span>
+          </div>
+          <div class="progress-step" [class.done]="progressStep(order.status) >= 3">
+            <div class="step-dot"></div>
+            <span class="step-label">Delivered</span>
+          </div>
+        </div>
       </div>
-      <div class="order-bottom">
-        <div class="order-total price-sm">₹ {{ order.totalAmount }}</div>
-        <button class="btn-secondary btn-sm btn-pill">View Details →</button>
+
+      <!-- Cancelled banner -->
+      <div class="cancelled-banner" *ngIf="order.status === 'CANCELLED'">
+        ❌ This order was cancelled.
       </div>
+
+      <!-- Items -->
+      <div class="order-items">
+        <div class="order-item-row" *ngFor="let item of order.items">
+          <div class="item-img-wrap">
+            <img *ngIf="item.productImage" [src]="item.productImage" [alt]="item.productName" class="item-thumb"/>
+            <div *ngIf="!item.productImage" class="item-thumb-placeholder">🛍️</div>
+          </div>
+          <div class="item-info">
+            <div class="item-name">{{ item.productName }}</div>
+            <div class="item-meta">Qty: {{ item.quantity }} &nbsp;·&nbsp; ₹{{ item.price | number:'1.0-0' }} each</div>
+          </div>
+          <div class="item-total">₹{{ item.lineTotal | number:'1.0-0' }}</div>
+
+          <!-- Inline review (only for DELIVERED orders) -->
+          <div class="review-col" *ngIf="order.status === 'DELIVERED'">
+            <div *ngIf="!getReviewState(order.orderId, item.productId).submitted">
+              <button class="btn-ghost-sm review-btn"
+                      (click)="openReview(order.orderId, item.productId)">
+                {{ getReviewState(order.orderId, item.productId).open ? '✕ Cancel' : '⭐ Review' }}
+              </button>
+              <div class="review-form" *ngIf="getReviewState(order.orderId, item.productId).open">
+                <div class="star-row">
+                  <span *ngFor="let s of [1,2,3,4,5]"
+                        class="star"
+                        [class.filled]="s <= getReviewState(order.orderId, item.productId).rating"
+                        (click)="setRating(order.orderId, item.productId, s)">★</span>
+                </div>
+                <textarea class="input review-input" rows="2" placeholder="Share your experience…"
+                  [(ngModel)]="getReviewState(order.orderId, item.productId).comment"></textarea>
+                <button class="btn-primary btn-sm btn-pill"
+                        [disabled]="getReviewState(order.orderId, item.productId).submitting"
+                        (click)="submitReview(order.orderId, item.productId)">
+                  {{ getReviewState(order.orderId, item.productId).submitting ? 'Submitting…' : 'Submit Review' }}
+                </button>
+              </div>
+            </div>
+            <div class="review-done" *ngIf="getReviewState(order.orderId, item.productId).submitted">
+              ✅ Review submitted!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order footer -->
+      <div class="order-footer">
+        <div class="order-total">Total: <strong>₹{{ order.totalAmount | number:'1.0-0' }}</strong></div>
+        <button class="btn-secondary btn-sm btn-pill" (click)="viewDetail(order)">View Details →</button>
+      </div>
+
     </div>
   </div>
 
+  <!-- Empty state -->
   <div class="empty-state" *ngIf="!loading && filtered.length === 0">
     <div class="empty-icon">📦</div>
     <div class="empty-title">No orders found</div>

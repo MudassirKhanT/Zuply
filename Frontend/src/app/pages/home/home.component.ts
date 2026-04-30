@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Product, Category } from '../../core/models';
+import { Product, Category, SellerSummary } from '../../core/models';
 
 @Component({
   selector: 'app-home',
@@ -12,10 +12,11 @@ import { Product, Category } from '../../core/models';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  products: Product[]    = [];
-  categories: Category[] = [];
-  selectedCategory       = '';
-  loading                = true;
+  products: Product[]        = [];
+  categories: Category[]     = [];
+  localSellers: SellerSummary[] = [];
+  selectedCategory           = '';
+  loading                    = true;
 
   features = [
     { icon: '📍', title: 'Local First',       desc: 'Products from sellers near you' },
@@ -81,6 +82,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.products = category
             ? res.data.filter((p: Product) => p.categoryName === category || p.category === category)
             : res.data.slice(0, 8);
+          if (!category) this.buildLocalSellers(res.data);
         }
         this.loading = false;
       },
@@ -107,5 +109,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   goToProducts(): void {
     this.router.navigate(['/products']);
+  }
+
+  private buildLocalSellers(products: Product[]): void {
+    const map = new Map<number, SellerSummary>();
+    products.forEach(p => {
+      if (!p.sellerId || !p.sellerName) return;
+      if (!map.has(p.sellerId)) {
+        map.set(p.sellerId, { sellerId: p.sellerId, sellerName: p.sellerName,
+          pincode: p.sellerPincode || p.pincode || '', productCount: 0, categories: [] });
+      }
+      map.get(p.sellerId)!.productCount++;
+    });
+    this.localSellers = Array.from(map.values()).slice(0, 6);
   }
 }

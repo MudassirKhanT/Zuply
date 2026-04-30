@@ -40,6 +40,7 @@ public class ProductService {
         dto.setStatus(product.getStatus().name());
         if (product.getCategory() != null) dto.setCategoryName(product.getCategory().getName());
         if (product.getSeller() != null) {
+            dto.setSellerId(product.getSeller().getId());
             dto.setSellerName(product.getSeller().getStoreName());
             dto.setSellerPincode(product.getSeller().getPincode());
         }

@@ -29,14 +29,23 @@ import { SellersComponent } from './pages/admin/sellers/sellers.component';
 import { ProductsComponent as AdminProductsComponent } from './pages/admin/products/products.component';
 import { ReportsComponent } from './pages/admin/reports/reports.component';
 
+// New pages
+import { BecomeASellerComponent } from './pages/become-a-seller/become-a-seller.component';
+import { SellersComponent as LocalSellersComponent } from './pages/sellers/sellers.component';
+import { SellerDetailComponent } from './pages/sellers/detail/seller-detail.component';
+
 const routes: Routes = [
 
   // ── Public ────────────────────────────────────────────
-  { path: '',          component: HomeComponent },
-  { path: 'login',     component: LoginComponent },
-  { path: 'register',  component: RegisterComponent },
-  { path: 'products',  component: ProductListComponent },
-  { path: 'products/:id', component: ProductDetailComponent },
+  { path: '',                component: HomeComponent },
+  { path: 'login',           component: LoginComponent },
+  { path: 'register',        component: RegisterComponent },
+  { path: 'products',        component: ProductListComponent },
+  { path: 'products/:id',    component: ProductDetailComponent },
+  { path: 'become-a-seller', component: BecomeASellerComponent },
+  { path: 'sellers',         component: LocalSellersComponent },
+  { path: 'sellers/:id',     component: SellerDetailComponent },
+  { path: 'advertise',       component: BecomeASellerComponent }, // placeholder
 
   // ── Customer ──────────────────────────────────────────
   { path: 'cart',      component: CartComponent,     canActivate: [AuthGuard], data: { role: 'CUSTOMER' } },

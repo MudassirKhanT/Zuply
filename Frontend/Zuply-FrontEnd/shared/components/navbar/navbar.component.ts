@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
   cartCount      = 0;
   mobileMenuOpen = false;
   userDropOpen   = false;
+  pfp            = '';   // base64 profile picture (localStorage)
 
   constructor(
     public auth: AuthService,
@@ -24,10 +25,22 @@ export class NavbarComponent implements OnInit {
     if (this.auth.isAuthenticated()) {
       this.cartService.getCart().subscribe();
     }
+    this.loadPfp();
+  }
+
+  loadPfp(): void {
+    const stored = localStorage.getItem('zuply_pfp');
+    if (stored) this.pfp = stored;
+  }
+
+  toggleDrop(): void {
+    this.loadPfp();
+    this.userDropOpen = !this.userDropOpen;
   }
 
   logout(): void {
     this.auth.logout();
+    this.pfp = '';
     this.mobileMenuOpen = false;
     this.userDropOpen   = false;
     this.router.navigate(['/login']);
@@ -41,8 +54,8 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  get role():     string  { return this.auth.getRole(); }
-  get isLoggedIn():boolean { return this.auth.isAuthenticated(); }
-  get userName(): string  { return this.auth.getUserName(); }
-  get userInitial(): string { return (this.userName?.charAt(0) || 'U').toUpperCase(); }
+  get role():        string  { return this.auth.getRole(); }
+  get isLoggedIn():  boolean { return this.auth.isAuthenticated(); }
+  get userName():    string  { return this.auth.getUserName(); }
+  get userInitial(): string  { return (this.userName?.charAt(0) || 'U').toUpperCase(); }
 }

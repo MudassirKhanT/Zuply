@@ -109,7 +109,11 @@ export class CheckoutComponent implements OnInit {
     this.paymentService.createOrder(this.cart.grandTotal).subscribe({
       next: res => {
         this.placing = false;
-        if (!res.success) { this.errorMsg = 'Could not initiate payment.'; return; }
+        if (!res.success) {
+          this.errorMsg = res.message
+            || 'Online payment is currently unavailable. Please use Cash on Delivery.';
+          return;
+        }
 
         const data = res.data;
         const user = this.auth.getCurrentUser();
@@ -140,7 +144,10 @@ export class CheckoutComponent implements OnInit {
       },
       error: err => {
         this.placing  = false;
-        this.errorMsg = err?.error?.message || 'Payment initiation failed.';
+        const detail = err?.error?.message || err?.message || '';
+        this.errorMsg = detail
+          ? `Payment failed: ${detail}`
+          : 'Online payment is currently unavailable. Please switch to Cash on Delivery.';
       }
     });
   }

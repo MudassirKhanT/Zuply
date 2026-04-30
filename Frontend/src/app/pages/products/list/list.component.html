@@ -82,7 +82,9 @@
         <app-product-card
           *ngFor="let p of filtered"
           [product]="p"
+          [wishlisted]="wishlistedIds.has(p.id)"
           (addToCartEvent)="addToCart($event)"
+          (wishlistToggleEvt)="toggleWishlist($event)"
           (cardClickEvt)="goToDetail($event)">
         </app-product-card>
       </div>
@@ -95,6 +97,9 @@
       </div>
     </div>
   </div>
+
+  <!-- ── Toast ───────────────────────────────────────── -->
+  <div class="toast-msg" *ngIf="toastMsg">{{ toastMsg }}</div>
 
   <!-- ── Location Modal ───────────────────────────────── -->
   <div class="modal-overlay" *ngIf="showLocationModal" (click)="showLocationModal = false">

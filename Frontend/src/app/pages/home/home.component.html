@@ -90,8 +90,13 @@
     <!-- ── CATEGORIES ────────────────────────────────────── -->
     <section class="section animate-fade-up" #catsRef>
       <div class="section-header">
-        <div class="section-title">Shop by Category</div>
-        <a class="section-link" (click)="goToProducts()">See all →</a>
+        <div class="section-title">Browse by Category</div>
+        <div class="section-header-right">
+          <button class="clear-filter-btn" *ngIf="selectedCategory" (click)="onCategorySelect('')">
+            ✕ Clear filter
+          </button>
+          <a class="section-link" (click)="goToProducts()">See all →</a>
+        </div>
       </div>
       <div class="categories-grid">
         <app-category-chip
@@ -146,6 +151,23 @@
         <button class="btn-primary btn-pill" (click)="onCategorySelect('')">
           View all products
         </button>
+      </div>
+    </section>
+
+    <!-- ── LOCAL SELLERS ─────────────────────────────────── -->
+    <section class="section animate-fade-up" *ngIf="localSellers.length > 0">
+      <div class="section-header">
+        <div class="section-title">🏪 Sellers Near You</div>
+        <a class="section-link" routerLink="/sellers">See all sellers →</a>
+      </div>
+      <div class="sellers-row">
+        <div class="seller-pill" *ngFor="let s of localSellers.slice(0, 6)" [routerLink]="['/sellers', s.sellerId]">
+          <div class="sp-avatar">{{ s.sellerName.charAt(0).toUpperCase() }}</div>
+          <div class="sp-body">
+            <div class="sp-name">{{ s.sellerName }}</div>
+            <div class="sp-meta">{{ s.productCount }} products</div>
+          </div>
+        </div>
       </div>
     </section>
 

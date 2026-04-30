@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Product, Category } from '../../../core/models';
 
@@ -25,10 +26,14 @@ export class ListComponent implements OnInit {
   pincodeInput     = '';
   loading          = true;
   showLocationModal = false;
+  wishlistedIds    = new Set<number>();
+  toastMsg         = '';
+  toastTimer: any;
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private wishlistService: WishlistService,
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
@@ -38,6 +43,13 @@ export class ListComponent implements OnInit {
     this.productService.getCategories().subscribe({
       next: res => { if (res.success) this.categories = res.data; }
     });
+    if (this.auth.isLoggedIn() && this.auth.isCustomer()) {
+      this.wishlistService.getWishlist().subscribe({
+        next: res => {
+          if (res.success) res.data.forEach((item: any) => this.wishlistedIds.add(item.productId ?? item.product?.id));
+        }
+      });
+    }
     this.route.queryParams.subscribe(params => {
       if (params['name'])     this.searchQuery      = params['name'];
       if (params['category']) this.selectedCategory = params['category'];
@@ -109,7 +121,41 @@ export class ListComponent implements OnInit {
     if (!this.auth.isLoggedIn()) {
       this.router.navigate(['/login'], { queryParams: { returnUrl: '/products' } }); return;
     }
-    this.cartService.addToCart(product.id).subscribe();
+    this.cartService.addToCart(product.id).subscribe({
+      next: res => {
+        if (res.success) this.showToast('✓ Added to cart!');
+        else this.showToast(res.message || 'Could not add to cart');
+      },
+      error: () => this.showToast('Failed to add to cart')
+    });
+  }
+
+  toggleWishlist(product: Product): void {
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: '/products' } }); return;
+    }
+    const isWishlisted = this.wishlistedIds.has(product.id);
+    if (isWishlisted) {
+      this.wishlistService.removeFromWishlist(product.id).subscribe({
+        next: res => {
+          if (res.success) { this.wishlistedIds.delete(product.id); this.showToast('Removed from wishlist'); }
+        },
+        error: () => this.showToast('Failed to update wishlist')
+      });
+    } else {
+      this.wishlistService.addToWishlist(product.id).subscribe({
+        next: res => {
+          if (res.success) { this.wishlistedIds.add(product.id); this.showToast('❤️ Added to wishlist!'); }
+        },
+        error: () => this.showToast('Failed to update wishlist')
+      });
+    }
+  }
+
+  showToast(msg: string): void {
+    this.toastMsg = msg;
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.toastMsg = '', 2500);
   }
 
   goToDetail(product: Product): void {

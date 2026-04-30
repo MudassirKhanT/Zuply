@@ -3,13 +3,43 @@
   <!-- ── Success Modal ─────────────────────────────── -->
   <div class="modal-overlay" *ngIf="orderSuccess">
     <div class="success-modal">
-      <div class="success-icon">✅</div>
-      <h2 class="success-title">Order Placed!</h2>
-      <p class="success-desc">
-        Your order <strong>#{{ placedOrderId }}</strong> has been placed successfully.
-        <span *ngIf="paymentMethod === 'COD'"> Pay <strong>₹{{ grandTotal | number:'1.0-0' }}</strong> on delivery.</span>
-        <span *ngIf="paymentMethod !== 'COD'"> Payment of <strong>₹{{ grandTotal | number:'1.0-0' }}</strong> received.</span>
-      </p>
+
+      <!-- COD -->
+      <ng-container *ngIf="paymentMethod === 'COD'">
+        <div class="success-icon">📦</div>
+        <h2 class="success-title">Order Confirmed!</h2>
+        <div class="success-method-badge cod-badge">Cash on Delivery</div>
+        <p class="success-desc">
+          Your order <strong>#{{ placedOrderId }}</strong> has been placed successfully.
+          Please keep <strong>₹{{ grandTotal | number:'1.0-0' }}</strong> ready to pay the delivery person on arrival.
+        </p>
+        <div class="success-tip">💡 You'll receive an SMS confirmation shortly.</div>
+      </ng-container>
+
+      <!-- UPI -->
+      <ng-container *ngIf="paymentMethod === 'UPI'">
+        <div class="success-icon">✅</div>
+        <h2 class="success-title">Payment Successful!</h2>
+        <div class="success-method-badge upi-badge">UPI Payment</div>
+        <p class="success-desc">
+          ₹<strong>{{ grandTotal | number:'1.0-0' }}</strong> paid via UPI for order <strong>#{{ placedOrderId }}</strong>.
+          Your payment has been confirmed and the seller has been notified.
+        </p>
+        <div class="success-tip">🔒 Secured by Razorpay · Transaction ID saved to your orders.</div>
+      </ng-container>
+
+      <!-- CARD -->
+      <ng-container *ngIf="paymentMethod === 'CARD'">
+        <div class="success-icon">💳</div>
+        <h2 class="success-title">Payment Successful!</h2>
+        <div class="success-method-badge card-badge">Card Payment</div>
+        <p class="success-desc">
+          ₹<strong>{{ grandTotal | number:'1.0-0' }}</strong> charged to your card for order <strong>#{{ placedOrderId }}</strong>.
+          A payment receipt has been sent to your registered email.
+        </p>
+        <div class="success-tip">🔒 Secured by Razorpay · PCI-DSS compliant.</div>
+      </ng-container>
+
       <div class="success-actions">
         <button class="btn-primary btn-pill" routerLink="/orders">View Orders</button>
         <button class="btn-secondary btn-pill" routerLink="/">Continue Shopping</button>

@@ -22,7 +22,12 @@ export class LoginComponent {
     private route: ActivatedRoute
   ) {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '';
-    if (this.auth.isLoggedIn()) this.router.navigate([this.returnUrl || '/']);
+    if (this.auth.isLoggedIn()) {
+      const role = this.auth.getRole();
+      if (role === 'SELLER') this.router.navigate(['/seller/dashboard']);
+      else if (role === 'ADMIN') this.router.navigate(['/admin/dashboard']);
+      else this.router.navigate([this.returnUrl || '/']);
+    }
   }
 
   onSubmit(): void {
@@ -33,8 +38,17 @@ export class LoginComponent {
       next: res => {
         this.loading = false;
         if (res.success) {
-          if (res.data.role === 'CUSTOMER') this.cartService.getCart().subscribe();
-          this.router.navigate([this.returnUrl || '/']);
+          const role = res.data.role;
+          if (role === 'CUSTOMER') {
+            this.cartService.getCart().subscribe();
+            this.router.navigate([this.returnUrl || '/']);
+          } else if (role === 'SELLER') {
+            this.router.navigate(['/seller/dashboard']);
+          } else if (role === 'ADMIN') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            this.router.navigate([this.returnUrl || '/']);
+          }
         } else {
           this.errorMsg = res.message || 'Login failed.';
         }

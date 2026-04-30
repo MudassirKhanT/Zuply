@@ -58,6 +58,13 @@
 .success-desc  { font-size: $text-base; color: $zuply-text-secondary; line-height: 1.6; margin-bottom: $space-xl; }
 .success-actions { display: flex; gap: $space-sm; justify-content: center; flex-wrap: wrap; }
 
+/* Payment success badges */
+.success-method-badge { display: inline-block; border-radius: $radius-pill; padding: 4px 16px; font-size: $text-sm; font-weight: 700; margin-bottom: 16px; }
+.cod-badge  { background: #fff3cd; color: #856404; }
+.upi-badge  { background: #e8f0ff; color: #2353d4; }
+.card-badge { background: #e6f7ee; color: #1a7e46; }
+.success-tip { font-size: $text-sm; color: $zuply-text-muted; background: $zuply-primary-mist; border-radius: $radius-md; padding: 10px 16px; margin-bottom: 20px; }
+
 @media (max-width: 768px) {
   .checkout-layout { grid-template-columns: 1fr; }
   .checkout-summary { position: static; }

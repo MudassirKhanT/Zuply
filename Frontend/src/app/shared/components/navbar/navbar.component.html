@@ -38,14 +38,19 @@
         <a routerLink="/register" class="btn-filled-sm">Sign Up</a>
       </ng-container>
 
-      <!-- Customer icons -->
+      <!-- Customer nav links: Products | Wishlist | Orders | Cart -->
       <ng-container *ngIf="isLoggedIn && isCustomer">
-        <a routerLink="/wishlist" class="icon-btn" title="Wishlist">❤️</a>
-        <a routerLink="/cart" class="icon-btn cart-icon-btn" title="Cart">
-          &#128722;
-          <span class="cart-count" *ngIf="(cartCount$ | async)! > 0">
-            {{ cartCount$ | async }}
-          </span>
+        <a routerLink="/products"  routerLinkActive="nav-link-active" class="nav-link-pill">Products</a>
+        <a routerLink="/wishlist"  routerLinkActive="nav-link-active" class="nav-link-pill icon-link" title="Wishlist">
+          <span class="nl-icon">❤️</span><span class="nl-label">Wishlist</span>
+        </a>
+        <a routerLink="/orders"   routerLinkActive="nav-link-active" class="nav-link-pill icon-link" title="Orders">
+          <span class="nl-icon">📦</span><span class="nl-label">Orders</span>
+        </a>
+        <a routerLink="/cart" class="nav-link-pill icon-link cart-icon-btn" title="Cart">
+          <span class="nl-icon">&#128722;</span>
+          <span class="nl-label">Cart</span>
+          <span class="cart-count" *ngIf="(cartCount$ | async)! > 0">{{ cartCount$ | async }}</span>
         </a>
       </ng-container>
 
@@ -54,29 +59,39 @@
         <a routerLink="/seller/upload" class="btn-filled-sm">+ List Product</a>
       </ng-container>
 
-      <!-- User menu -->
+      <!-- User avatar / PFP dropdown -->
       <div class="user-menu-wrap" *ngIf="isLoggedIn">
         <div class="user-avatar"
              [class.seller]="isSeller"
              [class.admin]="isAdmin"
+             [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'"
+             [class.has-pfp]="!!pfp"
              (click)="toggleUserMenu()">
-          {{ userInitial }}
+          <span *ngIf="!pfp">{{ userInitial }}</span>
         </div>
 
         <div class="dropdown" *ngIf="showUserMenu">
           <div class="dropdown-header">
-            <div class="dropdown-name">{{ userName }}</div>
-            <div class="dropdown-role">
-              {{ isCustomer ? 'Customer' : isSeller ? 'Seller' : 'Admin' }}
+            <div class="dropdown-avatar"
+                 [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'"
+                 [class.has-pfp]="!!pfp">
+              <span *ngIf="!pfp">{{ userInitial }}</span>
+            </div>
+            <div>
+              <div class="dropdown-name">{{ userName }}</div>
+              <div class="dropdown-role">
+                {{ isCustomer ? 'Customer' : isSeller ? 'Seller' : 'Admin' }}
+              </div>
             </div>
           </div>
           <div class="dropdown-divider"></div>
 
           <!-- Customer links -->
           <ng-container *ngIf="isCustomer">
-            <a routerLink="/profile"  class="dropdown-item" (click)="closeUserMenu()">My Profile</a>
-            <a routerLink="/orders"   class="dropdown-item" (click)="closeUserMenu()">My Orders</a>
-            <a routerLink="/wishlist" class="dropdown-item" (click)="closeUserMenu()">Wishlist</a>
+            <a routerLink="/profile"  class="dropdown-item" (click)="closeUserMenu()">👤 My Profile</a>
+            <a routerLink="/orders"   class="dropdown-item" (click)="closeUserMenu()">📦 My Orders</a>
+            <a routerLink="/wishlist" class="dropdown-item" (click)="closeUserMenu()">❤️ Wishlist</a>
+            <a routerLink="/profile" [queryParams]="{tab:'addresses'}" class="dropdown-item" (click)="closeUserMenu()">📍 My Addresses</a>
           </ng-container>
 
           <!-- Seller links -->
@@ -96,10 +111,27 @@
           </ng-container>
 
           <div class="dropdown-divider"></div>
-          <div class="dropdown-item logout" (click)="logout()">Logout</div>
+          <div class="dropdown-item logout" (click)="logout()">🚪 Logout</div>
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Secondary info bar -->
+  <div class="navbar-secondary">
+    <div class="secondary-inner">
+      <a routerLink="/become-a-seller" class="sec-link">
+        <span class="sec-icon">🏪</span> Become a Seller
+      </a>
+      <span class="sec-divider">|</span>
+      <a href="tel:+918000000000" class="sec-link">
+        <span class="sec-icon">📞</span> 24/7 Customer Care
+      </a>
+      <span class="sec-divider">|</span>
+      <a routerLink="/advertise" class="sec-link">
+        <span class="sec-icon">📢</span> Advertise on Zuply
+      </a>
     </div>
   </div>
 </nav>
@@ -115,17 +147,17 @@
     </a>
     <a routerLink="/products" routerLinkActive="active" class="bnav-item">
       <span class="bnav-icon">🔍</span>
-      <span>Search</span>
-      <div class="bnav-bar"></div>
-    </a>
-    <a routerLink="/cart" routerLinkActive="active" class="bnav-item" *ngIf="isCustomer">
-      <span class="bnav-icon">🛒</span>
-      <span>Cart</span>
+      <span>Products</span>
       <div class="bnav-bar"></div>
     </a>
     <a routerLink="/orders" routerLinkActive="active" class="bnav-item" *ngIf="isCustomer">
       <span class="bnav-icon">📦</span>
       <span>Orders</span>
+      <div class="bnav-bar"></div>
+    </a>
+    <a routerLink="/cart" routerLinkActive="active" class="bnav-item" *ngIf="isCustomer">
+      <span class="bnav-icon">🛒</span>
+      <span>Cart</span>
       <div class="bnav-bar"></div>
     </a>
     <a routerLink="/profile" routerLinkActive="active" class="bnav-item">

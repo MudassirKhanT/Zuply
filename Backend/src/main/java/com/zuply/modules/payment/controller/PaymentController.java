@@ -32,8 +32,15 @@ public class PaymentController {
             PaymentOrderResponse response = paymentService.createOrder(request, user.getId());
             return ResponseEntity.ok(ApiResponse.success("Payment order created", response));
         } catch (RazorpayException e) {
+            String msg = e.getMessage();
+            // Provide a user-friendly message while preserving the raw error for debugging
+            String userMsg = (msg != null && msg.contains("The api key provided is invalid"))
+                    ? "Payment gateway configuration error. Please use Cash on Delivery."
+                    : "Failed to initiate payment: " + msg;
+            return ResponseEntity.badRequest().body(ApiResponse.failure(userMsg));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(
-                    ApiResponse.failure("Failed to create payment: " + e.getMessage()));
+                    ApiResponse.failure("Payment service error: " + e.getMessage()));
         }
     }
 

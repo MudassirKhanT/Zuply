@@ -1,0 +1,40 @@
+<div class="sellers-page page-container">
+
+  <div class="sellers-header">
+    <div>
+      <h1 class="page-heading">Local Sellers</h1>
+      <p class="page-sub">Discover sellers near you and shop directly from their store.</p>
+    </div>
+    <input class="input search-input" type="text" placeholder="Search by name, pincode, category…"
+           [(ngModel)]="searchQuery"/>
+  </div>
+
+  <app-loading-spinner [show]="loading" message="Finding sellers near you…"></app-loading-spinner>
+
+  <div class="sellers-grid" *ngIf="!loading">
+    <div class="seller-card" *ngFor="let seller of filteredSellers" (click)="goToSeller(seller.sellerId)">
+      <div class="seller-banner" [style.backgroundImage]="seller.sampleImage ? 'url('+seller.sampleImage+')' : 'none'">
+        <div class="seller-avatar">{{ seller.sellerName.charAt(0).toUpperCase() }}</div>
+      </div>
+      <div class="seller-body">
+        <div class="seller-name">{{ seller.sellerName }}</div>
+        <div class="seller-location" *ngIf="seller.pincode">📍 Pincode {{ seller.pincode }}</div>
+        <div class="seller-cats">
+          <span class="cat-chip" *ngFor="let c of seller.categories.slice(0, 3)">{{ c }}</span>
+        </div>
+        <div class="seller-meta">
+          <span class="meta-badge">{{ seller.productCount }} {{ seller.productCount === 1 ? 'product' : 'products' }}</span>
+        </div>
+      </div>
+      <div class="seller-footer">
+        <button class="btn-primary btn-sm btn-full">View Store →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filteredSellers.length === 0">
+    <div class="empty-icon">🏪</div>
+    <div class="empty-title">No sellers found</div>
+    <div class="empty-desc">{{ searchQuery ? 'Try a different search.' : 'No local sellers available yet.' }}</div>
+  </div>
+</div>

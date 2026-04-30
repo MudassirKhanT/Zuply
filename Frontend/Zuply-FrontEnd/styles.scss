@@ -183,6 +183,16 @@ input, textarea, select { font-family: $font-family; }
 .btn-full   { width: 100%; }
 .btn-sm     { padding: 6px 14px; font-size: $text-xs; }
 .btn-lg     { padding: 14px 28px; font-size: $text-md; }
+.btn-ghost-sm {
+  @extend %btn-base;
+  background: transparent;
+  border: 1px solid $zuply-border;
+  color: $zuply-text-secondary;
+  padding: 5px 12px;
+  font-size: $text-xs;
+  &:hover:not(:disabled) { border-color: $zuply-primary; color: $zuply-primary; }
+  &.danger:hover:not(:disabled) { border-color: $zuply-error; color: $zuply-error; }
+}
 
 // ============================================================
 // Form Elements
