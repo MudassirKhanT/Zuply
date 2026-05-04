@@ -37,6 +37,10 @@ public class Product {
     private String highlights;
 
     private String imageUrl;
+
+    @Column(name = "extra_images", columnDefinition = "TEXT")
+    private String extraImages; // comma-separated additional image URLs in display order
+
     private Double price;
     private boolean aiSuggestedCategory;
     private String status;

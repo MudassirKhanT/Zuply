@@ -1,9 +1,12 @@
 package com.zuply.modules.product.dto;
 
+import java.util.List;
+
 public class ProductDto {
 
     private Long id;
     private String name;
+    private String description;
     private String categoryName;
     private Double price;
     private Integer stock;
@@ -11,6 +14,7 @@ public class ProductDto {
     private String deliveryMethod;
     private String returnPolicy;
     private String imageUrl;
+    private List<String> extraImages;
     private String sellerName;
     private String sellerPincode;
     private String status;
@@ -20,6 +24,9 @@ public class ProductDto {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) {
@@ -44,6 +51,9 @@ public class ProductDto {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public List<String> getExtraImages() { return extraImages; }
+    public void setExtraImages(List<String> extraImages) { this.extraImages = extraImages; }
 
     public String getSellerName() { return sellerName; }
     public void setSellerName(String sellerName) { this.sellerName = sellerName; }

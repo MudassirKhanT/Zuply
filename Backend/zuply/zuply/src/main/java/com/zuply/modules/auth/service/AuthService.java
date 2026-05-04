@@ -1,8 +1,11 @@
 package com.zuply.modules.auth.service;
 
+import com.zuply.common.enums.Role;
 import com.zuply.modules.auth.dto.LoginRequest;
 import com.zuply.modules.auth.dto.LoginResponse;
 import com.zuply.modules.auth.dto.RegisterRequest;
+import com.zuply.modules.seller.model.Seller;
+import com.zuply.modules.seller.repository.SellerRepository;
 import com.zuply.modules.user.dto.UserProfileDto;
 import com.zuply.modules.user.model.User;
 import com.zuply.modules.user.repository.UserRepository;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     @Autowired private UserRepository userRepository;
+    @Autowired private SellerRepository sellerRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JwtUtil jwtUtil;
 
@@ -29,6 +33,17 @@ public class AuthService {
         user.setPhone(request.getPhone());
         user.setRole(request.getRole());
         User saved = userRepository.save(user);
+
+        // Auto-create Seller record so the seller can use the platform immediately
+        if (request.getRole() == Role.SELLER) {
+            Seller seller = new Seller();
+            seller.setUser(saved);
+            seller.setStoreName(request.getName() + "'s Store");
+            seller.setVerificationStatus("PENDING");
+            seller.setActive(false);
+            sellerRepository.save(seller);
+        }
+
         return toDto(saved);
     }
 

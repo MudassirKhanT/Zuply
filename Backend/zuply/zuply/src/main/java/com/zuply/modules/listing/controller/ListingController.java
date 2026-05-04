@@ -13,6 +13,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/listing")
 @RequiredArgsConstructor
@@ -110,6 +113,25 @@ public class ListingController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(404)
                     .body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    // -------------------------------------------------------
+    // PUT /api/listing/{productId}/images
+    // Seller saves ordered extra image URLs for a listing product
+    // -------------------------------------------------------
+    @PutMapping("/{productId}/images")
+    public ResponseEntity<ApiResponse<ListingResponse>> saveExtraImages(
+            @PathVariable Long productId,
+            @RequestBody Map<String, List<String>> body,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            Long sellerId = getSellerIdFromUserDetails(userDetails);
+            List<String> imageUrls = body.getOrDefault("imageUrls", List.of());
+            ListingResponse response = listingService.saveExtraImages(productId, sellerId, imageUrls);
+            return ResponseEntity.ok(ApiResponse.success(response, "Images saved"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(ApiResponse.error(e.getMessage()));
         }
     }
 

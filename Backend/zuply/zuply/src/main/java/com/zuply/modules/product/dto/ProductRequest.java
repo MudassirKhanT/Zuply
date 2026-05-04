@@ -1,8 +1,11 @@
 package com.zuply.modules.product.dto;
 
+import java.util.List;
+
 public class ProductRequest {
 
     private String name;
+    private String description;
     private Long categoryId;
     private Double price;
     private Integer stock;
@@ -10,10 +13,14 @@ public class ProductRequest {
     private String deliveryMethod;
     private String returnPolicy;
     private String imageUrl;
+    private List<String> extraImages;
     private Long sellerId;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
@@ -37,6 +44,9 @@ public class ProductRequest {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public List<String> getExtraImages() { return extraImages; }
+    public void setExtraImages(List<String> extraImages) { this.extraImages = extraImages; }
 
     public Long getSellerId() { return sellerId; }
     public void setSellerId(Long sellerId) { this.sellerId = sellerId; }

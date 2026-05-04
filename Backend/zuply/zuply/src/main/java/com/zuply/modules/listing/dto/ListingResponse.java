@@ -23,5 +23,6 @@ public class ListingResponse {
     private String suggestedPriceMax;
     private List<String> tags;
     private List<String> highlights;
+    private List<String> extraImages;
     private String status;
 }

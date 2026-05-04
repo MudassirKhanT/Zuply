@@ -32,7 +32,14 @@ public class ProductController {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return sellerRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Seller record not found"));
+                .orElseGet(() -> {
+                    Seller s = new Seller();
+                    s.setUser(user);
+                    s.setStoreName(user.getName() + "'s Store");
+                    s.setVerificationStatus("PENDING");
+                    s.setActive(false);
+                    return sellerRepository.save(s);
+                });
     }
 
     // ── Public: Search, Filter, Sort ─────────────────────────────────────────

@@ -22,12 +22,19 @@ public class Product {
     private Category category;
 
     private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     private Double price;
     private Integer stock;
     private String variations;
     private String deliveryMethod;
     private String returnPolicy;
     private String imageUrl;
+
+    @Column(name = "extra_images", columnDefinition = "TEXT")
+    private String extraImages; // comma-separated additional image URLs in display order
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.PENDING;
@@ -43,6 +50,9 @@ public class Product {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
@@ -61,6 +71,9 @@ public class Product {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getExtraImages() { return extraImages; }
+    public void setExtraImages(String extraImages) { this.extraImages = extraImages; }
 
     public ProductStatus getStatus() { return status; }
     public void setStatus(ProductStatus status) { this.status = status; }

@@ -52,10 +52,13 @@ public class UploadService {
         Files.createDirectories(destination.getParent());
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
+        // Accessible HTTP path (served via WebConfig resource handler)
+        String imageUrl = "/uploads/" + uniqueFileName;
+
         // TODO 5 — Build and save Image entity with PENDING status
         Image image = Image.builder()
                 .userId(userId)
-                .originalUrl(destination.toString())
+                .originalUrl(imageUrl)
                 .fileName(uniqueFileName)
                 .fileType(file.getContentType())
                 .status(ImageStatus.PENDING)
@@ -65,7 +68,8 @@ public class UploadService {
         // TODO 6 — Return UploadResponse
         return UploadResponse.builder()
                 .imageId(saved.getId())
-                .originalUrl(saved.getOriginalUrl())
+                .originalUrl(imageUrl)
+                .imageUrl(imageUrl)
                 .status(saved.getStatus())
                 .message("Image uploaded successfully.")
                 .build();

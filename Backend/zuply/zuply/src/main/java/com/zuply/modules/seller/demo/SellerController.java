@@ -2,6 +2,7 @@ package com.zuply.modules.seller.demo;
 
 import com.zuply.common.ApiResponse;
 import com.zuply.modules.order.model.Order;
+import com.zuply.modules.product.dto.ProductDto;
 import com.zuply.modules.product.model.Product;
 import com.zuply.modules.product.service.ProductService;
 import com.zuply.modules.seller.dto.SellerDashboardDto;
@@ -39,7 +40,12 @@ public class SellerController {
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return sellerService.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Seller record not found. Please register as seller first."));
+                .orElseGet(() -> sellerService.registerSeller(
+                        user,
+                        user.getName() + "'s Store",
+                        "",
+                        ""
+                ));
     }
 
     // --- Seller Registration ---
@@ -71,6 +77,11 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success(seller, "Seller registered successfully. Awaiting admin approval."));
     }
 
+    // Returns true only for sellers explicitly suspended by admin (approved then deactivated)
+    private boolean isSuspended(Seller seller) {
+        return "APPROVED".equals(seller.getVerificationStatus()) && !seller.isActive();
+    }
+
     // --- Seller Dashboard ---
     @GetMapping("/dashboard")
     public ResponseEntity<ApiResponse<SellerDashboardDto>> getDashboard(Authentication authentication) {
@@ -81,9 +92,8 @@ public class SellerController {
             return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
 
-        if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+        if (isSuspended(seller)) {
+            return ResponseEntity.status(403).body(ApiResponse.error("Your account has been suspended."));
         }
 
         SellerDashboardDto dashboard = sellerService.getDashboard(seller.getId());
@@ -92,7 +102,7 @@ public class SellerController {
 
     // --- Seller Products (own products only) ---
     @GetMapping("/products")
-    public ResponseEntity<ApiResponse<List<Product>>> getSellerProducts(Authentication authentication) {
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getSellerProducts(Authentication authentication) {
         Seller seller;
         try {
             seller = getAuthenticatedSeller(authentication);
@@ -100,12 +110,11 @@ public class SellerController {
             return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
 
-        if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+        if (isSuspended(seller)) {
+            return ResponseEntity.status(403).body(ApiResponse.error("Your account has been suspended."));
         }
 
-        List<Product> products = sellerService.getSellerProducts(seller.getId());
+        List<ProductDto> products = productService.findBySellerId(seller.getId());
         return ResponseEntity.ok(ApiResponse.success(products, "Seller products fetched"));
     }
 
@@ -119,9 +128,8 @@ public class SellerController {
             return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
 
-        if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+        if (isSuspended(seller)) {
+            return ResponseEntity.status(403).body(ApiResponse.error("Your account has been suspended."));
         }
 
         List<SellerOrderDto> orders = sellerService.getSellerOrders(seller.getId());
@@ -141,9 +149,8 @@ public class SellerController {
             return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
         }
 
-        if (!seller.isActive()) {
-            return ResponseEntity.status(403)
-                    .body(ApiResponse.error("Account suspended"));
+        if (isSuspended(seller)) {
+            return ResponseEntity.status(403).body(ApiResponse.error("Your account has been suspended."));
         }
 
         try {

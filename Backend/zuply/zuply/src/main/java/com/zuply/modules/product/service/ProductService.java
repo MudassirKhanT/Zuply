@@ -12,6 +12,7 @@ import com.zuply.modules.seller.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +31,16 @@ public class ProductService {
         ProductDto dto = new ProductDto();
         dto.setId(product.getId());
         dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setStock(product.getStock());
         dto.setVariations(product.getVariations());
         dto.setDeliveryMethod(product.getDeliveryMethod());
         dto.setReturnPolicy(product.getReturnPolicy());
         dto.setImageUrl(product.getImageUrl());
+        dto.setExtraImages(product.getExtraImages() != null && !product.getExtraImages().isBlank()
+                ? Arrays.asList(product.getExtraImages().split(","))
+                : List.of());
         dto.setStatus(product.getStatus().name());
         if (product.getCategory() != null) dto.setCategoryName(product.getCategory().getName());
         if (product.getSeller() != null) {
@@ -98,6 +103,7 @@ public class ProductService {
 
         Product product = new Product();
         product.setName(request.getName());
+        product.setDescription(request.getDescription());
         product.setCategory(category);
         product.setSeller(seller);
         product.setPrice(request.getPrice());
@@ -106,6 +112,8 @@ public class ProductService {
         product.setDeliveryMethod(request.getDeliveryMethod());
         product.setReturnPolicy(request.getReturnPolicy());
         product.setImageUrl(request.getImageUrl());
+        if (request.getExtraImages() != null && !request.getExtraImages().isEmpty())
+            product.setExtraImages(String.join(",", request.getExtraImages()));
         product.setStatus(ProductStatus.PENDING);
 
         return toDto(productRepository.save(product));
@@ -120,12 +128,14 @@ public class ProductService {
             throw new RuntimeException("Forbidden: you can only edit your own products");
 
         if (request.getName()           != null) product.setName(request.getName());
+        if (request.getDescription()    != null) product.setDescription(request.getDescription());
         if (request.getPrice()          != null) product.setPrice(request.getPrice());
         if (request.getStock()          != null) product.setStock(request.getStock());
         if (request.getVariations()     != null) product.setVariations(request.getVariations());
         if (request.getDeliveryMethod() != null) product.setDeliveryMethod(request.getDeliveryMethod());
         if (request.getReturnPolicy()   != null) product.setReturnPolicy(request.getReturnPolicy());
         if (request.getImageUrl()       != null) product.setImageUrl(request.getImageUrl());
+        if (request.getExtraImages()    != null) product.setExtraImages(String.join(",", request.getExtraImages()));
         if (request.getCategoryId()     != null) {
             Category cat = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Invalid category"));

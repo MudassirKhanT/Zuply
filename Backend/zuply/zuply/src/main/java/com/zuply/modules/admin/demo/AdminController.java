@@ -4,6 +4,7 @@ import com.zuply.common.ApiResponse;   // FIXED: was com.zuply.payload.ApiRespon
 import com.zuply.modules.admin.dto.AdminDashboardDto;
 import com.zuply.modules.admin.dto.AdminReportDto;
 import com.zuply.modules.admin.service.AdminService;
+import com.zuply.modules.admin.dto.AdminSellerDto;
 import com.zuply.modules.product.model.Product;
 import com.zuply.modules.seller.model.Seller;
 import lombok.RequiredArgsConstructor;
@@ -30,23 +31,22 @@ public class AdminController {
     }
 
     @GetMapping("/sellers")
-    public ResponseEntity<ApiResponse<List<Seller>>> getAllSellers() {
-        return ResponseEntity.ok(
-                ApiResponse.success(adminService.getAllSellers(), "Sellers fetched successfully"));
+    public ResponseEntity<ApiResponse<List<AdminSellerDto>>> getAllSellers() {
+        List<AdminSellerDto> dtos = adminService.getAllSellers().stream()
+                .map(AdminSellerDto::new).toList();
+        return ResponseEntity.ok(ApiResponse.success(dtos, "Sellers fetched successfully"));
     }
 
     @PatchMapping("/sellers/{id}/approve")
-    public ResponseEntity<ApiResponse<Seller>> approveSeller(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<AdminSellerDto>> approveSeller(@PathVariable Long id) {
         Seller seller = adminService.approveSeller(id);
-        return ResponseEntity.ok(
-                ApiResponse.success(seller, "Seller approved successfully"));
+        return ResponseEntity.ok(ApiResponse.success(new AdminSellerDto(seller), "Seller approved successfully"));
     }
 
     @PatchMapping("/sellers/{id}/suspend")
-    public ResponseEntity<ApiResponse<Seller>> suspendSeller(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<AdminSellerDto>> suspendSeller(@PathVariable Long id) {
         Seller seller = adminService.suspendSeller(id);
-        return ResponseEntity.ok(
-                ApiResponse.success(seller, "Seller suspended successfully"));
+        return ResponseEntity.ok(ApiResponse.success(new AdminSellerDto(seller), "Seller suspended successfully"));
     }
 
     @GetMapping("/products")

@@ -7,8 +7,7 @@ import java.util.List;
 
 public class CheckoutRequest {
 
-    @NotNull(message = "Customer ID is required")
-    private Long customerId;
+    private Long customerId; // set by OrderController from JWT, never required from client
 
     @Valid
     @NotNull(message = "Delivery address is required")

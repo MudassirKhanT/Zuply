@@ -175,6 +175,15 @@ public class ListingService {
     }
 
 
+    // Save ordered extra image URLs for a listing product
+    public ListingResponse saveExtraImages(Long productId, Long sellerId, List<String> imageUrls) {
+        Product product = productRepository.findByIdAndSellerId(productId, sellerId)
+                .orElseThrow(() -> new RuntimeException("Product not found or access denied"));
+        product.setExtraImages(imageUrls.isEmpty() ? null : String.join(",", imageUrls));
+        productRepository.save(product);
+        return buildListingResponse(product);
+    }
+
     // Internal helper — builds ListingResponse from Product
     private ListingResponse buildListingResponse(Product product) {
 
@@ -194,6 +203,10 @@ public class ListingService {
                 .map(Image::getOriginalUrl)
                 .orElse(null);
 
+        List<String> extraImages = (product.getExtraImages() != null && !product.getExtraImages().isBlank())
+                ? Arrays.asList(product.getExtraImages().split(","))
+                : List.of();
+
         return ListingResponse.builder()
                 .productId(product.getId())
                 .imageId(product.getImageId())
@@ -211,6 +224,7 @@ public class ListingService {
                 .suggestedPriceMax(product.getSuggestedPriceMax())
                 .tags(tags)
                 .highlights(highlights)
+                .extraImages(extraImages)
                 .status(product.getStatus())
                 .build();
     }

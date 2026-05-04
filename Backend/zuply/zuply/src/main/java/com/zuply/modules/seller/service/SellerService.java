@@ -93,9 +93,12 @@ public class SellerService {
 
         for (OrderItem item : sellerOrderItems) {
             Order order = item.getOrder();
+            String customerName = order.getCustomerName() != null
+                    ? order.getCustomerName()
+                    : (order.getCustomer() != null ? order.getCustomer().getName() : "Unknown");
             SellerOrderDto dto = new SellerOrderDto(
                     order.getId(),
-                    order.getCustomer().getName(),
+                    customerName,
                     item.getProduct().getName(),
                     item.getQuantity(),
                     order.getStatus().name()

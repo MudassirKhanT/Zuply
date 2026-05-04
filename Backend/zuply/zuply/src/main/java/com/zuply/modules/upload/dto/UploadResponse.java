@@ -13,6 +13,7 @@ public class UploadResponse {
 
     private Long imageId;
     private String originalUrl;
+    private String imageUrl;
     private ImageStatus status;
     private String message;
 }

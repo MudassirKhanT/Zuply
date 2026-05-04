@@ -64,8 +64,10 @@ public class SecurityConfig {
 
                         // Public routes
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/chat").permitAll()          // chatbot — no login required
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
 
                         // Customer only
                         .requestMatchers("/api/cart/**").hasRole("CUSTOMER")
@@ -74,14 +76,13 @@ public class SecurityConfig {
 
                         // Seller only
                         .requestMatchers("/api/seller/**").hasRole("SELLER")
-
-                        //  Seller only (NEW)
-                        // Upload: POST /api/upload — seller submits a product image
+                        .requestMatchers(HttpMethod.POST,   "/api/products").hasRole("SELLER")
+                        .requestMatchers(HttpMethod.PUT,    "/api/products/**").hasRole("SELLER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("SELLER")
                         .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("SELLER")
-                        // Listing: all listing endpoints — generate, preview, edit, publish
                         .requestMatchers("/api/listing/**").hasRole("SELLER")
 
-                        //  — Admin only ─
+                        // Admin only
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // ── Everything else requires authentication ───

@@ -33,6 +33,7 @@ public class OrderController {
             Authentication authentication) {
         try {
             User user = getAuthUser(authentication);
+            request.setCustomerId(user.getId()); // always use JWT identity, never trust client-sent ID
             OrderDto order = orderService.placeOrder(request);
             return ResponseEntity.ok(ApiResponse.success(order, "Order placed successfully"));
         } catch (RuntimeException e) {
