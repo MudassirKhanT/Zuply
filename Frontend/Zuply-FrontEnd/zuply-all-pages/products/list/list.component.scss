@@ -1,5 +1,28 @@
 // src/app/pages/products/list/list.component.scss
 @import 'styles';
+
+.cart-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $zuply-success;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: $radius-pill;
+  font-size: $text-sm;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: $shadow-md;
+  animation: fadeInUp 0.2s ease;
+
+  &--error { background: $zuply-error; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 .list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:$space-lg; flex-wrap:wrap; gap:$space-md; }
 .sort-wrap   { display:flex; align-items:center; gap:$space-sm; }
 .sort-label  { font-size:$text-sm; color:$zuply-text-secondary; font-weight:500; }

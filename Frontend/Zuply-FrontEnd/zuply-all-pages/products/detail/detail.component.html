@@ -7,20 +7,47 @@
 
     <div class="detail-grid">
       <!-- Image -->
-      <div class="detail-image">
-        <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name"/>
-        <div *ngIf="!product.imageUrl" class="detail-img-placeholder">
-          <span style="font-size:80px">🛒</span>
+      <div class="detail-image-col">
+        <div class="detail-image">
+          <img *ngIf="selectedImage" [src]="selectedImage" [alt]="product.name"/>
+          <div *ngIf="!selectedImage" class="detail-img-placeholder">
+            <span style="font-size:80px">🛒</span>
+          </div>
+          <app-ai-badge *ngIf="product.aiGenerated"></app-ai-badge>
         </div>
-        <app-ai-badge *ngIf="product.aiGenerated"></app-ai-badge>
+
+        <!-- Thumbnail strip — shown only when there are extra images -->
+        <div class="thumb-strip" *ngIf="product.extraImages && product.extraImages.length">
+          <button class="thumb-item"
+                  [class.active]="selectedImage === product.imageUrl"
+                  (click)="selectedImage = product.imageUrl || ''">
+            <img [src]="product.imageUrl" [alt]="product.name"/>
+          </button>
+          <button class="thumb-item"
+                  *ngFor="let img of product.extraImages"
+                  [class.active]="selectedImage === img"
+                  (click)="selectedImage = img">
+            <img [src]="img" [alt]="product.name"/>
+          </button>
+        </div>
       </div>
 
       <!-- Info -->
       <div class="detail-info">
-        <div class="detail-cat badge-primary">{{ product.category }}</div>
+        <div class="detail-cat badge-primary">{{ product.category || product.categoryName }}</div>
         <h1 class="detail-name">{{ product.name }}</h1>
         <div class="detail-seller">🏪 {{ product.sellerName }}</div>
         <div class="detail-dist badge-distance" *ngIf="product.distance">📍 {{ product.distance }}</div>
+
+        <!-- Rating summary -->
+        <div class="rating-summary" *ngIf="product.reviewCount && product.reviewCount > 0">
+          <div class="stars-display">
+            <span *ngFor="let s of starArray(5)" class="star-icon" [class.filled]="s <= (product.averageRating || 0)">★</span>
+          </div>
+          <span class="rating-val">{{ product.averageRating | number:'1.1-1' }}</span>
+          <span class="rating-count">({{ product.reviewCount }} review{{ product.reviewCount !== 1 ? 's' : '' }})</span>
+        </div>
+
         <div class="detail-price">₹ {{ product.price }}</div>
 
         <div class="detail-desc" *ngIf="product.description">
@@ -38,10 +65,83 @@
 
         <div class="detail-btns">
           <button class="btn-secondary btn-pill" (click)="addToWishlist()">❤️ Wishlist</button>
-          <button class="btn-primary btn-pill" (click)="addToCart()">🛒 Add to Cart</button>
+          <button class="btn-primary btn-pill" (click)="addToCart()" [disabled]="addingToCart">
+            {{ addingToCart ? 'Adding...' : '🛒 Add to Cart' }}
+          </button>
+        </div>
+
+        <div class="action-msg" *ngIf="actionMsg" [class.action-msg--error]="actionMsgType === 'error'">
+          {{ actionMsg }}
         </div>
       </div>
     </div>
+
+    <!-- ── Reviews Section ─────────────────────────────────────────────── -->
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <div class="reviews-title">Customer Reviews
+          <span class="count-badge" *ngIf="reviews.length > 0">{{ reviews.length }}</span>
+        </div>
+      </div>
+
+      <!-- Write a review (customers only) -->
+      <div class="review-form-card" *ngIf="isCustomer">
+        <div class="review-form-title">Write a Review</div>
+
+        <div class="star-picker">
+          <span *ngFor="let s of starArray(5)"
+                class="star-pick"
+                [class.active]="s <= (hoverRating || newRating)"
+                (mouseenter)="hoverRating = s"
+                (mouseleave)="hoverRating = 0"
+                (click)="newRating = s">★</span>
+        </div>
+
+        <textarea class="review-textarea"
+                  [(ngModel)]="newComment"
+                  placeholder="Share your experience (optional)"
+                  rows="3"></textarea>
+
+        <div class="review-msg" *ngIf="reviewMsg" [class.review-msg--error]="reviewMsgType === 'error'">
+          {{ reviewMsg }}
+        </div>
+
+        <button class="btn-primary btn-pill review-submit-btn"
+                (click)="submitReview()"
+                [disabled]="submittingReview || newRating === 0">
+          {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+        </button>
+      </div>
+
+      <!-- Login prompt for guests -->
+      <div class="review-login-prompt" *ngIf="!isLoggedIn">
+        <a routerLink="/login">Login</a> to write a review.
+      </div>
+
+      <!-- Reviews list -->
+      <app-loading-spinner [show]="reviewsLoading"></app-loading-spinner>
+
+      <div class="reviews-empty" *ngIf="!reviewsLoading && reviews.length === 0">
+        No reviews yet. Be the first to share your experience!
+      </div>
+
+      <div class="review-cards" *ngIf="!reviewsLoading && reviews.length > 0">
+        <div class="review-card" *ngFor="let r of reviews">
+          <div class="review-top">
+            <div class="reviewer-avatar">{{ r.reviewerName.charAt(0).toUpperCase() }}</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name">{{ r.reviewerName }}</div>
+              <div class="review-date">{{ r.createdAt }}</div>
+            </div>
+            <div class="review-stars">
+              <span *ngFor="let s of starArray(5)" class="star-icon" [class.filled]="s <= r.rating">★</span>
+            </div>
+          </div>
+          <p class="review-comment" *ngIf="r.comment">{{ r.comment }}</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="empty-state" *ngIf="!loading && !product">

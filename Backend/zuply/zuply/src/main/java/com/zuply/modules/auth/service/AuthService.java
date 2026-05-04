@@ -23,6 +23,9 @@ public class AuthService {
     @Autowired private JwtUtil jwtUtil;
 
     public UserProfileDto register(RegisterRequest request) {
+        if (request.getRole() == Role.ADMIN) {
+            throw new RuntimeException("Admin accounts cannot be created through public registration.");
+        }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
@@ -49,13 +52,10 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        if (!user.getRole().equals(request.getRole())) {
-            throw new RuntimeException("Invalid role");
-        }
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+            throw new RuntimeException("Invalid email or password");
         }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());

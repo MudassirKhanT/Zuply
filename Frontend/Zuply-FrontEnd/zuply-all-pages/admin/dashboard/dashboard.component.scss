@@ -247,6 +247,74 @@
 .badge-rejected  { color: $zuply-error;   background: $zuply-error-light; }
 .badge-suspended { color: $zuply-error;   background: $zuply-error-light; }
 
+// ── Create Admin ─────────────────────────────────────────────────────────────
+.create-admin-section { border-top: 1px solid $zuply-border-light; padding-top: $space-xl; }
+
+.create-admin-form {
+  background: $zuply-bg;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  margin-top: $space-md;
+  animation: fadeSlideIn .2s ease both;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.admin-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-md;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.input-group-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label { font-size: $text-sm; font-weight: 600; color: $zuply-text-secondary; }
+
+  .input {
+    border: 1.5px solid $zuply-border;
+    border-radius: $radius-md;
+    padding: 9px 13px;
+    font-size: $text-sm;
+    font-family: $font-family;
+    color: $zuply-text;
+    outline: none;
+    background: #fff;
+    transition: border-color .18s;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:focus { border-color: $zuply-primary; box-shadow: 0 0 0 3px rgba($zuply-primary, .08); }
+    &::placeholder { color: $zuply-text-muted; }
+  }
+}
+
+.admin-create-btn { align-self: flex-start; }
+
+.create-admin-msg {
+  padding: 10px 16px;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 500;
+  background: $zuply-success-light;
+  color: $zuply-success;
+  animation: fadeSlideIn .2s ease;
+  margin-top: $space-sm;
+
+  &--error { background: $zuply-error-light; color: $zuply-error; }
+}
+
 // All clear
 .all-clear {
   text-align: center;

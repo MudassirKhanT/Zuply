@@ -169,5 +169,47 @@
       <div class="all-clear-sub">No pending sellers or products require your attention.</div>
     </div>
 
+    <!-- ── Create Admin Account ──────────────────────────────────── -->
+    <div class="section create-admin-section">
+      <div class="section-header">
+        <div class="section-title">Admin Accounts</div>
+        <button class="btn-primary btn-sm btn-pill" (click)="toggleCreateAdmin()">
+          {{ showCreateAdmin ? '✕ Cancel' : '+ Add Admin' }}
+        </button>
+      </div>
+
+      <div class="create-admin-msg" *ngIf="createAdminMsg"
+           [class.create-admin-msg--error]="createAdminError">
+        {{ createAdminMsg }}
+      </div>
+
+      <div class="create-admin-form" *ngIf="showCreateAdmin">
+        <div class="admin-form-row">
+          <div class="input-group-sm">
+            <label>Full Name *</label>
+            <input class="input" type="text" placeholder="Admin name" [(ngModel)]="adminName"/>
+          </div>
+          <div class="input-group-sm">
+            <label>Email *</label>
+            <input class="input" type="email" placeholder="admin@example.com" [(ngModel)]="adminEmail"/>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <div class="input-group-sm">
+            <label>Password *</label>
+            <input class="input" type="password" placeholder="Strong password" [(ngModel)]="adminPassword"/>
+          </div>
+          <div class="input-group-sm">
+            <label>Phone</label>
+            <input class="input" type="tel" placeholder="Phone number" [(ngModel)]="adminPhone"/>
+          </div>
+        </div>
+        <button class="btn-primary btn-pill admin-create-btn"
+                (click)="createAdmin()" [disabled]="creatingAdmin">
+          {{ creatingAdmin ? 'Creating...' : 'Create Admin Account' }}
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>

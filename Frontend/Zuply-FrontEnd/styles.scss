@@ -179,6 +179,14 @@ input, textarea, select { font-family: $font-family; }
   &:hover:not(:disabled) { background: darken($zuply-error, 8%); }
 }
 
+.btn-warning {
+  @extend %btn-base;
+  background: #f59e0b;
+  color: #fff;
+
+  &:hover:not(:disabled) { background: #d97706; }
+}
+
 .btn-pill   { border-radius: $radius-pill !important; }
 .btn-full   { width: 100%; }
 .btn-sm     { padding: 6px 14px; font-size: $text-xs; }

@@ -5,17 +5,23 @@ import com.zuply.common.enums.Role;
 import com.zuply.exception.ResourceNotFoundException;
 import com.zuply.modules.admin.dto.AdminDashboardDto;
 import com.zuply.modules.admin.dto.AdminReportDto;
+import com.zuply.modules.admin.dto.CreateAdminRequest;
 import com.zuply.modules.order.repository.OrderRepository;
+import com.zuply.modules.product.dto.ProductDto;
 import com.zuply.modules.product.model.Product;
 import com.zuply.modules.product.repository.ProductRepository;
+import com.zuply.modules.product.service.ProductService;
 import com.zuply.modules.seller.model.Seller;
 import com.zuply.modules.seller.repository.SellerRepository;
+import com.zuply.modules.user.model.User;
 import com.zuply.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -25,8 +31,26 @@ public class AdminService {
 
     private final SellerRepository sellerRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    // ─── Admin Account Creation ──────────────────────────────────────────────
+
+    @Transactional
+    public User createAdmin(CreateAdminRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered");
+        }
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhone(request.getPhone());
+        user.setRole(Role.ADMIN);
+        return userRepository.save(user);
+    }
 
     // ─── Dashboard ───────────────────────────────────────────────────────────
 
@@ -60,26 +84,38 @@ public class AdminService {
         return sellerRepository.save(seller);
     }
 
+    @Transactional
+    public Seller rejectSeller(Long id) {
+        Seller seller = sellerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Seller not found with id: " + id));
+        seller.setVerificationStatus("REJECTED");
+        seller.setActive(false);
+        return sellerRepository.save(seller);
+    }
+
     // ─── Product Management ──────────────────────────────────────────────────
 
-    public java.util.List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(p -> productService.toPublicDto(p))
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Product approveProduct(Long id) {
+    public ProductDto approveProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         product.setStatus(ProductStatus.APPROVED);
-        return productRepository.save(product);
+        return productService.toPublicDto(productRepository.save(product));
     }
 
     @Transactional
-    public Product rejectProduct(Long id) {
+    public ProductDto rejectProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         product.setStatus(ProductStatus.REJECTED);
-        return productRepository.save(product);
+        return productService.toPublicDto(productRepository.save(product));
     }
 
     // ─── Reports ─────────────────────────────────────────────────────────────

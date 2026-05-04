@@ -11,12 +11,9 @@ export class LoginComponent {
 
   email        = '';
   password     = '';
-  role         = 'CUSTOMER';
   loading      = false;
   errorMsg     = '';
   showPassword = false;
-
-  roles = ['CUSTOMER', 'SELLER', 'ADMIN'];
 
   constructor(
     private auth: AuthService,
@@ -32,7 +29,7 @@ export class LoginComponent {
     this.loading  = true;
     this.errorMsg = '';
 
-    this.auth.login({ email: this.email, password: this.password, role: this.role }).subscribe({
+    this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: res => {
         this.loading = false;
         if (res.success) {

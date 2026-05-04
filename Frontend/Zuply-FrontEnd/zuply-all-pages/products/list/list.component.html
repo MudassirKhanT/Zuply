@@ -1,4 +1,7 @@
 <!-- src/app/pages/products/list/list.component.html -->
+<div class="cart-toast" *ngIf="cartMsg" [class.cart-toast--error]="cartMsgType === 'error'">
+  {{ cartMsg }}
+</div>
 <div class="page-container">
   <div class="list-header">
     <h1 class="text-2xl">{{ selectedCategory || 'All Products' }}</h1>

@@ -38,7 +38,7 @@
       <div class="form-card" *ngIf="!editMode">
         <div class="form-card-title">
           ✦ AI Generated Listing
-          <button class="edit-btn" (click)="editMode = true">Edit</button>
+          <button class="edit-btn" (click)="editMode = true">✏️ Edit</button>
         </div>
 
         <div class="field-row">
@@ -56,9 +56,14 @@
             <span class="ai-tag" *ngIf="listing.aiSuggestedCategory">AI suggested</span>
           </div>
         </div>
-        <div class="field-row" *ngIf="listing.price">
+        <div class="field-row">
           <div class="field-label">Price</div>
-          <div class="field-value price">₹ {{ listing.price }}</div>
+          <div class="field-value" [class.price]="listing.price">
+            <span *ngIf="listing.price">₹ {{ listing.price }}</span>
+            <span *ngIf="!listing.price" class="price-missing">
+              Not set — <button class="inline-link" (click)="editMode = true">set price to publish</button>
+            </span>
+          </div>
         </div>
         <div class="field-row" *ngIf="listing.suggestedPriceMin">
           <div class="field-label">Suggested Range</div>
@@ -99,8 +104,11 @@
           <input class="input" type="text" [(ngModel)]="editCategory"/>
         </div>
         <div class="input-group">
-          <label>Price (₹)</label>
-          <input class="input" type="number" [(ngModel)]="editPrice"/>
+          <label>Price (₹) <span class="required-star">*</span></label>
+          <input class="input" type="number" min="0" [(ngModel)]="editPrice" placeholder="Enter selling price"/>
+          <div class="field-hint" *ngIf="listing.suggestedPriceMin">
+            AI suggests: ₹{{ listing.suggestedPriceMin }} — ₹{{ listing.suggestedPriceMax }}
+          </div>
         </div>
 
         <div class="edit-actions">
@@ -109,13 +117,19 @@
         </div>
       </div>
 
+      <!-- Price required warning -->
+      <div class="price-warning-card" *ngIf="!listing.price && listing.status !== 'PUBLISHED'">
+        <span>⚠️ A price is required before you can publish this listing.</span>
+        <button class="btn-primary btn-pill" (click)="editMode = true">Set Price</button>
+      </div>
+
       <!-- Publish buttons -->
       <div class="publish-row" *ngIf="listing.status !== 'PUBLISHED'">
         <button class="btn-secondary btn-pill" routerLink="/seller/upload">Upload Another</button>
         <button
           class="btn-accent btn-pill publish-btn"
           (click)="publish()"
-          [disabled]="publishing">
+          [disabled]="publishing || !listing.price">
           {{ publishing ? 'Publishing...' : '🚀 Publish Listing' }}
         </button>
       </div>

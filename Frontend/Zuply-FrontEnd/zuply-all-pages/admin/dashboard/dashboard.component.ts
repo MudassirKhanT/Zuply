@@ -87,4 +87,51 @@ export class DashboardComponent implements OnInit {
 
   goToSellerPage(p: number): void  { if (p >= 1 && p <= this.totalSellerPages)  this.sellersPage  = p; }
   goToProductPage(p: number): void { if (p >= 1 && p <= this.totalProductPages) this.productsPage = p; }
+
+  // ── Create Admin ────────────────────────────────────────────
+  showCreateAdmin   = false;
+  adminName         = '';
+  adminEmail        = '';
+  adminPassword     = '';
+  adminPhone        = '';
+  creatingAdmin     = false;
+  createAdminMsg    = '';
+  createAdminError  = false;
+  private adminMsgTimer: any;
+
+  toggleCreateAdmin(): void { this.showCreateAdmin = !this.showCreateAdmin; }
+
+  createAdmin(): void {
+    if (!this.adminName || !this.adminEmail || !this.adminPassword) {
+      this.createAdminMsg = 'Name, email and password are required.';
+      this.createAdminError = true; return;
+    }
+    this.creatingAdmin = true; this.createAdminMsg = '';
+    this.adminService.createAdmin({
+      name: this.adminName, email: this.adminEmail,
+      password: this.adminPassword, phone: this.adminPhone
+    }).subscribe({
+      next: res => {
+        this.creatingAdmin = false;
+        if (res.success) {
+          this.createAdminMsg = 'Admin account created successfully.';
+          this.createAdminError = false;
+          this.adminName = ''; this.adminEmail = ''; this.adminPassword = ''; this.adminPhone = '';
+          this.showCreateAdmin = false;
+        } else {
+          this.createAdminMsg = res.message || 'Failed to create admin.';
+          this.createAdminError = true;
+        }
+        clearTimeout(this.adminMsgTimer);
+        this.adminMsgTimer = setTimeout(() => this.createAdminMsg = '', 4000);
+      },
+      error: err => {
+        this.creatingAdmin = false;
+        this.createAdminMsg = err.error?.message || 'Failed to create admin.';
+        this.createAdminError = true;
+        clearTimeout(this.adminMsgTimer);
+        this.adminMsgTimer = setTimeout(() => this.createAdminMsg = '', 4000);
+      }
+    });
+  }
 }

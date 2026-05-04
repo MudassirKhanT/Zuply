@@ -2,9 +2,36 @@
 @import 'styles';
 .back-btn    { background:transparent; border:none; color:$zuply-primary; font-size:$text-base; font-weight:500; cursor:pointer; margin-bottom:$space-lg; padding:0; &:hover{text-decoration:underline;} }
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:$space-xl; }
+
+.detail-image-col { display:flex; flex-direction:column; gap:$space-sm; }
+
 .detail-image { border-radius:$radius-xl; overflow:hidden; background:$zuply-primary-light; min-height:300px; display:flex; align-items:center; justify-content:center; position:relative;
   img { width:100%; height:100%; object-fit:cover; }
   app-ai-badge { position:absolute; bottom:$space-md; left:$space-md; } }
+
+.thumb-strip {
+  display: flex;
+  gap: $space-sm;
+  flex-wrap: wrap;
+}
+
+.thumb-item {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  background: $zuply-primary-light;
+  cursor: pointer;
+  transition: border-color .15s, transform .15s;
+  flex-shrink: 0;
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  &:hover { transform: translateY(-2px); border-color: rgba($zuply-primary, .4); }
+  &.active { border-color: $zuply-primary; box-shadow: 0 0 0 2px rgba($zuply-primary, .2); }
+}
 .detail-img-placeholder { display:flex; align-items:center; justify-content:center; width:100%; height:300px; }
 .detail-info { display:flex; flex-direction:column; gap:$space-md; }
 .detail-cat  { display:inline-block; margin-bottom:$space-xs; }
@@ -14,4 +41,184 @@
 .detail-desc  { .desc-title { font-size:$text-base; font-weight:600; color:$zuply-primary; margin-bottom:$space-xs; } p { font-size:$text-base; color:$zuply-text-secondary; line-height:1.6; } }
 .qty-row     { display:flex; align-items:center; gap:$space-md; }
 .detail-btns { display:flex; gap:$space-md; flex-wrap:wrap; margin-top:$space-sm; .btn-secondary, .btn-primary { flex:1; justify-content:center; font-size:$text-md; padding:12px; } }
-@media(max-width:768px) { .detail-grid { grid-template-columns:1fr; } }
+@media(max-width:768px) { .detail-grid { grid-template-columns:1fr; } .thumb-strip { justify-content: center; } }
+
+.action-msg {
+  margin-top: $space-sm;
+  padding: 10px 16px;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 500;
+  background: $zuply-success-light;
+  color: $zuply-success;
+  animation: fadeInUp 0.2s ease;
+
+  &--error { background: $zuply-error-light; color: $zuply-error; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Rating summary (below seller name) ───────────────────────
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stars-display .star-icon { font-size: 16px; color: #d1d5db; &.filled { color: #f59e0b; } }
+.rating-val   { font-weight: 700; font-size: $text-base; color: $zuply-text; }
+.rating-count { font-size: $text-sm; color: $zuply-text-muted; }
+
+// ── Reviews section ───────────────────────────────────────────
+.reviews-section {
+  margin-top: $space-2xl;
+  border-top: 1px solid $zuply-border-light;
+  padding-top: $space-xl;
+}
+
+.reviews-header { margin-bottom: $space-lg; }
+.reviews-title {
+  font-size: $text-xl;
+  font-weight: 700;
+  color: $zuply-text;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  background: $zuply-primary;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+// ── Review form ───────────────────────────────────────────────
+.review-form-card {
+  background: $zuply-bg;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  margin-bottom: $space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.review-form-title { font-weight: 600; color: $zuply-text; font-size: $text-base; }
+
+.star-picker {
+  display: flex;
+  gap: 4px;
+}
+
+.star-pick {
+  font-size: 28px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color .1s, transform .1s;
+  line-height: 1;
+
+  &.active { color: #f59e0b; }
+  &:hover  { transform: scale(1.15); }
+}
+
+.review-textarea {
+  width: 100%;
+  border: 1.5px solid $zuply-border;
+  border-radius: $radius-md;
+  padding: 10px 13px;
+  font-size: $text-sm;
+  font-family: $font-family;
+  color: $zuply-text;
+  resize: vertical;
+  outline: none;
+  background: #fff;
+  transition: border-color .18s;
+  box-sizing: border-box;
+
+  &:focus { border-color: $zuply-primary; box-shadow: 0 0 0 3px rgba($zuply-primary, .08); }
+  &::placeholder { color: $zuply-text-muted; }
+}
+
+.review-submit-btn { align-self: flex-start; }
+
+.review-msg {
+  padding: 8px 14px;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 500;
+  background: $zuply-success-light;
+  color: $zuply-success;
+  animation: fadeInUp .2s ease;
+
+  &--error { background: $zuply-error-light; color: $zuply-error; }
+}
+
+.review-login-prompt {
+  font-size: $text-sm;
+  color: $zuply-text-muted;
+  margin-bottom: $space-lg;
+  a { color: $zuply-primary; text-decoration: underline; }
+}
+
+.reviews-empty {
+  text-align: center;
+  color: $zuply-text-muted;
+  font-size: $text-sm;
+  padding: $space-xl 0;
+}
+
+// ── Review cards ──────────────────────────────────────────────
+.review-cards { display: flex; flex-direction: column; gap: $space-md; }
+
+.review-card {
+  background: #fff;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  animation: fadeInUp .2s ease;
+}
+
+.review-top {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-sm;
+}
+
+.reviewer-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $zuply-primary, #0e7076);
+  color: #fff;
+  font-weight: 700;
+  font-size: $text-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reviewer-info { flex: 1; }
+.reviewer-name { font-weight: 600; font-size: $text-base; color: $zuply-text; }
+.review-date   { font-size: 11px; color: $zuply-text-muted; margin-top: 2px; }
+
+.review-stars .star-icon { font-size: 14px; color: #d1d5db; &.filled { color: #f59e0b; } }
+
+.review-comment {
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+  line-height: 1.6;
+  margin: 0;
+}

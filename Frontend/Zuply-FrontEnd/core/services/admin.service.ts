@@ -27,6 +27,10 @@ export class AdminService {
     return this.http.patch<ApiResponse<any>>(`${this.API}/admin/sellers/${id}/suspend`, {});
   }
 
+  rejectSeller(id: number): Observable<ApiResponse<any>> {
+    return this.http.patch<ApiResponse<any>>(`${this.API}/admin/sellers/${id}/reject`, {});
+  }
+
   getProducts(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.API}/admin/products`);
   }
@@ -41,5 +45,9 @@ export class AdminService {
 
   getReports(): Observable<ApiResponse<AdminReport>> {
     return this.http.get<ApiResponse<AdminReport>>(`${this.API}/admin/reports`);
+  }
+
+  createAdmin(payload: { name: string; email: string; password: string; phone?: string }): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.API}/admin/create-admin`, payload);
   }
 }

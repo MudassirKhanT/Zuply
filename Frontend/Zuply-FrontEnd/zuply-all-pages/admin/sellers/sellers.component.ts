@@ -25,5 +25,10 @@ export class SellersComponent implements OnInit {
     this.adminService.suspendSeller(id).subscribe(() => this.ngOnInit());
   }
 
+  reject(id: number): void {
+    if (!confirm('Reject this seller registration?')) return;
+    this.adminService.rejectSeller(id).subscribe(() => this.ngOnInit());
+  }
+
   getStatusClass(status: string): string { return `status-${(status || 'pending').toLowerCase()}`; }
 }

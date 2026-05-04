@@ -3,6 +3,8 @@
   <h1 class="text-2xl" style="margin-bottom:24px">Manage Products</h1>
   <app-loading-spinner [show]="loading"></app-loading-spinner>
 
+  <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
   <div class="products-table" *ngIf="!loading && products.length > 0">
     <div class="table-row header">
       <span>ID</span>
@@ -22,14 +24,16 @@
         <button
           class="btn-primary btn-sm btn-pill"
           *ngIf="p.status !== 'APPROVED'"
+          [disabled]="actionId === p.id"
           (click)="approve(p.id)">
-          Approve
+          {{ actionId === p.id ? '...' : 'Approve' }}
         </button>
         <button
           class="btn-danger btn-sm btn-pill"
           *ngIf="p.status !== 'REJECTED'"
+          [disabled]="actionId === p.id"
           (click)="reject(p.id)">
-          Reject
+          {{ actionId === p.id ? '...' : 'Reject' }}
         </button>
       </div>
     </div>
@@ -37,7 +41,7 @@
 
   <div class="empty-state" *ngIf="!loading && products.length === 0">
     <div class="empty-icon">📦</div>
-    <div class="empty-title">No products pending review</div>
-    <div class="empty-desc">All products have been reviewed.</div>
+    <div class="empty-title">No products found</div>
+    <div class="empty-desc">Products submitted by sellers will appear here.</div>
   </div>
 </div>

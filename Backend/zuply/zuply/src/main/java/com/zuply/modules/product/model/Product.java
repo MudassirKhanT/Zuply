@@ -27,7 +27,9 @@ public class Product {
     private String description;
 
     private Double price;
-    private Integer stock;
+
+    @Column(columnDefinition = "INT DEFAULT 1")
+    private Integer stock = 1;
     private String variations;
     private String deliveryMethod;
     private String returnPolicy;

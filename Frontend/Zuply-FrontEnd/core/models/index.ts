@@ -80,6 +80,22 @@ export interface Product {
   aiGenerated?: boolean;
   distance?: string;
   category?: string;
+  averageRating?: number;
+  reviewCount?: number;
+}
+
+// ── Review ────────────────────────────────────────────────────
+export interface Review {
+  id: number;
+  reviewerName: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
+
+export interface ReviewRequest {
+  rating: number;
+  comment?: string;
 }
 
 // ── Category ─────────────────────────────────────────────────

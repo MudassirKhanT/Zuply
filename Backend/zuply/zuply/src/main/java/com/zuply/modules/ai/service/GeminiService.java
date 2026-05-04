@@ -28,6 +28,9 @@ public class GeminiService {
     @Value("${gemini.api.url}")
     private String geminiApiUrl;
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     // Prompt instructs Gemini to return ONLY a JSON object — no markdown, no extra text.
     private static final String GEMINI_PROMPT =
             "Analyze this product image and return a JSON object with these exact fields:\n" +
@@ -51,12 +54,18 @@ public class GeminiService {
     public AIGeneratedContent generateContent(String processedImagePath) throws IOException {
 
         // ── Step 1: Read image file from disk and encode it to Base64 ────────
-        byte[] imageBytes = Files.readAllBytes(Paths.get(processedImagePath));
+        // processedImagePath is stored as a web URL path e.g. "/uploads/file.jpg"
+        // Resolve it to the actual filesystem path using the configured upload directory
+        String fsPath = processedImagePath.startsWith("/uploads/")
+                ? Paths.get(uploadPath).resolve(processedImagePath.substring("/uploads/".length())).toString()
+                : processedImagePath;
+
+        byte[] imageBytes = Files.readAllBytes(Paths.get(fsPath));
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
         // Determine MIME type from file extension (default to image/png).
-        String mimeType = processedImagePath.toLowerCase().endsWith(".jpg")
-                || processedImagePath.toLowerCase().endsWith(".jpeg")
+        String mimeType = fsPath.toLowerCase().endsWith(".jpg")
+                || fsPath.toLowerCase().endsWith(".jpeg")
                 ? "image/jpeg"
                 : "image/png";
 

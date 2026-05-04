@@ -23,13 +23,19 @@
       <div class="action-btns">
         <button
           class="btn-primary btn-sm btn-pill"
-          *ngIf="seller.verificationStatus !== 'APPROVED'"
+          *ngIf="seller.verificationStatus !== 'APPROVED' || !seller.active"
           (click)="approve(seller.id)">
-          Approve
+          {{ !seller.active && seller.verificationStatus === 'APPROVED' ? 'Re-activate' : 'Approve' }}
+        </button>
+        <button
+          class="btn-warning btn-sm btn-pill"
+          *ngIf="seller.verificationStatus === 'PENDING'"
+          (click)="reject(seller.id)">
+          Reject
         </button>
         <button
           class="btn-danger btn-sm btn-pill"
-          *ngIf="seller.verificationStatus !== 'SUSPENDED'"
+          *ngIf="seller.active"
           (click)="suspend(seller.id)">
           Suspend
         </button>

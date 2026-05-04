@@ -15,17 +15,6 @@
     <h1 class="auth-title">Welcome back</h1>
     <p class="auth-subtitle">Login to shop from local stores near you</p>
 
-    <!-- Role selector -->
-    <div class="role-selector">
-      <button
-        *ngFor="let r of roles"
-        class="role-btn"
-        [class.active]="role === r"
-        (click)="role = r">
-        {{ r | titlecase }}
-      </button>
-    </div>
-
     <!-- Error -->
     <div class="error-banner" *ngIf="errorMsg">
       ⚠️ {{ errorMsg }}

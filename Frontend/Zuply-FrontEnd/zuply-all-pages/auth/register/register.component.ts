@@ -15,12 +15,12 @@ export class RegisterComponent {
   password  = '';
   phone     = '';
   storeName = '';
-  role: 'CUSTOMER' | 'SELLER' | 'ADMIN' = 'CUSTOMER';
+  role: 'CUSTOMER' | 'SELLER' = 'CUSTOMER';
   loading   = false;
   errorMsg  = '';
   showPassword = false;
 
-  roles: Array<'CUSTOMER' | 'SELLER' | 'ADMIN'> = ['CUSTOMER', 'SELLER', 'ADMIN'];
+  roles: Array<'CUSTOMER' | 'SELLER'> = ['CUSTOMER', 'SELLER'];
 
   constructor(private auth: AuthService, private router: Router) {}
 

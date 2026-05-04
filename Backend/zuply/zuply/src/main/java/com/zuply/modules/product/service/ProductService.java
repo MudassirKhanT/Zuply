@@ -7,6 +7,7 @@ import com.zuply.modules.product.dto.ProductDto;
 import com.zuply.modules.product.dto.ProductRequest;
 import com.zuply.modules.product.model.Product;
 import com.zuply.modules.product.repository.ProductRepository;
+import com.zuply.modules.review.repository.ReviewRepository;
 import com.zuply.modules.seller.model.Seller;
 import com.zuply.modules.seller.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,13 @@ public class ProductService {
     @Autowired private ProductRepository productRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private SellerRepository sellerRepository;
+    @Autowired private ReviewRepository reviewRepository;
 
     // ── DTO mapper ────────────────────────────────────────────────────────────
+
+    public ProductDto toPublicDto(Product product) {
+        return toDto(product);
+    }
 
     private ProductDto toDto(Product product) {
         ProductDto dto = new ProductDto();
@@ -47,6 +53,9 @@ public class ProductService {
             dto.setSellerName(product.getSeller().getStoreName());
             dto.setSellerPincode(product.getSeller().getPincode());
         }
+        Double avg = reviewRepository.averageRatingByProductId(product.getId());
+        dto.setAverageRating(avg != null ? Math.round(avg * 10.0) / 10.0 : 0.0);
+        dto.setReviewCount(reviewRepository.countByProductId(product.getId()));
         return dto;
     }
 

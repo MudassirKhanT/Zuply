@@ -33,6 +33,18 @@
 .edit-btn    { margin-left:auto; background:transparent; border:1.5px solid $zuply-primary; color:$zuply-primary; padding:4px 14px; border-radius:$radius-pill; font-size:$text-sm; cursor:pointer; font-weight:500; &:hover{background:$zuply-primary;color:#fff;} }
 .edit-actions{ display:flex; gap:$space-md; justify-content:flex-end; margin-top:$space-md; }
 
+.price-missing { color:$zuply-error; font-size:$text-sm; font-weight:500; }
+.inline-link   { background:none; border:none; color:$zuply-primary; font-size:$text-sm; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; &:hover{opacity:.8;} }
+.required-star { color:$zuply-error; }
+.field-hint    { font-size:$text-xs; color:$zuply-text-muted; margin-top:4px; }
+
+.price-warning-card {
+  display:flex; align-items:center; justify-content:space-between; gap:$space-md;
+  background:#fff8e1; border:1.5px solid #f59e0b; border-radius:$radius-md;
+  padding:$space-sm $space-md; margin-bottom:$space-md; font-size:$text-sm; font-weight:500; color:#92400e;
+  @media(max-width:480px) { flex-direction:column; align-items:flex-start; }
+}
+
 .publish-row { display:flex; gap:$space-md; justify-content:flex-end; margin-top:$space-xl; }
 .publish-btn { font-size:$text-md; padding:12px 28px; }
 .published-banner { background:$zuply-success-light; color:darken(#2ECC71,20%); border-radius:$radius-lg; padding:$space-lg; text-align:center; margin-top:$space-xl; font-size:$text-base; font-weight:500;

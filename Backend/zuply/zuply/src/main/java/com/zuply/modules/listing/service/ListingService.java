@@ -1,21 +1,28 @@
 package com.zuply.modules.listing.service;
 
+import com.zuply.common.enums.ProductStatus;
 import com.zuply.modules.ai.dto.AIGeneratedContent;
 import com.zuply.modules.ai.service.GeminiService;
+import com.zuply.modules.category.repository.CategoryRepository;
 import com.zuply.modules.listing.dto.ListingEditRequest;
 import com.zuply.modules.listing.dto.ListingResponse;
 import com.zuply.modules.listing.dto.PublishResponse;
 import com.zuply.modules.listing.model.Product;
 import com.zuply.modules.listing.repository.ProductRepository;
 import com.zuply.modules.processing.service.ProcessingService;
+import com.zuply.modules.seller.model.Seller;
+import com.zuply.modules.seller.repository.SellerRepository;
 import com.zuply.modules.tagging.repository.TagRepository;
 import com.zuply.modules.tagging.service.CategoryService;
 import com.zuply.modules.tagging.service.TagService;
 import com.zuply.modules.upload.dto.ImageStatus;
 import com.zuply.modules.upload.model.Image;
 import com.zuply.modules.upload.repository.ImageRepository;
+import com.zuply.modules.user.model.User;
+import com.zuply.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +40,10 @@ public class ListingService {
     private final GeminiService geminiService;
     private final TagService tagService;
     private final CategoryService categoryService;
+    private final SellerRepository sellerRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final com.zuply.modules.product.repository.ProductRepository mainProductRepository;
 
     // -------------------------------------------------------
     // Trigger full pipeline for an uploaded image
@@ -151,9 +162,10 @@ public class ListingService {
 
 
     // Publish the confirmed listing to the marketplace
+    @Transactional
     public PublishResponse publishListing(Long productId, Long sellerId) {
 
-        // Ownership check
+        // Ownership check — sellerId here is the User ID stored in listing_products
         Product product = productRepository.findByIdAndSellerId(productId, sellerId)
                 .orElseThrow(() -> new RuntimeException("Product not found or access denied"));
 
@@ -165,6 +177,46 @@ public class ListingService {
 
         product.setStatus("PUBLISHED");
         productRepository.save(product);
+
+        // Resolve Seller entity — sellerId in listing_products is the User ID.
+        // If no seller record exists yet, create one so the mirror always succeeds.
+        Seller seller = sellerRepository.findByUserId(sellerId)
+                .orElseGet(() -> {
+                    User user = userRepository.findById(sellerId)
+                            .orElseThrow(() -> new RuntimeException("User not found with id: " + sellerId));
+                    Seller newSeller = new Seller();
+                    newSeller.setUser(user);
+                    newSeller.setStoreName(user.getName() + "'s Store");
+                    newSeller.setVerificationStatus("PENDING");
+                    newSeller.setActive(false);
+                    return sellerRepository.save(newSeller);
+                });
+
+        // Mirror into the main products table so admin can approve/reject it
+        // Avoid creating a duplicate if this listing was already mirrored before
+        boolean alreadyMirrored = mainProductRepository.findBySellerId(seller.getId())
+                .stream()
+                .anyMatch(p -> product.getImageUrl() != null
+                        && product.getImageUrl().equals(p.getImageUrl()));
+
+        if (!alreadyMirrored) {
+            com.zuply.modules.product.model.Product mainProduct = new com.zuply.modules.product.model.Product();
+            mainProduct.setName(product.getTitle());
+            mainProduct.setDescription(product.getDescription());
+            mainProduct.setPrice(product.getPrice());
+            mainProduct.setStock(1);
+            mainProduct.setImageUrl(product.getImageUrl());
+            mainProduct.setExtraImages(product.getExtraImages());
+            mainProduct.setSeller(seller);
+            mainProduct.setStatus(ProductStatus.PENDING);
+
+            if (product.getCategory() != null) {
+                categoryRepository.findByNameIgnoreCase(product.getCategory())
+                        .ifPresent(mainProduct::setCategory);
+            }
+
+            mainProductRepository.save(mainProduct);
+        }
 
         return PublishResponse.builder()
                 .productId(product.getId())

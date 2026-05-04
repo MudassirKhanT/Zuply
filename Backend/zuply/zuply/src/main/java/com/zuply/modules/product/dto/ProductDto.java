@@ -18,6 +18,8 @@ public class ProductDto {
     private String sellerName;
     private String sellerPincode;
     private String status;
+    private double averageRating;
+    private long   reviewCount;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -64,4 +66,10 @@ public class ProductDto {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public double getAverageRating()              { return averageRating; }
+    public void   setAverageRating(double r)      { this.averageRating = r; }
+
+    public long getReviewCount()                  { return reviewCount; }
+    public void setReviewCount(long c)            { this.reviewCount = c; }
 }

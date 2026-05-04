@@ -1,12 +1,14 @@
 package com.zuply.modules.admin.demo;
 
-import com.zuply.common.ApiResponse;   // FIXED: was com.zuply.payload.ApiResponse
+import com.zuply.common.ApiResponse;
 import com.zuply.modules.admin.dto.AdminDashboardDto;
 import com.zuply.modules.admin.dto.AdminReportDto;
+import com.zuply.modules.admin.dto.CreateAdminRequest;
 import com.zuply.modules.admin.service.AdminService;
 import com.zuply.modules.admin.dto.AdminSellerDto;
-import com.zuply.modules.product.model.Product;
+import com.zuply.modules.product.dto.ProductDto;
 import com.zuply.modules.seller.model.Seller;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,14 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+
+    // ─── Admin Account Creation ───────────────────────────────────────────────
+
+    @PostMapping("/create-admin")
+    public ResponseEntity<ApiResponse<String>> createAdmin(@Valid @RequestBody CreateAdminRequest request) {
+        adminService.createAdmin(request);
+        return ResponseEntity.ok(ApiResponse.success("Admin account created for " + request.getEmail(), "Admin created successfully"));
+    }
 
     @GetMapping("/dashboard")
     public ResponseEntity<ApiResponse<AdminDashboardDto>> getDashboard() {
@@ -49,24 +59,36 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(new AdminSellerDto(seller), "Seller suspended successfully"));
     }
 
+    @PatchMapping("/sellers/{id}/reject")
+    public ResponseEntity<ApiResponse<AdminSellerDto>> rejectSeller(@PathVariable Long id) {
+        Seller seller = adminService.rejectSeller(id);
+        return ResponseEntity.ok(ApiResponse.success(new AdminSellerDto(seller), "Seller rejected successfully"));
+    }
+
     @GetMapping("/products")
-    public ResponseEntity<ApiResponse<List<Product>>> getAllProducts() {
+    public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts() {
         return ResponseEntity.ok(
                 ApiResponse.success(adminService.getAllProducts(), "Products fetched successfully"));
     }
 
     @PatchMapping("/products/{id}/approve")
-    public ResponseEntity<ApiResponse<Product>> approveProduct(@PathVariable Long id) {
-        Product product = adminService.approveProduct(id);
-        return ResponseEntity.ok(
-                ApiResponse.success(product, "Product approved successfully"));
+    public ResponseEntity<ApiResponse<ProductDto>> approveProduct(@PathVariable Long id) {
+        try {
+            ProductDto product = adminService.approveProduct(id);
+            return ResponseEntity.ok(ApiResponse.success(product, "Product approved successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @PatchMapping("/products/{id}/reject")
-    public ResponseEntity<ApiResponse<Product>> rejectProduct(@PathVariable Long id) {
-        Product product = adminService.rejectProduct(id);
-        return ResponseEntity.ok(
-                ApiResponse.success(product, "Product rejected successfully"));
+    public ResponseEntity<ApiResponse<ProductDto>> rejectProduct(@PathVariable Long id) {
+        try {
+            ProductDto product = adminService.rejectProduct(id);
+            return ResponseEntity.ok(ApiResponse.success(product, "Product rejected successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(ApiResponse.error(e.getMessage()));
+        }
     }
 
     @GetMapping("/reports")
