@@ -1,0 +1,61 @@
+<div class="cart-page page-container">
+  <h1 class="page-heading">🛒 My Cart</h1>
+
+  <app-loading-spinner [show]="loading" message="Loading your cart…"></app-loading-spinner>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!loading && items.length === 0">
+    <div class="empty-icon">🛒</div>
+    <div class="empty-title">Your cart is empty</div>
+    <div class="empty-desc">Browse products and add items to your cart.</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Start Shopping</button>
+  </div>
+
+  <!-- Cart content -->
+  <div class="cart-layout" *ngIf="!loading && items.length > 0">
+
+    <!-- Items -->
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of items">
+        <div class="item-img" [style.backgroundImage]="item.productImage ? 'url('+item.productImage+')' : 'none'">
+          <span *ngIf="!item.productImage">🛍️</span>
+        </div>
+        <div class="item-body">
+          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-price">₹{{ item.price | number:'1.0-0' }} each</div>
+        </div>
+        <div class="item-qty">
+          <div class="qty-selector">
+            <button class="qty-btn" (click)="updateQty(item, item.quantity - 1)">−</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="updateQty(item, item.quantity + 1)">+</button>
+          </div>
+        </div>
+        <div class="item-total">₹{{ item.lineTotal | number:'1.0-0' }}</div>
+        <button class="item-remove" (click)="removeItem(item.id)" title="Remove">✕</button>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="cart-summary">
+      <div class="summary-title">Order Summary</div>
+      <div class="summary-row">
+        <span>Subtotal ({{ items.length }} items)</span>
+        <span>₹{{ grandTotal | number:'1.0-0' }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span class="free-tag">FREE</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span>₹{{ grandTotal | number:'1.0-0' }}</span>
+      </div>
+      <button class="btn-primary btn-full btn-lg" routerLink="/checkout">
+        Proceed to Checkout →
+      </button>
+      <a class="continue-link" routerLink="/products">← Continue Shopping</a>
+    </div>
+  </div>
+</div>

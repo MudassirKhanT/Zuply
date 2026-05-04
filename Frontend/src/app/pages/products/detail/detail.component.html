@@ -1,0 +1,399 @@
+<div class="detail-page page-container" *ngIf="product">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> /
+    <a routerLink="/products">Products</a> /
+    <span>{{ product.name }}</span>
+  </div>
+
+  <!-- ── Product Main ──────────────────────────────── -->
+  <div class="product-main">
+
+    <!-- Image -->
+    <div class="product-image-wrap">
+      <div class="product-image" [style.backgroundImage]="product.imageUrl ? 'url('+product.imageUrl+')' : 'none'">
+        <div class="no-img" *ngIf="!product.imageUrl">🛍️</div>
+      </div>
+      <div class="product-badges">
+        <span class="badge-success" *ngIf="product.stock && product.stock > 10">In Stock</span>
+        <span class="badge-warning" *ngIf="product.stock && product.stock > 0 && product.stock <= 10">
+          Only {{ product.stock }} left!
+        </span>
+        <span class="badge-error"   *ngIf="!product.stock || product.stock === 0">Out of Stock</span>
+        <span class="badge-primary" *ngIf="product.categoryName">{{ product.categoryName }}</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="product-info">
+      <div class="product-seller" *ngIf="product.sellerName">🏪 {{ product.sellerName }}</div>
+      <h1 class="product-name">{{ product.name }}</h1>
+
+      <!-- Rating summary -->
+      <div class="rating-row" *ngIf="reviewData">
+        <div class="stars">
+          <span *ngFor="let s of starsArray(reviewData.averageRating)" class="star filled">★</span>
+          <span *ngFor="let s of emptyStars(reviewData.averageRating)" class="star empty">★</span>
+        </div>
+        <span class="rating-num">{{ reviewData.averageRating | number:'1.1-1' }}</span>
+        <span class="rating-count">({{ reviewData.count }} {{ reviewData.count === 1 ? 'review' : 'reviews' }})</span>
+      </div>
+
+      <div class="product-price">₹{{ product.price | number:'1.0-0' }}</div>
+
+      <p class="product-desc" *ngIf="product.description">{{ product.description }}</p>
+
+      <!-- Details -->
+      <div class="detail-grid" *ngIf="product.variations || product.deliveryMethod || product.returnPolicy || product.sellerPincode">
+        <div class="detail-row" *ngIf="product.variations">
+          <span class="detail-key">Variations</span>
+          <span class="detail-val">{{ product.variations }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.deliveryMethod">
+          <span class="detail-key">Delivery</span>
+          <span class="detail-val">{{ product.deliveryMethod }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.returnPolicy">
+          <span class="detail-key">Returns</span>
+          <span class="detail-val">{{ product.returnPolicy }}</span>
+        </div>
+        <div class="detail-row" *ngIf="product.sellerPincode">
+          <span class="detail-key">📍 Pincode</span>
+          <span class="detail-val">{{ product.sellerPincode }}</span>
+        </div>
+      </div>
+
+      <!-- Stock count -->
+      <div class="stock-row" *ngIf="product.stock !== undefined">
+        <span class="stock-icon" [class.low]="product.stock > 0 && product.stock <= 10"
+              [class.out]="product.stock === 0">
+          {{ product.stock === 0 ? '✗' : product.stock <= 10 ? '⚠' : '✓' }}
+        </span>
+        <span class="stock-label">
+          <ng-container *ngIf="product.stock === 0">Out of stock</ng-container>
+          <ng-container *ngIf="product.stock > 0 && product.stock <= 10">Only {{ product.stock }} units left — order soon!</ng-container>
+          <ng-container *ngIf="product.stock > 10">{{ product.stock }} units in stock</ng-container>
+        </span>
+      </div>
+
+      <!-- Quantity -->
+      <div class="qty-row" *ngIf="product.stock && product.stock > 0">
+        <span class="qty-label">Quantity</span>
+        <div class="qty-selector">
+          <button class="qty-btn" (click)="decQty()">−</button>
+          <span class="qty-value">{{ qty }}</span>
+          <button class="qty-btn" (click)="incQty()">+</button>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-btns">
+        <button class="btn-primary btn-lg" (click)="addToCart()" [disabled]="!product.stock || product.stock === 0">
+          🛒 Add to Cart
+        </button>
+        <button class="btn-wishlist" [class.wishlisted]="isWishlisted" (click)="toggleWishlist()">
+          {{ isWishlisted ? '❤️' : '🤍' }} {{ isWishlisted ? 'Wishlisted' : 'Wishlist' }}
+        </button>
+      </div>
+
+      <!-- Login prompt -->
+      <div class="login-prompt" *ngIf="showLoginPrompt">
+        <span>Please <a routerLink="/login" [queryParams]="{returnUrl: currentUrl}">sign in</a> to add items to your cart or wishlist.</span>
+      </div>
+
+      <!-- ── Delivery details (all categories) ─────────── -->
+      <div class="delivery-box">
+        <div class="db-title">🚚 Delivery Details</div>
+        <div class="db-row" *ngIf="product.deliveryMethod">
+          <span class="db-label">Method</span>
+          <span class="db-val">{{ product.deliveryMethod }}</span>
+        </div>
+        <div class="db-row" *ngIf="!product.deliveryMethod">
+          <span class="db-val">Standard delivery · Usually 2–5 business days</span>
+        </div>
+        <div class="db-row" *ngIf="product.returnPolicy">
+          <span class="db-label">Returns</span>
+          <span class="db-val">{{ product.returnPolicy }}</span>
+        </div>
+        <div class="db-row" *ngIf="!product.returnPolicy">
+          <span class="db-label">Returns</span>
+          <span class="db-val">Check with seller</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CATEGORY-SPECIFIC SECTIONS ──────────────────── -->
+
+  <!-- Clothing / Fashion & Footwear — Size Chart -->
+  <div class="cat-section" *ngIf="isCategory('Clothing') || isCategory('Fashion & Footwear')">
+    <h3 class="cat-sec-title">📏 Size Chart</h3>
+    <div class="size-chart-wrap">
+      <table class="size-table">
+        <thead>
+          <tr><th>Size</th><th>Chest (cm)</th><th>Waist (cm)</th><th>Hip (cm)</th><th>Height</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>XS</td><td>76–81</td><td>61–66</td><td>84–89</td><td>155–160 cm</td></tr>
+          <tr><td>S</td> <td>81–86</td><td>66–71</td><td>89–94</td><td>160–165 cm</td></tr>
+          <tr><td>M</td> <td>86–91</td><td>71–76</td><td>94–99</td><td>165–170 cm</td></tr>
+          <tr><td>L</td> <td>91–97</td><td>76–82</td><td>99–104</td><td>170–175 cm</td></tr>
+          <tr><td>XL</td><td>97–102</td><td>82–87</td><td>104–109</td><td>175–180 cm</td></tr>
+          <tr><td>XXL</td><td>102–107</td><td>87–92</td><td>109–114</td><td>180–185 cm</td></tr>
+        </tbody>
+      </table>
+      <p class="size-note">Measurements are approximate. When in doubt, size up.</p>
+      <div class="variations-info" *ngIf="product.variations">
+        <span class="var-label">Available variations:</span> {{ product.variations }}
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">🧺</span>
+      <div><strong>Care Instructions:</strong> Machine wash cold, gentle cycle. Do not bleach. Tumble dry low.</div>
+    </div>
+  </div>
+
+  <!-- Electronics — Specs + Warranty -->
+  <div class="cat-section" *ngIf="isCategory('Electronics')">
+    <h3 class="cat-sec-title">⚡ Product Specifications</h3>
+    <div class="spec-grid" *ngIf="product.variations">
+      <div class="spec-row">
+        <span class="spec-key">Variants</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+    </div>
+    <div class="spec-grid">
+      <div class="spec-row">
+        <span class="spec-key">Warranty</span>
+        <span class="spec-val">1 Year Manufacturer Warranty</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">In-box</span>
+        <span class="spec-val">Product unit, user manual, warranty card</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Brand</span>
+        <span class="spec-val">{{ product.sellerName || 'As described' }}</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">🔧</span>
+      <div><strong>Service Support:</strong> Contact seller or manufacturer for repairs. Warranty void if tampered.</div>
+    </div>
+  </div>
+
+  <!-- Grocery — Weight & Freshness -->
+  <div class="cat-section" *ngIf="isCategory('Grocery')">
+    <h3 class="cat-sec-title">🛒 Product Details</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Weight / Pack Size</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Storage</span>
+        <span class="spec-val">Store in a cool, dry place. Keep away from direct sunlight.</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Source</span>
+        <span class="spec-val">Sourced from verified local suppliers</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">📅</span>
+      <div><strong>Freshness Note:</strong> Best before date printed on pack. Check on delivery.</div>
+    </div>
+  </div>
+
+  <!-- Food & Beverage — Ingredients + Nutritional -->
+  <div class="cat-section" *ngIf="isCategory('Food & Beverage')">
+    <h3 class="cat-sec-title">🍔 Nutritional &amp; Ingredients Info</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Net Weight</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Ingredients</span>
+        <span class="spec-val">As listed on packaging. Read label before consumption.</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Allergens</span>
+        <span class="spec-val">May contain nuts, dairy, or gluten. Check label.</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">🌡️</span>
+      <div><strong>Storage:</strong> Refrigerate after opening. Consume within the period shown on pack.</div>
+    </div>
+  </div>
+
+  <!-- Home & Kitchen — Dimensions + Material -->
+  <div class="cat-section" *ngIf="isCategory('Home & Kitchen')">
+    <h3 class="cat-sec-title">🏠 Product Details</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Dimensions / Size</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Warranty</span>
+        <span class="spec-val">6 months manufacturing defect warranty</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Assembly</span>
+        <span class="spec-val">Assembly instructions included where applicable</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">🔨</span>
+      <div><strong>Care:</strong> Clean with dry cloth. Avoid harsh chemicals on surfaces.</div>
+    </div>
+  </div>
+
+  <!-- Beauty & Personal Care — Skin type + Usage -->
+  <div class="cat-section" *ngIf="isCategory('Beauty & Personal Care')">
+    <h3 class="cat-sec-title">💄 Usage &amp; Ingredients</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Size / Variant</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Skin Type</span>
+        <span class="spec-val">Suitable for all skin types unless stated otherwise</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Cruelty Free</span>
+        <span class="spec-val">Check brand label for certification</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">⚠️</span>
+      <div><strong>Patch Test:</strong> Perform a patch test before full application. Discontinue if irritation occurs.</div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">📋</span>
+      <div><strong>How to use:</strong> As directed on packaging. Ingredients and full directions listed on product label.</div>
+    </div>
+  </div>
+
+  <!-- Health & Wellness — Dosage + Certifications -->
+  <div class="cat-section" *ngIf="isCategory('Health & Wellness')">
+    <h3 class="cat-sec-title">💊 Health &amp; Usage Information</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Pack Size</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Usage</span>
+        <span class="spec-val">As directed on label or by healthcare professional</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Certifications</span>
+        <span class="spec-val">FSSAI approved (food supplements) / Licensed pharmacy</span>
+      </div>
+    </div>
+    <div class="cat-detail-row warn-row">
+      <span class="cdr-icon">⚕️</span>
+      <div><strong>Disclaimer:</strong> Not a substitute for medical advice. Consult your doctor before use.</div>
+    </div>
+  </div>
+
+  <!-- Agriculture — Origin + Season -->
+  <div class="cat-section" *ngIf="isCategory('Agriculture')">
+    <h3 class="cat-sec-title">🌾 Product Details</h3>
+    <div class="spec-grid">
+      <div class="spec-row" *ngIf="product.variations">
+        <span class="spec-key">Weight / Quantity</span>
+        <span class="spec-val">{{ product.variations }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Region / Origin</span>
+        <span class="spec-val">{{ product.sellerPincode ? 'Local — Pincode ' + product.sellerPincode : 'Local produce' }}</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Packaging</span>
+        <span class="spec-val">Packed fresh at source</span>
+      </div>
+    </div>
+    <div class="cat-detail-row">
+      <span class="cdr-icon">🌿</span>
+      <div><strong>Freshness guarantee:</strong> Products are dispatched within 24 hours of harvest where applicable.</div>
+    </div>
+  </div>
+
+  <!-- ── Reviews Section ───────────────────────────── -->
+  <div class="reviews-section">
+    <div class="reviews-header">
+      <h2 class="section-title">Customer Reviews</h2>
+      <div class="avg-badge" *ngIf="reviewData && reviewData.count > 0">
+        ★ {{ reviewData.averageRating | number:'1.1-1' }} · {{ reviewData.count }} reviews
+      </div>
+    </div>
+
+    <!-- Write review (customers only) -->
+    <div class="write-review" *ngIf="isCustomer && !alreadyReviewed">
+      <div class="wr-title">Write a Review</div>
+      <div class="star-picker">
+        <span *ngFor="let n of [1,2,3,4,5]" class="star-pick"
+              [class.selected]="reviewForm.rating >= n"
+              (click)="reviewForm.rating = n">★</span>
+      </div>
+      <textarea class="input review-textarea" rows="3" placeholder="Share your experience…"
+                [(ngModel)]="reviewForm.comment"></textarea>
+      <button class="btn-primary btn-sm" (click)="submitReview()" [disabled]="reviewForm.rating === 0 || submittingReview">
+        {{ submittingReview ? 'Posting…' : 'Post Review' }}
+      </button>
+      <div class="review-success" *ngIf="reviewSuccess">✓ Review posted!</div>
+    </div>
+
+    <div class="already-reviewed" *ngIf="isCustomer && alreadyReviewed">
+      ✓ You have already reviewed this product.
+    </div>
+
+    <div class="login-review-prompt" *ngIf="!isLoggedIn">
+      <a routerLink="/login" [queryParams]="{returnUrl: currentUrl}">Sign in</a> to write a review.
+    </div>
+
+    <!-- Reviews list -->
+    <div class="reviews-list" *ngIf="reviewData && reviewData.reviews.length > 0">
+      <div class="review-card" *ngFor="let r of reviewData.reviews">
+        <div class="review-top">
+          <div class="reviewer-avatar">{{ r.customerName.charAt(0).toUpperCase() }}</div>
+          <div class="reviewer-info">
+            <div class="reviewer-name">{{ r.customerName }}</div>
+            <div class="reviewer-date">{{ r.createdAt | date:'mediumDate' }}</div>
+          </div>
+          <div class="review-stars">
+            <span *ngFor="let s of starsArray(r.rating)" class="star filled">★</span>
+            <span *ngFor="let s of emptyStars(r.rating)" class="star empty">★</span>
+          </div>
+        </div>
+        <p class="review-comment" *ngIf="r.comment">{{ r.comment }}</p>
+      </div>
+    </div>
+
+    <div class="no-reviews" *ngIf="reviewData && reviewData.reviews.length === 0">
+      No reviews yet. Be the first to review!
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="page-container" *ngIf="!product && loading">
+  <app-loading-spinner [show]="true" message="Loading product…"></app-loading-spinner>
+</div>
+
+<!-- Not found -->
+<div class="page-container" *ngIf="!product && !loading">
+  <div class="empty-state">
+    <div class="empty-icon">😕</div>
+    <div class="empty-title">Product not found</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+</div>

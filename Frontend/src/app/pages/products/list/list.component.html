@@ -1,0 +1,123 @@
+<div class="products-page page-container">
+
+  <!-- ── Top bar ──────────────────────────────────────── -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <h1 class="page-heading">
+        {{ selectedCategory || 'All Products' }}
+        <span class="result-count" *ngIf="!loading">({{ filtered.length }})</span>
+      </h1>
+      <div class="location-pill" (click)="showLocationModal = true">
+        📍 {{ currentPincode || 'All locations' }} <span class="change-link">Change</span>
+      </div>
+    </div>
+    <div class="sort-bar">
+      <span class="sort-label">Sort by:</span>
+      <select class="select sort-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+        <option value="">Relevance</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="products-layout">
+
+    <!-- ── Sidebar Filters ───────────────────────────── -->
+    <aside class="filters-sidebar">
+      <div class="filter-section">
+        <div class="filter-title">Categories</div>
+        <div class="cat-list">
+          <div class="cat-item" [class.active]="selectedCategory === ''" (click)="selectCategory('')">
+            All
+          </div>
+          <div class="cat-item" *ngFor="let c of categories"
+               [class.active]="selectedCategory === c.name"
+               (click)="selectCategory(c.name)">
+            {{ c.name }}
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">Price Range</div>
+        <div class="price-inputs">
+          <input class="input input-sm" type="number" placeholder="Min ₹" [(ngModel)]="minPrice" (change)="applyFilters()" />
+          <span class="price-sep">—</span>
+          <input class="input input-sm" type="number" placeholder="Max ₹" [(ngModel)]="maxPrice" (change)="applyFilters()" />
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-title">Location</div>
+        <div class="location-input-wrap">
+          <input class="input input-sm" type="text" placeholder="Enter pincode"
+                 [(ngModel)]="pincodeInput" (keyup.enter)="applyPincode()" maxlength="6"/>
+          <button class="btn-primary btn-sm" (click)="applyPincode()">Go</button>
+        </div>
+        <div class="clear-link" *ngIf="currentPincode" (click)="clearPincode()">✕ Clear location</div>
+      </div>
+
+      <button class="btn-secondary btn-sm btn-full" (click)="clearFilters()">
+        Clear All Filters
+      </button>
+    </aside>
+
+    <!-- ── Product Grid ──────────────────────────────── -->
+    <div class="products-main">
+
+      <!-- Search bar -->
+      <div class="search-row">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="input search-input" type="text" placeholder="Search products…"
+                 [(ngModel)]="searchQuery" (input)="applyFilters()" />
+          <button class="clear-search" *ngIf="searchQuery" (click)="searchQuery=''; applyFilters()">✕</button>
+        </div>
+      </div>
+
+      <app-loading-spinner [show]="loading" message="Loading products…"></app-loading-spinner>
+
+      <div class="grid-4" *ngIf="!loading && filtered.length > 0">
+        <app-product-card
+          *ngFor="let p of filtered"
+          [product]="p"
+          [wishlisted]="wishlistedIds.has(p.id)"
+          (addToCartEvent)="addToCart($event)"
+          (wishlistToggleEvt)="toggleWishlist($event)"
+          (cardClickEvt)="goToDetail($event)">
+        </app-product-card>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && filtered.length === 0">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">No products found</div>
+        <div class="empty-desc">Try changing your filters or search term.</div>
+        <button class="btn-primary btn-pill" (click)="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ───────────────────────────────────────── -->
+  <div class="toast-msg" *ngIf="toastMsg">{{ toastMsg }}</div>
+
+  <!-- ── Location Modal ───────────────────────────────── -->
+  <div class="modal-overlay" *ngIf="showLocationModal" (click)="showLocationModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">📍 Change Location</div>
+        <button class="modal-close" (click)="showLocationModal = false">✕</button>
+      </div>
+      <p class="modal-desc">Enter your pincode to find products near you.</p>
+      <div class="input-group">
+        <label>Pincode</label>
+        <input class="input" type="text" placeholder="e.g. 600001" [(ngModel)]="pincodeInput" maxlength="6"/>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="showLocationModal = false">Cancel</button>
+        <button class="btn-primary" (click)="applyPincode(); showLocationModal = false">Apply</button>
+      </div>
+    </div>
+  </div>
+
+</div>

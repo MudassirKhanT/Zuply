@@ -1,0 +1,175 @@
+<!-- Loading -->
+<div class="lp-loading" *ngIf="loading">
+  <div class="lp-spinner"></div>
+  <p>Loading your listing…</p>
+</div>
+
+<!-- Error (no listing found) -->
+<div class="lp-error-page" *ngIf="!loading && !listing && errorMsg">
+  <p class="err-msg">⚠ {{ errorMsg }}</p>
+  <button class="btn-secondary" (click)="uploadAnother()">← Go Back</button>
+</div>
+
+<!-- ── Published success screen ──────────────────────────────────── -->
+<div class="lp-success" *ngIf="published">
+  <div class="success-icon">🎉</div>
+  <h2>Submitted for Review!</h2>
+  <p>Your product has been sent to the admin for approval. It will appear on the marketplace once approved.</p>
+  <div class="success-actions">
+    <button class="btn-primary" (click)="uploadAnother()">Upload Another Product</button>
+    <button class="btn-secondary" (click)="goToDashboard()">Go to Dashboard</button>
+  </div>
+</div>
+
+<!-- ── Main Preview ───────────────────────────────────────────────── -->
+<div class="lp-page" *ngIf="!loading && listing && !published">
+
+  <div class="lp-header">
+    <button class="back-btn" (click)="uploadAnother()">← Upload Another</button>
+    <h1 class="lp-title">Review Your Listing</h1>
+    <p class="lp-subtitle">Check the enhanced image and edit the AI-generated details below before publishing.</p>
+  </div>
+
+  <!-- Images: Original vs Enhanced -->
+  <div class="images-row">
+    <div class="img-card">
+      <p class="img-label">Original</p>
+      <div class="img-frame original-frame">
+        <img [src]="imageUrl(listing.originalImageUrl)" alt="Original" />
+      </div>
+    </div>
+
+    <div class="img-arrow">→</div>
+
+    <div class="img-card enhanced-card">
+      <p class="img-label">
+        Enhanced
+        <span class="ai-tag">✦ AI</span>
+      </p>
+      <div class="img-frame enhanced-frame">
+        <img [src]="imageUrl(listing.processedImageUrl)" alt="Enhanced" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit form + details -->
+  <div class="lp-body">
+
+    <!-- Left: editable fields -->
+    <div class="edit-panel">
+      <h3 class="panel-title">Product Details</h3>
+
+      <!-- Title -->
+      <div class="field-group">
+        <label>Product Title <span class="ai-hint">✦ AI-generated</span></label>
+        <input
+          type="text"
+          class="field-input"
+          [(ngModel)]="editTitle"
+          placeholder="Enter product title"
+        />
+      </div>
+
+      <!-- Description -->
+      <div class="field-group">
+        <label>Description <span class="ai-hint">✦ AI-generated</span></label>
+        <textarea
+          class="field-input field-textarea"
+          [(ngModel)]="editDescription"
+          placeholder="Enter product description"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <!-- Category -->
+      <div class="field-group">
+        <label>Category</label>
+        <select class="field-input" [(ngModel)]="editCategory">
+          <option value="" disabled>Select category</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <!-- Price -->
+      <div class="field-group">
+        <label>
+          Your Price (₹)
+          <span class="price-hint" *ngIf="listing.suggestedPriceMin || listing.suggestedPriceMax">
+            AI suggests: {{ priceRange() }}
+          </span>
+        </label>
+        <input
+          type="number"
+          class="field-input"
+          [(ngModel)]="editPrice"
+          placeholder="Set your price"
+          min="1"
+        />
+      </div>
+
+      <!-- Save button -->
+      <button class="btn-save" (click)="saveEdits()" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Save Changes' }}
+      </button>
+
+      <p class="success-inline" *ngIf="successMsg">✓ {{ successMsg }}</p>
+    </div>
+
+    <!-- Right: AI details (read-only info) -->
+    <div class="info-panel">
+
+      <!-- AI metadata -->
+      <div class="info-card">
+        <h4>AI Detected Details</h4>
+        <div class="info-row" *ngIf="listing.color">
+          <span class="info-key">Color</span>
+          <span class="info-val">{{ listing.color }}</span>
+        </div>
+        <div class="info-row" *ngIf="listing.material">
+          <span class="info-key">Material</span>
+          <span class="info-val">{{ listing.material }}</span>
+        </div>
+        <div class="info-row" *ngIf="listing.productType">
+          <span class="info-key">Type</span>
+          <span class="info-val">{{ listing.productType }}</span>
+        </div>
+      </div>
+
+      <!-- Highlights -->
+      <div class="info-card" *ngIf="listing.highlights?.length">
+        <h4>Product Highlights</h4>
+        <ul class="highlights-list">
+          <li *ngFor="let h of listing.highlights">{{ h }}</li>
+        </ul>
+      </div>
+
+      <!-- Tags -->
+      <div class="info-card" *ngIf="listing.tags?.length">
+        <h4>Search Tags</h4>
+        <div class="tags-wrap">
+          <span class="tag-chip" *ngFor="let tag of listing.tags">{{ tag }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error banner -->
+  <div class="error-banner" *ngIf="errorMsg">⚠ {{ errorMsg }}</div>
+
+  <!-- Publish bar -->
+  <div class="publish-bar">
+    <p class="publish-note">
+      Once published, your product goes to admin for approval before appearing on the marketplace.
+    </p>
+    <button
+      class="btn-publish"
+      (click)="publish()"
+      [disabled]="publishing || !editPrice"
+    >
+      <span *ngIf="!publishing">🚀 Publish Listing</span>
+      <span *ngIf="publishing">Publishing…</span>
+    </button>
+  </div>
+
+</div>

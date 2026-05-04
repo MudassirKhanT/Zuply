@@ -1,0 +1,46 @@
+<div class="wishlist-page page-container">
+  <h1 class="page-heading">My Wishlist</h1>
+
+  <app-loading-spinner [show]="loading" message="Loading wishlist…"></app-loading-spinner>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && items.length === 0">
+    <div class="empty-icon">🤍</div>
+    <h2 class="empty-title">Your wishlist is empty</h2>
+    <p class="empty-desc">Save items you love and come back to them anytime.</p>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+
+  <!-- Wishlist grid -->
+  <div class="wishlist-grid" *ngIf="!loading && items.length > 0">
+    <div class="wish-card" *ngFor="let item of items">
+
+      <!-- Product image -->
+      <div class="wish-img" (click)="goToProduct(item.productId)"
+           [style.background-image]="item.productImage ? 'url(' + item.productImage + ')' : 'none'">
+        <span *ngIf="!item.productImage" class="wish-img-placeholder">🛍️</span>
+      </div>
+
+      <!-- Info -->
+      <div class="wish-body">
+        <div class="wish-name" (click)="goToProduct(item.productId)">{{ item.productName }}</div>
+        <div class="wish-seller" *ngIf="item.sellerName">by {{ item.sellerName }}</div>
+        <div class="wish-price">₹{{ item.price | number:'1.0-0' }}</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="wish-actions">
+        <button class="btn-primary btn-sm move-btn"
+                (click)="moveToCart(item)"
+                [disabled]="movingId === item.productId">
+          <span *ngIf="movingId !== item.productId">🛒 Add to Cart</span>
+          <span *ngIf="movingId === item.productId" class="spinner-sm"></span>
+        </button>
+        <button class="remove-btn" (click)="remove(item.productId)" title="Remove from wishlist">
+          🗑️
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="bas-page">
+
+  <!-- Hero -->
+  <section class="bas-hero">
+    <div class="page-container">
+      <div class="bas-hero-inner">
+        <div class="bas-hero-content">
+          <div class="bas-badge">🏪 Sell on Zuply</div>
+          <h1 class="bas-heading">Grow your business<br><span class="bas-accent">with local shoppers.</span></h1>
+          <p class="bas-sub">List your products in under 60 seconds using AI. No technical knowledge needed — just upload a photo.</p>
+          <button class="btn-primary btn-lg btn-pill" (click)="goToRegister()">Create Seller Account →</button>
+        </div>
+        <div class="bas-stats">
+          <div class="stat-box"><span class="sb-num">10K+</span><span class="sb-lbl">Products Listed</span></div>
+          <div class="stat-box"><span class="sb-num">500+</span><span class="sb-lbl">Active Sellers</span></div>
+          <div class="stat-box"><span class="sb-num">50+</span><span class="sb-lbl">Cities Covered</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-container">
+
+    <!-- Categories -->
+    <section class="bas-section">
+      <div class="bas-section-title">What can you sell on Zuply?</div>
+      <p class="bas-section-sub">We support 9 major product categories for local sellers across India.</p>
+      <div class="cat-grid">
+        <div class="cat-card" *ngFor="let cat of categories">
+          <div class="cat-icon">{{ cat.icon }}</div>
+          <div class="cat-name">{{ cat.name }}</div>
+          <div class="cat-desc">{{ cat.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Listing Tutorial -->
+    <section class="bas-section">
+      <div class="bas-section-title">How to list your products</div>
+      <p class="bas-section-sub">Our AI-powered listing tool makes it effortless — no descriptions to write.</p>
+      <div class="steps-grid">
+        <div class="step-card" *ngFor="let step of listingSteps">
+          <div class="step-num">{{ step.num }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <div class="step-title">{{ step.title }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Storage & Shipping -->
+    <section class="bas-section">
+      <div class="bas-section-title">Storage & Shipping</div>
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="ic-icon">📦</div>
+          <div class="ic-title">Self Storage</div>
+          <div class="ic-desc">Store products at your own location. No warehousing fees from Zuply.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🚚</div>
+          <div class="ic-title">Own Delivery</div>
+          <div class="ic-desc">Handle delivery yourself or partner with local courier services.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🏷️</div>
+          <div class="ic-title">Flexible Pricing</div>
+          <div class="ic-desc">Set your own delivery charges or offer free delivery to attract more buyers.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Receive Payments -->
+    <section class="bas-section">
+      <div class="bas-section-title">Receive Payments</div>
+      <div class="info-cards">
+        <div class="info-card" *ngFor="let p of paymentPoints">
+          <div class="ic-icon">{{ p.icon }}</div>
+          <div class="ic-title">{{ p.title }}</div>
+          <div class="ic-desc">{{ p.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="bas-cta">
+      <div class="bas-cta-title">Ready to start selling?</div>
+      <p class="bas-cta-sub">Create your free seller account today and reach thousands of local customers.</p>
+      <button class="btn-accent btn-lg btn-pill" (click)="goToRegister()">Get Started — It's Free</button>
+    </section>
+
+    <!-- Help & Support -->
+    <section class="bas-section bas-help">
+      <div class="bas-section-title">Help & Support</div>
+      <div class="help-cards">
+        <div class="help-card"><div class="help-icon">📧</div><div>Email us at <a href="mailto:support@zuply.in">support&#64;zuply.in</a></div></div>
+        <div class="help-card"><div class="help-icon">📞</div><div>Call us at <a href="tel:+918000000000">+91 800 000 0000</a></div></div>
+        <div class="help-card"><div class="help-icon">💬</div><div>Live chat available 9 AM – 9 PM, Mon–Sat</div></div>
+      </div>
+    </section>
+
+  </div>
+</div>

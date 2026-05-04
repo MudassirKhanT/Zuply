@@ -1,0 +1,83 @@
+@import 'styles';
+
+.profile-page { padding: 32px 0 60px; max-width: 720px; margin: 0 auto; }
+.page-heading  { font-size: 1.9rem; font-weight: 800; color: #1a2332; margin-bottom: 8px; }
+
+/* Tabs */
+.tab-bar { display: flex; gap: 4px; background: #f0f4f8; border-radius: $radius-lg; padding: 4px; margin-bottom: 28px; }
+.tab-btn  { flex: 1; padding: 9px; border: none; background: transparent; border-radius: $radius-md;
+  font-size: $text-sm; font-weight: 600; color: $zuply-text-secondary; cursor: pointer; transition: $transition-fast;
+  &.active { background: #fff; color: $zuply-primary; box-shadow: $shadow-sm; }
+}
+
+/* Profile card */
+.profile-card { background: #fff; border-radius: $radius-lg; padding: 32px; box-shadow: $shadow-sm; }
+
+/* PFP */
+.pfp-section { margin-bottom: 24px; }
+.pfp-wrap    { display: flex; align-items: center; gap: 24px; margin-bottom: 8px; }
+.pfp-img     { width: 88px; height: 88px; border-radius: 50%; background: $zuply-primary;
+  background-size: cover; background-position: center;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pfp-initial { font-size: 2rem; font-weight: 800; color: #fff; }
+.pfp-actions { display: flex; flex-direction: column; gap: 8px; }
+.pfp-upload-btn { cursor: pointer; }
+.pfp-hint    { font-size: $text-xs; color: $zuply-text-muted; }
+.info-divider { height: 1px; background: $zuply-border-light; margin-bottom: 20px; }
+
+/* Info grid */
+.info-grid { display: flex; flex-direction: column; border: 1px solid $zuply-border-light; border-radius: $radius-md; overflow: hidden; margin-bottom: 16px; }
+.info-row  { display: flex; padding: 12px 16px; font-size: $text-sm; border-bottom: 1px solid $zuply-border-light;
+  &:last-child { border-bottom: none; }
+  &:nth-child(even) { background: $zuply-primary-mist; }
+}
+.info-label { min-width: 120px; color: $zuply-text-muted; font-weight: 500; flex-shrink: 0; }
+.info-val   { color: $zuply-text; font-weight: 500; }
+.role-badge { background: $zuply-primary-light; color: $zuply-primary; border-radius: $radius-pill; padding: 2px 12px; font-size: $text-xs; font-weight: 700; }
+.profile-note { font-size: $text-xs; color: $zuply-text-muted; }
+
+/* Addresses */
+.addresses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.addr-title  { font-size: 1.1rem; font-weight: 700; color: $zuply-text; }
+.toast-success { background: #e6f7ee; color: #1a7e46; border-radius: $radius-md; padding: 10px 16px; font-weight: 600; font-size: $text-sm; margin-bottom: 16px; }
+
+/* Address form */
+.address-form-card { background: #fff; border-radius: $radius-lg; padding: 24px; box-shadow: $shadow-sm; margin-bottom: 20px; }
+.form-card-title   { font-weight: 700; font-size: 1rem; color: $zuply-text; margin-bottom: 16px; }
+.label-selector    { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.label-btn         { padding: 6px 16px; border-radius: $radius-pill; border: 1.5px solid $zuply-border; background: #fff;
+  font-size: $text-sm; font-weight: 600; cursor: pointer; color: $zuply-text-secondary; transition: $transition-fast;
+  &.selected, &:hover { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-light; }
+}
+.form-actions { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.grid-2       { display: grid; grid-template-columns: 1fr 1fr; gap: $space-md; }
+
+/* Address list */
+.addresses-list { display: flex; flex-direction: column; gap: 16px; }
+.address-card   { background: #fff; border: 1.5px solid $zuply-border-light; border-radius: $radius-lg; padding: 20px 24px; transition: $transition-fast;
+  &.default-card { border-color: $zuply-primary; }
+}
+.addr-header  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.addr-label   { font-weight: 700; font-size: $text-sm; color: $zuply-text; }
+.default-badge { background: $zuply-primary-light; color: $zuply-primary; font-size: $text-xs; font-weight: 700; border-radius: $radius-pill; padding: 2px 10px; }
+.addr-name    { font-weight: 600; font-size: .95rem; color: $zuply-text; margin-bottom: 4px; }
+.addr-phone   { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: 4px; }
+.addr-text    { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: 12px; }
+.addr-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-ghost-sm { background: transparent; border: 1px solid $zuply-border; color: $zuply-text-secondary; border-radius: $radius-md; padding: 5px 12px; font-size: $text-xs; font-weight: 600; cursor: pointer;
+  &:hover { border-color: $zuply-primary; color: $zuply-primary; }
+  &.danger:hover { border-color: $zuply-error; color: $zuply-error; }
+}
+.input-group  { display: flex; flex-direction: column; gap: 4px; }
+.input-group label { font-size: $text-sm; font-weight: 500; color: $zuply-text-secondary; }
+.btn-sm       { padding: 8px 18px; font-size: $text-sm; }
+
+/* Empty state reuse */
+.empty-state  { text-align: center; padding: 48px 24px; }
+.empty-icon   { font-size: 3rem; margin-bottom: 12px; }
+.empty-title  { font-size: 1.1rem; font-weight: 700; color: $zuply-text; margin-bottom: 8px; }
+.empty-desc   { color: $zuply-text-muted; font-size: $text-sm; margin-bottom: 20px; }
+
+@media (max-width: 600px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}

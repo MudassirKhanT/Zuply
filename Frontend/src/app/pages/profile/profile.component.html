@@ -1,0 +1,155 @@
+<div class="profile-page page-container">
+
+  <h1 class="page-heading">My Account</h1>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'">
+      👤 Profile
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'addresses'" (click)="activeTab = 'addresses'">
+      📍 Saved Addresses
+    </button>
+  </div>
+
+  <!-- ── PROFILE TAB ─────────────────────────────────── -->
+  <div *ngIf="activeTab === 'profile'">
+    <div class="profile-card">
+
+      <!-- PFP section -->
+      <div class="pfp-section">
+        <div class="pfp-wrap">
+          <div class="pfp-img" [style.backgroundImage]="pfp ? 'url('+pfp+')' : 'none'">
+            <span *ngIf="!pfp" class="pfp-initial">{{ user.name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="pfp-actions">
+            <label class="btn-outline-sm pfp-upload-btn" for="pfp-input">
+              📷 {{ pfp ? 'Change Photo' : 'Upload Photo' }}
+            </label>
+            <input id="pfp-input" type="file" accept="image/*" hidden (change)="onPfpChange($event)"/>
+            <button *ngIf="pfp" class="btn-ghost-sm" (click)="removePfp()">Remove</button>
+          </div>
+        </div>
+        <p class="pfp-hint">Optional — your photo will appear in the navbar and account menu.</p>
+      </div>
+
+      <div class="info-divider"></div>
+
+      <!-- User info -->
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Full Name</span>
+          <span class="info-val">{{ user.name }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-val">{{ user.email }}</span>
+        </div>
+        <div class="info-row" *ngIf="user.phone">
+          <span class="info-label">Phone</span>
+          <span class="info-val">{{ user.phone }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Account Type</span>
+          <span class="info-val role-badge">Customer</span>
+        </div>
+      </div>
+
+      <p class="profile-note">To update your name, email or phone, please contact support.</p>
+    </div>
+  </div>
+
+  <!-- ── ADDRESSES TAB ──────────────────────────────── -->
+  <div *ngIf="activeTab === 'addresses'">
+
+    <div class="addresses-header">
+      <div class="addr-title">Saved Addresses</div>
+      <button class="btn-primary btn-sm btn-pill" (click)="openAddForm()" *ngIf="!showAddressForm">
+        + Add New Address
+      </button>
+    </div>
+
+    <!-- Success toast -->
+    <div class="toast-success" *ngIf="saveSuccess">✓ Address saved successfully!</div>
+
+    <!-- Address form -->
+    <div class="address-form-card" *ngIf="showAddressForm">
+      <div class="form-card-title">{{ editingAddressId ? 'Edit Address' : 'Add New Address' }}</div>
+
+      <!-- Label selector -->
+      <div class="label-selector">
+        <button *ngFor="let lbl of labelOptions"
+                class="label-btn"
+                [class.selected]="addressForm.label === lbl"
+                (click)="addressForm.label = lbl">
+          {{ labelIcon(lbl) }} {{ lbl }}
+        </button>
+      </div>
+
+      <div class="grid-2">
+        <div class="input-group">
+          <label>Full Name</label>
+          <input class="input" type="text" placeholder="Recipient's full name"
+                 [(ngModel)]="addressForm.customerName"/>
+        </div>
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input class="input" type="tel" placeholder="10-digit mobile number"
+                 [(ngModel)]="addressForm.phone" maxlength="10"/>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Full Address</label>
+        <textarea class="input" rows="2" placeholder="House no., street, area, landmark…"
+                  [(ngModel)]="addressForm.address"></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>City</label>
+          <input class="input" type="text" placeholder="City" [(ngModel)]="addressForm.city"/>
+        </div>
+        <div class="input-group">
+          <label>Pincode</label>
+          <input class="input" type="text" placeholder="6-digit pincode" maxlength="6"
+                 [(ngModel)]="addressForm.pincode"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary btn-pill" (click)="saveAddress()">
+          {{ editingAddressId ? 'Update Address' : 'Save Address' }}
+        </button>
+        <button class="btn-ghost-sm" (click)="cancelForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Address list -->
+    <div class="addresses-list" *ngIf="!showAddressForm">
+      <div class="address-card" *ngFor="let addr of addresses" [class.default-card]="addr.isDefault">
+        <div class="addr-header">
+          <span class="addr-label">{{ labelIcon(addr.label) }} {{ addr.label }}</span>
+          <span class="default-badge" *ngIf="addr.isDefault">Default</span>
+        </div>
+        <div class="addr-name">{{ addr.customerName }}</div>
+        <div class="addr-phone">📞 {{ addr.phone }}</div>
+        <div class="addr-text">{{ addr.address }}, {{ addr.city }} – {{ addr.pincode }}</div>
+        <div class="addr-actions">
+          <button class="btn-ghost-sm" (click)="editAddress(addr)">✏️ Edit</button>
+          <button class="btn-ghost-sm danger" (click)="removeAddress(addr.id)">🗑️ Remove</button>
+          <button class="btn-ghost-sm" *ngIf="!addr.isDefault" (click)="setDefault(addr.id)">
+            ☆ Set Default
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="addresses.length === 0">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">No saved addresses</div>
+        <div class="empty-desc">Add an address to speed up checkout.</div>
+        <button class="btn-primary btn-pill" (click)="openAddForm()">+ Add Address</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

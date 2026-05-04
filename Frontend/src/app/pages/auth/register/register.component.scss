@@ -1,0 +1,34 @@
+@import 'styles';
+
+.auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: $zuply-bg; padding: $space-lg; }
+.auth-card {
+  background: $zuply-surface; border-radius: $radius-xl; border: 1px solid $zuply-border-light;
+  box-shadow: $shadow-lg; padding: $space-2xl; width: 100%; max-width: 440px;
+  animation: fadeInUp 0.5s ease both;
+}
+@keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+.auth-brand { display: flex; align-items: center; gap: $space-sm; margin-bottom: $space-xl; }
+.auth-brand-name { font-size: $text-xl; font-weight: 800; color: $zuply-primary; }
+.auth-title    { font-size: $text-2xl; font-weight: 700; margin-bottom: $space-xs; }
+.auth-subtitle { font-size: $text-base; color: $zuply-text-secondary; margin-bottom: $space-lg; }
+.role-tabs {
+  display: flex; gap: $space-sm; margin-bottom: $space-lg;
+  background: $zuply-surface-2; border-radius: $radius-md; padding: 4px;
+}
+.role-tab {
+  flex: 1; padding: 8px; border-radius: $radius-sm; font-size: $text-sm; font-weight: 600;
+  background: none; color: $zuply-text-secondary; border: none; cursor: pointer; transition: $transition-fast;
+  &.active { background: $zuply-surface; color: $zuply-primary; box-shadow: $shadow-sm; }
+}
+.auth-form { display: flex; flex-direction: column; gap: $space-md; margin-bottom: $space-lg; }
+.input-pass-wrap { position: relative; }
+.input-pass-wrap .input { padding-right: 44px; }
+.pass-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px; }
+.alert { padding: 10px 14px; border-radius: $radius-md; font-size: $text-sm; font-weight: 500; margin-bottom: $space-md; }
+.alert-error   { background: $zuply-error-light; color: $zuply-error; }
+.alert-success { background: $zuply-success-light; color: #1a7a44; }
+.spinner-sm { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(#fff,.4); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.auth-footer { text-align: center; font-size: $text-sm; color: $zuply-text-secondary;
+  a { color: $zuply-primary; font-weight: 600; margin-left: 4px; &:hover { text-decoration: underline; } }
+}

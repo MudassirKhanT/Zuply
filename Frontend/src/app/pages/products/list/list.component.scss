@@ -1,0 +1,90 @@
+@import 'styles';
+
+.products-page { padding-top: $space-lg; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: $space-lg; flex-wrap: wrap; gap: $space-md;
+}
+.top-bar-left { display: flex; align-items: center; gap: $space-md; flex-wrap: wrap; }
+.page-heading { font-size: $text-2xl; font-weight: 700; color: $zuply-text; }
+.result-count { font-size: $text-base; font-weight: 400; color: $zuply-text-secondary; margin-left: 4px; }
+
+.location-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: $zuply-primary-light; color: $zuply-primary;
+  padding: 6px 14px; border-radius: $radius-pill;
+  font-size: $text-sm; font-weight: 500; cursor: pointer;
+  border: 1px solid rgba($zuply-primary, 0.2);
+  transition: $transition-fast;
+  &:hover { background: darken(#E8F5F6, 4%); }
+}
+.change-link { color: $zuply-accent; font-weight: 600; margin-left: 4px; }
+
+.sort-bar { display: flex; align-items: center; gap: $space-sm; }
+.sort-label { font-size: $text-sm; color: $zuply-text-secondary; font-weight: 500; }
+.sort-select { width: 200px; padding: 8px 12px; }
+
+.products-layout { display: grid; grid-template-columns: 240px 1fr; gap: $space-xl; align-items: start; }
+
+// Sidebar
+.filters-sidebar {
+  background: $zuply-surface; border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light; padding: $space-lg;
+  position: sticky; top: 80px;
+}
+.filter-section { margin-bottom: $space-lg; padding-bottom: $space-lg; border-bottom: 1px solid $zuply-border-light; &:last-child { border-bottom: none; margin-bottom: 0; } }
+.filter-title { font-size: $text-sm; font-weight: 700; color: $zuply-text; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: $space-sm; }
+
+.cat-list { display: flex; flex-direction: column; gap: 4px; }
+.cat-item {
+  padding: 7px 10px; border-radius: $radius-sm; font-size: $text-sm; cursor: pointer;
+  color: $zuply-text-secondary; transition: $transition-fast;
+  &:hover { background: $zuply-primary-light; color: $zuply-primary; }
+  &.active { background: $zuply-primary-light; color: $zuply-primary; font-weight: 600; }
+}
+
+.price-inputs { display: flex; align-items: center; gap: $space-sm; }
+.input-sm { padding: 7px 10px !important; font-size: $text-sm !important; }
+.price-sep { color: $zuply-text-muted; font-size: $text-sm; }
+
+.location-input-wrap { display: flex; gap: $space-sm; align-items: center; margin-bottom: $space-xs; }
+.location-input-wrap .input-sm { flex: 1; }
+.clear-link { font-size: $text-xs; color: $zuply-error; cursor: pointer; margin-top: 4px; &:hover { text-decoration: underline; } }
+
+// Main area
+.products-main { }
+.search-row { margin-bottom: $space-lg; }
+.search-wrap { position: relative; }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+.search-input { padding-left: 42px !important; padding-right: 36px !important; }
+.clear-search { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: $zuply-text-muted; font-size: 14px; &:hover { color: $zuply-error; } }
+
+// Modal
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; display: flex; align-items: center; justify-content: center; padding: $space-lg; }
+.modal-box { background: $zuply-surface; border-radius: $radius-xl; padding: $space-xl; width: 100%; max-width: 380px; box-shadow: $shadow-lg; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-sm; }
+.modal-title { font-size: $text-lg; font-weight: 700; color: $zuply-primary; }
+.modal-close { background: none; border: none; font-size: 18px; cursor: pointer; color: $zuply-text-secondary; &:hover { color: $zuply-error; } }
+.modal-desc { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-lg; }
+.modal-actions { display: flex; gap: $space-sm; justify-content: flex-end; margin-top: $space-lg; }
+
+// Toast
+.toast-msg {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: #1e293b; color: #fff; padding: 10px 24px;
+  border-radius: $radius-pill; font-size: $text-sm; font-weight: 500;
+  box-shadow: $shadow-lg; z-index: 1100;
+  animation: fadeInUp 0.2s ease;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .products-layout { grid-template-columns: 1fr; }
+  .filters-sidebar { position: static; }
+  .top-bar { flex-direction: column; align-items: flex-start; }
+}
+

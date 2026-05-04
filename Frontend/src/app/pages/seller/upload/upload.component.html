@@ -1,0 +1,121 @@
+<!-- ── Step 1: Select Image ────────────────────────────────────────── -->
+<div class="upload-page" *ngIf="step === 'select'">
+
+  <div class="upload-header">
+    <h1 class="upload-title">List a New Product</h1>
+    <p class="upload-subtitle">
+      Upload a raw photo — we'll remove the background, enhance it, and
+      auto-generate the title &amp; description for you.
+    </p>
+  </div>
+
+  <!-- Drop zone -->
+  <div
+    class="drop-zone"
+    [class.drag-over]="dragOver"
+    [class.has-file]="selectedFile"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+    (click)="!selectedFile && fileInput.click()"
+  >
+    <input #fileInput type="file" accept="image/jpeg,image/png" hidden (change)="onFileSelected($event)" />
+
+    <!-- Empty state -->
+    <ng-container *ngIf="!selectedFile">
+      <div class="dz-icon">📷</div>
+      <p class="dz-title">Drag &amp; drop your product photo here</p>
+      <p class="dz-sub">or <span class="dz-link">browse to upload</span></p>
+      <p class="dz-hint">JPEG or PNG · max 10 MB</p>
+    </ng-container>
+
+    <!-- Preview state -->
+    <ng-container *ngIf="selectedFile">
+      <div class="preview-wrap">
+        <img [src]="previewUrl" alt="Preview" class="preview-img" />
+        <button class="remove-btn" (click)="$event.stopPropagation(); removeFile()" title="Remove">✕</button>
+      </div>
+      <p class="file-name">{{ selectedFile.name }}</p>
+      <p class="file-size">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+    </ng-container>
+  </div>
+
+  <!-- Error -->
+  <p class="error-msg" *ngIf="errorMsg">⚠ {{ errorMsg }}</p>
+
+  <!-- What happens next -->
+  <div class="steps-preview" *ngIf="!selectedFile">
+    <div class="step-item">
+      <span class="step-num">1</span>
+      <div>
+        <strong>Background Removal</strong>
+        <p>Cleans up messy backgrounds automatically</p>
+      </div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step-item">
+      <span class="step-num">2</span>
+      <div>
+        <strong>Image Enhancement</strong>
+        <p>Boosts brightness, contrast &amp; sharpness</p>
+      </div>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step-item">
+      <span class="step-num">3</span>
+      <div>
+        <strong>AI Listing</strong>
+        <p>Generates title, description &amp; category</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action button -->
+  <button
+    class="btn-enhance"
+    [disabled]="!selectedFile"
+    (click)="enhanceAndGenerate()"
+  >
+    ✦ Enhance &amp; Generate Listing
+  </button>
+
+</div>
+
+<!-- ── Step 2: Processing ─────────────────────────────────────────── -->
+<div class="processing-page" *ngIf="step === 'processing'">
+
+  <div class="processing-card">
+
+    <div class="spinner-ring">
+      <svg viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="34" />
+        <circle cx="40" cy="40" r="34" class="progress-arc"
+                [style.stroke-dashoffset]="213 - (213 * progressPercent / 100)" />
+      </svg>
+      <span class="spinner-icon">✦</span>
+    </div>
+
+    <h2 class="processing-title">Working on your image</h2>
+    <p class="processing-msg">{{ currentMessage }}</p>
+
+    <div class="progress-steps">
+      <div
+        *ngFor="let msg of processingMessages; let i = index"
+        class="prog-step"
+        [class.done]="i < processingStep"
+        [class.active]="i === processingStep"
+      >
+        <span class="prog-dot">
+          <ng-container *ngIf="i < processingStep">✓</ng-container>
+          <ng-container *ngIf="i === processingStep">
+            <span class="pulse-dot"></span>
+          </ng-container>
+        </span>
+        <span class="prog-label">{{ msg }}</span>
+      </div>
+    </div>
+
+    <p class="processing-note">This usually takes 15–30 seconds. Please don't close this page.</p>
+  </div>
+
+</div>

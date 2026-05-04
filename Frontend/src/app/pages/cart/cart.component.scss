@@ -1,0 +1,50 @@
+@import 'styles';
+
+.cart-page { padding-top: $space-lg; padding-bottom: $space-3xl; }
+.page-heading { font-size: $text-2xl; font-weight: 700; margin-bottom: $space-xl; }
+
+.cart-layout { display: grid; grid-template-columns: 1fr 340px; gap: $space-xl; align-items: start; }
+
+.cart-items { display: flex; flex-direction: column; gap: $space-md; }
+.cart-item {
+  display: flex; align-items: center; gap: $space-md;
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg; padding: $space-md;
+  transition: $transition-fast;
+  &:hover { box-shadow: $shadow-sm; }
+}
+.item-img {
+  width: 80px; height: 80px; border-radius: $radius-md;
+  background: $zuply-surface-2 center/cover no-repeat;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border: 1px solid $zuply-border-light;
+}
+.item-body { flex: 1; min-width: 0; }
+.item-name  { font-size: $text-base; font-weight: 600; color: $zuply-text; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-price { font-size: $text-sm; color: $zuply-text-secondary; }
+.item-qty   { flex-shrink: 0; }
+.item-total { font-size: $text-base; font-weight: 700; color: $zuply-accent; min-width: 80px; text-align: right; }
+.item-remove {
+  background: none; border: none; color: $zuply-text-muted; font-size: 16px; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  transition: $transition-fast; flex-shrink: 0;
+  &:hover { background: $zuply-error-light; color: $zuply-error; }
+}
+
+.cart-summary {
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl; padding: $space-xl; position: sticky; top: 80px;
+}
+.summary-title   { font-size: $text-lg; font-weight: 700; color: $zuply-primary; margin-bottom: $space-lg; }
+.summary-row     { display: flex; justify-content: space-between; font-size: $text-base; margin-bottom: $space-md; color: $zuply-text-secondary; }
+.free-tag        { color: $zuply-success; font-weight: 600; }
+.summary-divider { height: 1px; background: $zuply-border-light; margin: $space-md 0; }
+.total-row       { font-size: $text-lg; font-weight: 700; color: $zuply-text; margin-bottom: $space-lg; }
+
+.continue-link { display: block; text-align: center; margin-top: $space-md; font-size: $text-sm; color: $zuply-primary; font-weight: 500; &:hover { text-decoration: underline; } }
+
+@media (max-width: 768px) {
+  .cart-layout { grid-template-columns: 1fr; }
+  .cart-summary { position: static; }
+  .item-total   { display: none; }
+}

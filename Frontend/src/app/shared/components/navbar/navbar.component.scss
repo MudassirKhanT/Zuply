@@ -1,0 +1,201 @@
+@import 'styles';
+
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: $zuply-surface;
+  border-bottom: 1px solid $zuply-border-light;
+  box-shadow: $shadow-sm;
+
+  .navbar-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 $space-lg; height: 64px;
+    display: flex; align-items: center; gap: $space-md;
+  }
+}
+
+.navbar-logo {
+  display: flex; align-items: center; gap: $space-sm;
+  text-decoration: none; flex-shrink: 0;
+  .logo-text {
+    font-size: $text-xl; font-weight: 800;
+    letter-spacing: -1px; color: $zuply-primary;
+    em { color: $zuply-accent; font-style: normal; }
+  }
+}
+
+.location-pill {
+  display: flex; align-items: center; gap: 5px;
+  font-size: $text-sm; color: $zuply-primary; font-weight: 500;
+  background: $zuply-primary-light; padding: 4px 10px;
+  border-radius: $radius-pill; white-space: nowrap; flex-shrink: 0;
+  .loc-dot { width: 6px; height: 6px; border-radius: 50%; background: $zuply-accent; }
+}
+
+.navbar-search {
+  flex: 1; max-width: 440px;
+  display: flex; align-items: center;
+  background: $zuply-surface; border: 1.5px solid $zuply-border;
+  border-radius: $radius-md; overflow: hidden; transition: $transition-fast;
+  &:focus-within { border-color: $zuply-primary; box-shadow: 0 0 0 3px rgba($zuply-primary, 0.1); }
+
+  .search-input {
+    flex: 1; border: none; padding: 9px 12px;
+    font-size: $text-base; font-family: $font-main;
+    color: $zuply-text; background: transparent; outline: none;
+    &::placeholder { color: $zuply-text-muted; }
+  }
+  .search-btn {
+    padding: 9px 12px; background: $zuply-primary; color: #fff;
+    border: none; cursor: pointer; font-size: 14px;
+    &:hover { background: $zuply-primary-dark; }
+  }
+}
+
+.navbar-actions {
+  display: flex; align-items: center;
+  gap: $space-sm; margin-left: auto; flex-shrink: 0;
+}
+
+.btn-outline-sm {
+  padding: 6px 14px; border-radius: $radius-md;
+  border: 1.5px solid $zuply-primary; color: $zuply-primary;
+  font-size: $text-sm; font-weight: 600; background: transparent;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  &:hover { background: $zuply-primary-light; }
+}
+
+.btn-filled-sm {
+  padding: 6px 14px; border-radius: $radius-md;
+  background: $zuply-primary; color: #fff;
+  font-size: $text-sm; font-weight: 600;
+  border: none; cursor: pointer; text-decoration: none; white-space: nowrap;
+  &:hover { background: $zuply-primary-dark; }
+}
+
+.icon-btn {
+  width: 38px; height: 38px; border-radius: $radius-md;
+  background: $zuply-surface; border: 1px solid $zuply-border;
+  display: flex; align-items: center; justify-content: center;
+  color: $zuply-text-secondary; cursor: pointer; text-decoration: none;
+  font-size: 16px; transition: $transition-fast;
+  &:hover { background: $zuply-primary-light; color: $zuply-primary; border-color: $zuply-primary; }
+}
+
+/* ── Customer nav link pills ─────────────────────────── */
+.nav-link-pill {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border-radius: $radius-md;
+  font-size: $text-sm; font-weight: 500; color: $zuply-text-secondary;
+  text-decoration: none; white-space: nowrap; transition: $transition-fast;
+  &:hover { background: $zuply-primary-light; color: $zuply-primary; }
+  &.nav-link-active { background: $zuply-primary-light; color: $zuply-primary; font-weight: 600; }
+}
+.icon-link .nl-icon  { font-size: 1rem; }
+.icon-link .nl-label { font-size: $text-sm; }
+
+.cart-icon-btn {
+  position: relative;
+  .cart-count {
+    position: absolute; top: -5px; right: -5px;
+    width: 18px; height: 18px; background: $zuply-accent; color: #fff;
+    border-radius: 50%; font-size: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid $zuply-surface;
+  }
+}
+
+/* ── PFP avatar ──────────────────────────────────────── */
+.user-menu-wrap {
+  position: relative;
+  .user-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: $zuply-primary; color: #fff;
+    font-size: $text-base; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; user-select: none;
+    &:hover { background: $zuply-primary-dark; }
+    &.seller { background: $zuply-accent; color: $zuply-primary-dark; }
+    &.admin  { background: $zuply-text; }
+    &.has-pfp { background-size: cover; background-position: center; span { display: none; } }
+  }
+  .dropdown {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: $zuply-surface; border: 1px solid $zuply-border;
+    border-radius: $radius-lg; box-shadow: $shadow-lg;
+    min-width: 200px; z-index: 200; overflow: hidden;
+    animation: drop-in 0.15s ease;
+
+    .dropdown-divider { height: 1px; background: $zuply-border-light; }
+    .dropdown-item {
+      display: block; padding: 10px $space-md;
+      font-size: $text-base; color: $zuply-text;
+      cursor: pointer; transition: $transition-fast; text-decoration: none;
+      &:hover { background: $zuply-primary-light; color: $zuply-primary; }
+      &.logout { color: $zuply-error; &:hover { background: $zuply-error-light; } }
+    }
+  }
+}
+
+.dropdown-header {
+  display: flex; align-items: center; gap: 10px; padding: $space-md;
+  .dropdown-name { font-size: $text-base; font-weight: 600; color: $zuply-text; }
+  .dropdown-role { font-size: $text-xs; color: $zuply-text-secondary; margin-top: 2px; }
+}
+
+.dropdown-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: $zuply-primary; color: #fff;
+  font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  &.has-pfp { background-size: cover; background-position: center; span { display: none; } }
+}
+
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Secondary info bar ──────────────────────────────── */
+.navbar-secondary {
+  background: #f5f8f9;
+  border-top: 1px solid $zuply-border-light;
+}
+.secondary-inner {
+  max-width: 1200px; margin: 0 auto; padding: 5px $space-lg;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.sec-link {
+  display: flex; align-items: center; gap: 5px;
+  font-size: .78rem; font-weight: 600; color: #4a5568;
+  text-decoration: none; white-space: nowrap;
+  &:hover { color: $zuply-primary; }
+}
+.sec-icon    { font-size: .85rem; }
+.sec-divider { color: $zuply-border; font-size: .9rem; }
+
+/* ── Bottom nav — mobile ─────────────────────────────── */
+.bottom-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 100; background: $zuply-surface;
+  border-top: 1px solid $zuply-border-light;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+  padding: $space-xs 0 $space-md;
+
+  .bnav-inner { display: flex; justify-content: space-around; align-items: center; }
+  .bnav-item {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2px; font-size: 10px; color: $zuply-text-muted;
+    cursor: pointer; padding: $space-xs $space-sm; text-decoration: none;
+    .bnav-icon { font-size: 18px; }
+    .bnav-bar  { width: 16px; height: 2.5px; border-radius: 2px; background: transparent; margin-top: 1px; }
+    &.active { color: $zuply-primary; font-weight: 600; .bnav-bar { background: $zuply-accent; } }
+  }
+}
+
+@media (max-width: 768px) {
+  .bottom-nav    { display: block; }
+  .location-pill { display: none; }
+  .logo-text     { display: none; }
+  .nav-link-pill .nl-label { display: none; }
+  .secondary-inner { gap: 10px; }
+}

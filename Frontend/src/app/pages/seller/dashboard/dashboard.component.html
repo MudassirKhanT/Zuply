@@ -1,0 +1,57 @@
+<div class="seller-dashboard">
+  <h2 class="page-title">Seller Dashboard</h2>
+
+  <div *ngIf="loading" class="loading">Loading dashboard...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="stats" class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-value">{{ stats.totalProductsUploaded }}</div>
+      <div class="stat-label">Products Uploaded</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🛒</div>
+      <div class="stat-value">{{ stats.totalOrdersReceived }}</div>
+      <div class="stat-label">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-value">{{ stats.pendingOrders }}</div>
+      <div class="stat-label">Pending Orders</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <h3>Quick Actions</h3>
+    <div class="action-buttons">
+      <a routerLink="/seller/upload" class="btn-action primary">+ Upload New Product</a>
+      <a routerLink="/seller/products" class="btn-action secondary">View My Products</a>
+      <a routerLink="/seller/orders" class="btn-action secondary">View Orders</a>
+    </div>
+  </div>
+
+  <div *ngIf="recentOrders.length > 0" class="recent-orders">
+    <h3>Recent Orders</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of recentOrders">
+          <td>#{{ order.orderId }}</td>
+          <td>{{ order.customerName }}</td>
+          <td>{{ order.productName }}</td>
+          <td>{{ order.quantity }}</td>
+          <td><span [class]="'badge badge-' + order.orderStatus?.toLowerCase()">{{ order.orderStatus }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

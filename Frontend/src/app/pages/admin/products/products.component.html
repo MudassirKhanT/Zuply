@@ -1,0 +1,89 @@
+<div class="admin-products">
+  <h2 class="page-title">Product Management</h2>
+
+  <div *ngIf="actionMessage" class="action-msg">{{ actionMessage }}</div>
+  <div *ngIf="loading" class="loading">Loading products...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="!loading && products.length === 0 && !error" class="empty-state">
+    No products found.
+  </div>
+
+  <!-- Edit Modal -->
+  <div *ngIf="editingProduct" class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Edit Product #{{ editingProduct.id }}</h3>
+      <div class="form-group">
+        <label>Title</label>
+        <input [(ngModel)]="editForm.title" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input [(ngModel)]="editForm.category" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input [(ngModel)]="editForm.price" type="number" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="editForm.status" class="form-input">
+          <option value="DRAFT">DRAFT</option>
+          <option value="PUBLISHED">PUBLISHED</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="editForm.description" class="form-input" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-approve" (click)="saveEdit()">Save</button>
+        <button class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="products.length > 0" class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Seller ID</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.id }}</td>
+          <td>
+            <img
+              *ngIf="product.imageUrl"
+              [src]="product.imageUrl"
+              class="thumb"
+              (error)="product.imageUrl = null"
+            />
+            <span *ngIf="!product.imageUrl">—</span>
+          </td>
+          <td>{{ product.title || '—' }}</td>
+          <td>{{ product.category || '—' }}</td>
+          <td>{{ formatPrice(product) }}</td>
+          <td>{{ product.sellerId }}</td>
+          <td>
+            <span [class]="'status-badge ' + getStatusClass(product.status)">
+              {{ product.status }}
+            </span>
+          </td>
+          <td class="action-cell">
+            <button class="btn-edit" (click)="openEdit(product)">Edit</button>
+            <button class="btn-delete" (click)="deleteProduct(product.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

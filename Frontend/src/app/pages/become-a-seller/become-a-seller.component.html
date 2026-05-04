@@ -1,0 +1,143 @@
+<div class="bas-page">
+
+  <!-- ── HERO ────────────────────────────────────────── -->
+  <section class="bas-hero">
+    <div class="page-container">
+      <div class="bas-hero-inner">
+        <div class="bas-hero-content">
+          <div class="bas-badge">🏪 Sell on Zuply</div>
+          <h1 class="bas-heading">Grow your business<br><span class="bas-accent">with local shoppers.</span></h1>
+          <p class="bas-sub">List your products in under 60 seconds using AI. No technical knowledge needed — just upload a photo and we do the rest.</p>
+          <button class="btn-primary btn-lg btn-pill" (click)="goToRegister()">
+            Create Seller Account →
+          </button>
+        </div>
+        <div class="bas-hero-stats">
+          <div class="stat-box"><span class="sb-num">10K+</span><span class="sb-lbl">Products Listed</span></div>
+          <div class="stat-box"><span class="sb-num">500+</span><span class="sb-lbl">Active Sellers</span></div>
+          <div class="stat-box"><span class="sb-num">50+</span><span class="sb-lbl">Cities Covered</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-container">
+
+    <!-- ── CATEGORIES ──────────────────────────────────── -->
+    <section class="bas-section">
+      <div class="bas-section-title">What can you sell on Zuply?</div>
+      <p class="bas-section-sub">We support 9 major product categories for local sellers across India.</p>
+      <div class="cat-grid">
+        <div class="cat-card" *ngFor="let cat of categories">
+          <div class="cat-icon">{{ cat.icon }}</div>
+          <div class="cat-name">{{ cat.name }}</div>
+          <div class="cat-desc">{{ cat.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TUTORIAL TO LISTING ─────────────────────────── -->
+    <section class="bas-section">
+      <div class="bas-section-title">How to list your products</div>
+      <p class="bas-section-sub">Our AI-powered listing tool makes it effortless — no descriptions to write, no pricing research needed.</p>
+      <div class="steps-grid">
+        <div class="step-card" *ngFor="let step of listingSteps">
+          <div class="step-num">{{ step.num }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <div class="step-title">{{ step.title }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STORAGE & SHIPPING ──────────────────────────── -->
+    <section class="bas-section">
+      <div class="bas-section-title">Storage &amp; Shipping</div>
+      <div class="info-cards-row">
+        <div class="info-card">
+          <div class="ic-icon">📦</div>
+          <div class="ic-title">Sell from your store</div>
+          <div class="ic-desc">No warehouse needed. You manage your own inventory from your shop or home. Mark items as out of stock anytime from your dashboard.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🚚</div>
+          <div class="ic-title">Flexible delivery options</div>
+          <div class="ic-desc">Choose home delivery, store pickup, or partner with local delivery agents. You set the delivery radius and method per product.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">📍</div>
+          <div class="ic-title">Hyper-local reach</div>
+          <div class="ic-desc">Your products appear first to customers in your pincode area. Get discovered by shoppers who are already near you.</div>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">↩️</div>
+          <div class="ic-title">Return policy — your call</div>
+          <div class="ic-desc">Set your own return window (no returns, 7-day, 30-day). Full control over your return policy per product.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RECEIVE PAYMENTS ────────────────────────────── -->
+    <section class="bas-section">
+      <div class="bas-section-title">Receive Payments</div>
+      <p class="bas-section-sub">Get paid instantly and securely — no hidden fees, no delays.</p>
+      <div class="pay-grid">
+        <div class="pay-card" *ngFor="let p of paymentPoints">
+          <div class="pay-icon">{{ p.icon }}</div>
+          <div class="pay-title">{{ p.title }}</div>
+          <div class="pay-desc">{{ p.desc }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CREATE ACCOUNT ──────────────────────────────── -->
+    <section class="bas-cta-section">
+      <div class="bas-cta-card">
+        <div class="bas-cta-content">
+          <h2 class="bas-cta-title">Ready to start selling?</h2>
+          <p class="bas-cta-desc">Create your seller account in 2 minutes. No registration fee, no monthly charges.</p>
+          <div class="bas-cta-steps">
+            <div class="cta-step"><span class="cs-num">1</span> Register with your phone number</div>
+            <div class="cta-step"><span class="cs-num">2</span> Set up your store (name + location)</div>
+            <div class="cta-step"><span class="cs-num">3</span> Upload your first product &amp; go live</div>
+          </div>
+          <button class="btn-accent btn-lg btn-pill" (click)="goToRegister()">
+            Create Free Seller Account →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HELP & SUPPORT ──────────────────────────────── -->
+    <section class="bas-section bas-help">
+      <div class="bas-section-title">Help &amp; Support</div>
+      <div class="help-grid">
+        <div class="help-card">
+          <div class="hc-icon">📞</div>
+          <div class="hc-title">24/7 Seller Support</div>
+          <div class="hc-desc">Our dedicated seller support team is available round-the-clock via phone and chat.</div>
+          <a href="tel:+918000000000" class="hc-link">Call now</a>
+        </div>
+        <div class="help-card">
+          <div class="hc-icon">💬</div>
+          <div class="hc-title">Seller Community</div>
+          <div class="hc-desc">Join thousands of sellers on our WhatsApp community for tips, updates, and peer support.</div>
+          <a href="#" class="hc-link">Join group</a>
+        </div>
+        <div class="help-card">
+          <div class="hc-icon">📖</div>
+          <div class="hc-title">Seller Handbook</div>
+          <div class="hc-desc">Step-by-step guides for listing, shipping, payments, and growing your Zuply store.</div>
+          <a href="#" class="hc-link">Read guide</a>
+        </div>
+        <div class="help-card">
+          <div class="hc-icon">✉️</div>
+          <div class="hc-title">Email Support</div>
+          <div class="hc-desc">For non-urgent queries, email our seller relations team and we'll respond within 24 hrs.</div>
+          <a href="mailto:sellers@zuply.in" class="hc-link">sellers&#64;zuply.in</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

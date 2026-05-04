@@ -1,0 +1,48 @@
+<div class="seller-products">
+  <div class="page-header">
+    <h2 class="page-title">My Products</h2>
+    <button class="btn-primary" (click)="uploadNew()">+ Upload New Product</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading products...</div>
+  <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+  <div *ngIf="!loading && products.length === 0 && !error" class="empty-state">
+    <div class="empty-icon">📦</div>
+    <h3>No products yet</h3>
+    <p>Upload a product image to get started with AI-powered listing generation.</p>
+    <button class="btn-primary" (click)="uploadNew()">Upload Your First Product</button>
+  </div>
+
+  <div *ngIf="products.length > 0" class="products-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <div class="product-image-wrap">
+        <img
+          *ngIf="product.imageUrl"
+          [src]="product.imageUrl"
+          [alt]="product.title"
+          class="product-image"
+          (error)="product.imageUrl = null"
+        />
+        <div *ngIf="!product.imageUrl" class="no-image">No Image</div>
+      </div>
+
+      <div class="product-info">
+        <span [class]="'status-badge ' + getStatusClass(product.status)">
+          {{ product.status }}
+        </span>
+        <h4 class="product-title">{{ product.title || 'Untitled Product' }}</h4>
+        <p class="product-category">{{ product.category }}</p>
+        <p class="product-price">{{ formatPrice(product) }}</p>
+
+        <div *ngIf="product.tags?.length" class="product-tags">
+          <span class="tag" *ngFor="let tag of product.tags?.slice(0,3)">{{ tag }}</span>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn-edit" (click)="editProduct(product.id)">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

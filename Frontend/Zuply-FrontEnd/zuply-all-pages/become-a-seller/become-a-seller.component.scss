@@ -1,0 +1,63 @@
+@import 'styles';
+
+.bas-page { padding-bottom: $space-3xl; }
+
+.bas-hero {
+  background: linear-gradient(135deg, $zuply-primary-deeper 0%, $zuply-primary 100%);
+  padding: $space-3xl 0;
+  margin-bottom: $space-xl;
+}
+.bas-hero-inner { display: flex; align-items: center; justify-content: space-between; gap: $space-xl; flex-wrap: wrap; }
+.bas-hero-content { flex: 1; color: #fff; }
+.bas-badge { display: inline-block; background: rgba($zuply-accent,.2); border: 1px solid rgba($zuply-accent,.4);
+  color: $zuply-accent; font-size: $text-xs; font-weight: 700; padding: 4px 14px; border-radius: $radius-pill;
+  text-transform: uppercase; margin-bottom: $space-md; }
+.bas-heading { font-size: 44px; font-weight: 800; line-height: 1.1; margin-bottom: $space-md; }
+.bas-accent { color: $zuply-accent; }
+.bas-sub { font-size: $text-md; opacity: 0.85; margin-bottom: $space-lg; max-width: 440px; line-height: 1.6; }
+.bas-stats { display: flex; gap: $space-md; flex-wrap: wrap; }
+.stat-box { background: rgba(#fff,.1); border: 1px solid rgba(#fff,.2); border-radius: $radius-lg; padding: $space-md $space-lg; text-align: center; }
+.sb-num { display: block; font-size: $text-2xl; font-weight: 800; color: $zuply-accent; }
+.sb-lbl { display: block; font-size: $text-xs; color: rgba(#fff,.7); text-transform: uppercase; margin-top: 2px; }
+
+.bas-section { margin-bottom: $space-2xl; }
+.bas-section-title { font-size: $text-2xl; font-weight: 700; color: $zuply-text; margin-bottom: $space-xs; }
+.bas-section-sub   { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-lg; }
+
+.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: $space-md; }
+.cat-card { background: $zuply-surface; border: 1px solid $zuply-border-light; border-radius: $radius-lg; padding: $space-lg;
+  transition: $transition-fast; cursor: default;
+  &:hover { box-shadow: $shadow-md; border-color: $zuply-primary; } }
+.cat-icon { font-size: 32px; margin-bottom: $space-sm; }
+.cat-name { font-size: $text-base; font-weight: 700; color: $zuply-text; margin-bottom: 4px; }
+.cat-desc { font-size: $text-sm; color: $zuply-text-secondary; }
+
+.steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: $space-md; }
+.step-card { background: $zuply-surface; border: 1px solid $zuply-border-light; border-radius: $radius-lg; padding: $space-xl $space-lg; text-align: center; }
+.step-num  { font-size: $text-xs; font-weight: 700; color: $zuply-accent; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: $space-sm; }
+.step-icon { font-size: 36px; margin-bottom: $space-sm; }
+.step-title { font-size: $text-base; font-weight: 700; color: $zuply-primary; margin-bottom: $space-xs; }
+.step-desc  { font-size: $text-sm; color: $zuply-text-secondary; line-height: 1.5; }
+
+.info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: $space-md; }
+.info-card { background: $zuply-surface; border: 1px solid $zuply-border-light; border-radius: $radius-lg; padding: $space-lg; }
+.ic-icon  { font-size: 28px; margin-bottom: $space-sm; }
+.ic-title { font-size: $text-base; font-weight: 700; color: $zuply-text; margin-bottom: 4px; }
+.ic-desc  { font-size: $text-sm; color: $zuply-text-secondary; line-height: 1.5; }
+
+.bas-cta { text-align: center; background: $zuply-primary-light; border-radius: $radius-xl; padding: $space-2xl; margin-bottom: $space-2xl; }
+.bas-cta-title { font-size: $text-2xl; font-weight: 800; color: $zuply-primary; margin-bottom: $space-xs; }
+.bas-cta-sub   { font-size: $text-md; color: $zuply-text-secondary; margin-bottom: $space-lg; }
+
+.help-cards { display: flex; gap: $space-md; flex-wrap: wrap; }
+.help-card { display: flex; align-items: center; gap: $space-md; background: $zuply-surface; border: 1px solid $zuply-border-light; border-radius: $radius-lg; padding: $space-md $space-lg; font-size: $text-sm; color: $zuply-text; flex: 1; min-width: 200px; a { color: $zuply-primary; font-weight: 600; } }
+.help-icon { font-size: 24px; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .cat-grid, .steps-grid, .info-cards { grid-template-columns: repeat(2, 1fr); }
+  .bas-heading { font-size: 30px; }
+  .bas-hero-inner { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .cat-grid, .steps-grid, .info-cards { grid-template-columns: 1fr; }
+}

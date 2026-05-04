@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="auth-logo">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="10" fill="#0D5C63"/>
+          <path d="M12 28L16 14h8l4 14" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="20" cy="11" r="3" fill="#C9A84C"/>
+        </svg>
+      </div>
+      <div class="auth-brand-name">Zuply</div>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your account to continue</p>
+
+    <div class="alert alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <form (ngSubmit)="onSubmit()" #f="ngForm" class="auth-form" novalidate>
+
+      <div class="input-group">
+        <label>Email address</label>
+        <input class="input" type="email" name="email" placeholder="you@example.com"
+               [(ngModel)]="form.email" required email #emailCtrl="ngModel"
+               [class.error]="emailCtrl.invalid && emailCtrl.touched" />
+        <div class="error-msg" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+          Enter a valid email address.
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <div class="input-pass-wrap">
+          <input class="input" [type]="showPassword ? 'text' : 'password'" name="password"
+                 placeholder="••••••••" [(ngModel)]="form.password" required minlength="6"
+                 #passCtrl="ngModel" [class.error]="passCtrl.invalid && passCtrl.touched" />
+          <button type="button" class="pass-toggle" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-msg" *ngIf="passCtrl.invalid && passCtrl.touched">
+          Password must be at least 6 characters.
+        </div>
+      </div>
+
+      <button class="btn-primary btn-full" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading" class="spinner-sm"></span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Don't have an account?
+      <a routerLink="/register" [queryParams]="returnUrl ? { returnUrl } : {}">Create one</a>
+    </div>
+  </div>
+</div>
