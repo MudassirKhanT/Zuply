@@ -1,0 +1,9 @@
+// src/app/pages/seller/orders/orders.component.scss
+@import 'styles';
+.orders-table { background:$zuply-surface; border-radius:$radius-lg; border:1px solid $zuply-border-light; overflow:hidden; }
+.table-row    { display:grid; grid-template-columns:80px 1fr 100px 130px 160px; gap:$space-md; padding:$space-md $space-lg; border-bottom:1px solid $zuply-border-light; align-items:center; font-size:$text-sm;
+  &.header { background:$zuply-primary-mist; font-weight:600; color:$zuply-text-secondary; font-size:$text-xs; text-transform:uppercase; }
+  &:last-child { border-bottom:none; } }
+.order-id    { color:$zuply-primary; font-weight:600; }
+.action-btns { display:flex; gap:$space-xs; }
+@media(max-width:768px) { .table-row { grid-template-columns:1fr 1fr; } .table-row.header { display:none; } }

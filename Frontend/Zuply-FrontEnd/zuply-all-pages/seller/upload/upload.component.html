@@ -1,0 +1,222 @@
+<!-- Add Product -->
+<div class="page-container">
+  <div class="upload-wrap">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="text-2xl">Add Product</h1>
+        <p class="header-sub">Choose how you'd like to list your product</p>
+      </div>
+      <a routerLink="/seller/products" class="back-link">← My Products</a>
+    </div>
+
+    <!-- Mode tabs -->
+    <div class="mode-tabs">
+      <button class="mode-tab" [class.active]="mode === 'manual'" (click)="switchMode('manual')">
+        <span class="tab-icon">📝</span>
+        <div>
+          <div class="tab-label">Manual Upload</div>
+          <div class="tab-sub">Write your own description</div>
+        </div>
+      </button>
+      <button class="mode-tab" [class.active]="mode === 'ai'" (click)="switchMode('ai')">
+        <span class="tab-icon">✦</span>
+        <div>
+          <div class="tab-label">AI Enhanced</div>
+          <div class="tab-sub">Auto-generate title, description &amp; tags</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Alerts -->
+    <div class="error-banner"   *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+    <div class="success-banner" *ngIf="successMsg">✅ {{ successMsg }}</div>
+
+    <!-- AI progress steps -->
+    <div class="steps-row" *ngIf="uploading && mode === 'ai'">
+      <div class="step" *ngFor="let step of statusSteps" [class]="getStepClass(step)">
+        <div class="step-dot"></div>
+        <div class="step-label">{{ step | titlecase }}</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PRODUCT IMAGES (multi-image, drag-and-drop)
+    ══════════════════════════════════════════════════════ -->
+    <div class="section-label">
+      Product Images
+      <span class="optional-tag">
+        {{ mode === 'ai' ? '(first image used for AI · up to 8)' : '(optional · up to 8)' }}
+      </span>
+    </div>
+
+    <input #fileInput type="file" accept="image/jpeg,image/png" multiple
+           (change)="onFileSelect($event)" hidden/>
+
+    <!-- Grid with thumbnails -->
+    <div class="images-area" *ngIf="images.length > 0 || uploading">
+
+      <div class="images-grid" *ngIf="!uploading">
+        <!-- Image thumbnails -->
+        <div class="img-item"
+             *ngFor="let img of images; let i = index"
+             [class.dragging]="dragIndex === i"
+             [class.drag-over]="dragOverIdx === i && dragIndex !== i"
+             draggable="true"
+             (dragstart)="onItemDragStart(i, $event)"
+             (dragover)="onItemDragOver($event, i)"
+             (drop)="onItemDrop($event, i)"
+             (dragend)="onItemDragEnd()">
+
+          <img [src]="img.previewUrl" [alt]="'Image ' + (i+1)" class="img-thumb"/>
+
+          <!-- Order badge -->
+          <div class="img-badge">
+            <span *ngIf="i === 0">★ Primary</span>
+            <span *ngIf="i > 0">{{ i + 1 }}</span>
+          </div>
+
+          <!-- Hover overlay -->
+          <div class="img-overlay">
+            <div class="drag-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="9" cy="5" r="1.5"/><circle cx="15" cy="5" r="1.5"/>
+                <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+                <circle cx="9" cy="19" r="1.5"/><circle cx="15" cy="19" r="1.5"/>
+              </svg>
+              Drag to reorder
+            </div>
+            <button class="img-delete" (click)="removeImage(i, $event)" title="Remove image">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Add more button -->
+        <div class="img-add" *ngIf="images.length < 8" (click)="fileInput.click()" title="Add more images">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Add more</span>
+        </div>
+      </div>
+
+      <!-- AI processing animation (replaces grid during AI upload) -->
+      <div class="processing-state" *ngIf="uploading && mode === 'ai'">
+        <div class="spinner-ring"></div>
+        <div class="processing-title">{{ statusMsg }}</div>
+        <div class="processing-sub">This may take a few seconds...</div>
+      </div>
+    </div>
+
+    <!-- Empty drop zone (shown when no images yet) -->
+    <div class="upload-zone"
+         *ngIf="images.length === 0 && !uploading"
+         [class.drag-over]="zoneDragOver"
+         (drop)="onZoneDrop($event)"
+         (dragover)="onZoneDragOver($event)"
+         (dragleave)="onZoneDragLeave($event)"
+         (click)="fileInput.click()">
+      <div class="zone-icon">📸</div>
+      <div class="zone-title">Tap or drag to upload images</div>
+      <div class="zone-sub">You can add up to 8 images</div>
+      <div class="zone-hint">JPG or PNG · Max 10 MB each</div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         MANUAL MODE
+    ════════════════════════════════════════════════ -->
+    <div class="manual-form" *ngIf="mode === 'manual' && !uploading">
+
+      <div class="form-row">
+        <div class="input-group">
+          <label>Product Name <span class="req">*</span></label>
+          <input class="input" type="text" placeholder="e.g. Handmade Cotton Bag" [(ngModel)]="form.name"/>
+        </div>
+        <div class="input-group">
+          <label>Category <span class="req">*</span></label>
+          <select class="select" [(ngModel)]="form.categoryId">
+            <option [ngValue]="null" disabled>Select category</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Description</label>
+        <textarea class="input" rows="4"
+          placeholder="Describe your product — material, size, use case, unique qualities..."
+          [(ngModel)]="form.description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label>Price (₹) <span class="req">*</span></label>
+          <input class="input" type="number" placeholder="e.g. 299" min="1" [(ngModel)]="form.price"/>
+        </div>
+        <div class="input-group">
+          <label>Stock Quantity <span class="req">*</span></label>
+          <input class="input" type="number" placeholder="e.g. 50" min="0" [(ngModel)]="form.stock"/>
+        </div>
+      </div>
+
+      <details class="optional-section">
+        <summary class="optional-toggle">Additional details (optional)</summary>
+        <div class="optional-fields">
+          <div class="input-group">
+            <label>Variations</label>
+            <input class="input" type="text" placeholder="e.g. Red, Blue, Large, Small" [(ngModel)]="form.variations"/>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Delivery Method</label>
+              <input class="input" type="text" placeholder="e.g. Standard, Express" [(ngModel)]="form.deliveryMethod"/>
+            </div>
+            <div class="input-group">
+              <label>Return Policy</label>
+              <input class="input" type="text" placeholder="e.g. 7-day returns" [(ngModel)]="form.returnPolicy"/>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="info-box manual-info">
+        <span>📋</span>
+        <span>Your product will go to admin review before appearing on the marketplace.</span>
+      </div>
+
+      <button class="btn-primary btn-full btn-pill submit-btn"
+              (click)="submitManual()"
+              [disabled]="uploading">
+        Submit for Review →
+      </button>
+    </div>
+
+    <!-- Manual uploading state -->
+    <div class="processing-state center" *ngIf="mode === 'manual' && uploading">
+      <div class="spinner-ring"></div>
+      <div class="processing-title">Submitting your product...</div>
+      <div class="processing-sub">Please wait a moment.</div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         AI ENHANCED MODE
+    ════════════════════════════════════════════════ -->
+    <div class="ai-section" *ngIf="mode === 'ai' && !uploading">
+      <div class="info-box ai-info">
+        <span style="font-size:18px">✦</span>
+        <span>AI will generate title, description, category, tags and price suggestions from your first photo. You can edit everything before publishing.</span>
+      </div>
+
+      <button class="btn-primary btn-full btn-pill submit-btn"
+              (click)="generateWithAI()"
+              [disabled]="!images.length">
+        {{ images.length ? 'Generate Listing with AI →' : 'Add an image to continue' }}
+      </button>
+    </div>
+
+  </div>
+</div>

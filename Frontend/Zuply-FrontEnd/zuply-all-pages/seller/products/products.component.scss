@@ -1,0 +1,9 @@
+// src/app/pages/seller/products/products.component.scss
+@import 'styles';
+.page-top  { display:flex; justify-content:space-between; align-items:center; margin-bottom:$space-xl; }
+.prod-card { background:$zuply-surface; border-radius:$radius-lg; border:1px solid $zuply-border-light; overflow:hidden; transition:$transition-fast; &:hover{box-shadow:$shadow-md;} }
+.prod-img  { height:140px; background:$zuply-primary-light; display:flex; align-items:center; justify-content:center; overflow:hidden; img{width:100%;height:100%;object-fit:cover;} }
+.prod-body { padding:$space-md; display:flex; flex-direction:column; gap:$space-xs; }
+.prod-name { font-size:$text-base; font-weight:500; color:$zuply-text; }
+.prod-price{ font-size:$text-lg; font-weight:700; color:$zuply-accent; }
+.prod-stock{ font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:$space-xs; }

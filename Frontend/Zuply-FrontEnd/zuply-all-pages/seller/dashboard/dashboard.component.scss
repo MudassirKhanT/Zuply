@@ -1,0 +1,268 @@
+@import 'styles';
+
+.setup-banner {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  background: $zuply-warning-light;
+  border: 1px solid rgba($zuply-warning, .4);
+  border-radius: $radius-md;
+  padding: $space-md $space-lg;
+  font-size: $text-sm;
+  color: darken($zuply-warning, 20%);
+  margin-bottom: $space-lg;
+}
+
+.welcome-banner {
+  background: $zuply-primary-deeper;
+  border-radius: $radius-xl;
+  padding: $space-xl;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-xl;
+
+  .welcome-sup   { font-size: $text-xs; color: $zuply-accent; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: $space-xs; }
+  .welcome-title { font-size: $text-2xl; font-weight: 700; margin-bottom: $space-xs; }
+  .welcome-sub   { font-size: $text-base; opacity: .8; }
+  .welcome-emoji { font-size: 64px; opacity: .2; }
+}
+
+.stats-grid { margin-bottom: $space-xl; }
+
+.stat-card {
+  .stat-icon  { font-size: 28px; margin-bottom: $space-sm; }
+  .accent     { color: $zuply-accent; }
+  .warn       { color: $zuply-warning; }
+  .success    { color: $zuply-success; }
+}
+
+// Mid-row: two columns
+.mid-row { margin-bottom: $space-xl; }
+
+// Quick-actions inside form-card
+.quick-card { display: flex; flex-direction: column; }
+
+.qaction-row {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-md 0;
+  border-bottom: 1px solid $zuply-border-light;
+  text-decoration: none;
+  color: $zuply-text;
+  transition: $transition-fast;
+  cursor: pointer;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: $zuply-primary-mist; border-radius: $radius-md; padding-left: $space-sm; }
+
+  .qaction-icon  { font-size: 24px; width: 40px; text-align: center; flex-shrink: 0; }
+  .qaction-label { font-size: $text-base; font-weight: 600; color: $zuply-primary; }
+  .qaction-sub   { font-size: $text-xs; color: $zuply-text-secondary; margin-top: 2px; }
+  .qaction-arrow { margin-left: auto; color: $zuply-text-secondary; font-size: $text-lg; }
+}
+
+// Progress bar
+.progress-block { margin-bottom: $space-lg; }
+
+.progress-bar-wrap {
+  height: 10px;
+  background: $zuply-border;
+  border-radius: $radius-pill;
+  overflow: hidden;
+  margin-bottom: $space-sm;
+
+  .progress-bar { height: 100%; border-radius: $radius-pill; transition: width .4s ease; }
+  .approved     { background: $zuply-success; }
+}
+
+.progress-legend {
+  font-size: $text-xs;
+  color: $zuply-text-secondary;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.leg-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.approved-dot { background: $zuply-success; }
+  &.pending-dot  { background: $zuply-warning; }
+  &.rejected-dot { background: $zuply-error; }
+}
+
+.breakdown-rows { display: flex; flex-direction: column; gap: $space-sm; }
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+
+  .bval        { font-weight: 700; }
+  .success-text { color: $zuply-success; }
+  .warn-text    { color: $zuply-warning; }
+  .error-text   { color: $zuply-error; }
+}
+
+// Action cards (no-products fallback)
+.actions-grid { margin-bottom: $space-xl; }
+
+.action-card {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  padding: $space-xl;
+  border: 1px solid $zuply-border-light;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: $transition-fast;
+
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); border-color: $zuply-primary; }
+
+  .action-icon  { font-size: 36px; margin-bottom: $space-sm; }
+  .action-label { font-size: $text-lg; font-weight: 600; color: $zuply-primary; margin-bottom: 4px; }
+  .action-desc  { font-size: $text-sm; color: $zuply-text-secondary; }
+}
+
+// Section header
+.section        { margin-top: $space-xl; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: $space-md; }
+.section-title  { font-size: $text-xl; font-weight: 700; }
+.section-link   { font-size: $text-sm; color: $zuply-primary; font-weight: 600; text-decoration: none; &:hover { text-decoration: underline; } }
+
+// ── Order cards ──────────────────────────────────────────────────────────────
+.orders-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $space-md;
+  margin-bottom: $space-lg;
+}
+
+.order-card {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  transition: $transition-fast;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: rgba($zuply-primary, .25);
+    transform: translateY(-2px);
+  }
+}
+
+.order-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.order-id-wrap {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.order-num {
+  font-size: $text-base;
+  font-weight: 800;
+  color: $zuply-primary;
+}
+
+.order-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: $radius-pill;
+}
+
+.order-actions { display: flex; align-items: center; gap: $space-sm; }
+
+.order-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $text-sm;
+}
+
+.detail-label { color: $zuply-text-secondary; font-weight: 500; }
+.detail-val   { font-weight: 600; color: $zuply-text; text-align: right; }
+.product-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: $space-md;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: $radius-md;
+  border: 1.5px solid $zuply-border;
+  background: $zuply-surface;
+  color: $zuply-text;
+  font-size: $text-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(:disabled) { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-mist; }
+  &.active { background: $zuply-primary; border-color: $zuply-primary; color: #fff; }
+  &:disabled { opacity: .35; cursor: not-allowed; }
+  &.nav-btn { font-size: $text-lg; }
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $zuply-primary;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: $radius-pill;
+  margin-left: $space-sm;
+}
+
+.done-tag {
+  font-size: $text-xs;
+  color: $zuply-success;
+  font-weight: 600;
+  background: $zuply-success-light;
+  padding: 3px 8px;
+  border-radius: $radius-pill;
+}
+
+// Status badges
+.status-placed     { color: $zuply-primary;  background: $zuply-primary-light;  padding: 3px 8px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 600; }
+.status-processing { color: $zuply-warning;  background: $zuply-warning-light;  padding: 3px 8px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 600; }
+.status-delivered  { color: $zuply-success;  background: $zuply-success-light;  padding: 3px 8px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 600; }
+.status-cancelled  { color: $zuply-error;    background: $zuply-error-light;    padding: 3px 8px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 600; }

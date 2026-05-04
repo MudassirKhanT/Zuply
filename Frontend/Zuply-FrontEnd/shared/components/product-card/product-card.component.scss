@@ -1,0 +1,54 @@
+@import 'styles';
+
+.card {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  overflow: hidden;
+  cursor: pointer;
+  transition: $transition-fast;
+  display: flex;
+  flex-direction: column;
+
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); }
+}
+
+.card-img {
+  position: relative;
+  height: 180px;
+  background: $zuply-primary-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+
+  app-ai-badge {
+    position: absolute;
+    top: $space-sm;
+    left: $space-sm;
+  }
+}
+
+.card-img-placeholder { font-size: 48px; }
+
+.card-body {
+  padding: $space-md;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  flex: 1;
+}
+
+.card-cat  { align-self: flex-start; }
+.card-name { font-size: $text-base; font-weight: 600; color: $zuply-text; line-height: 1.3; }
+.card-seller { font-size: $text-xs; color: $zuply-text-secondary; }
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: $space-sm;
+}

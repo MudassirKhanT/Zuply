@@ -1,0 +1,49 @@
+<!-- src/app/pages/admin/reports/reports.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Platform Reports</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading && reports">
+    <div class="grid-4 stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">₹ {{ reports.totalRevenue || 0 }}</div>
+        <div class="stat-sub">platform revenue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Customers</div>
+        <div class="stat-value" style="color:#C9A84C">{{ reports.totalCustomers || 0 }}</div>
+        <div class="stat-sub">registered customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Sellers</div>
+        <div class="stat-value">{{ reports.totalSellers || 0 }}</div>
+        <div class="stat-sub">active sellers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ reports.totalOrders || 0 }}</div>
+        <div class="stat-sub">orders placed</div>
+      </div>
+    </div>
+
+    <div class="report-section" *ngIf="reports.categoryBreakdown">
+      <div class="form-card">
+        <div class="form-card-title">📊 Sales by Category</div>
+        <div class="category-row" *ngFor="let cat of reports.categoryBreakdown">
+          <span class="cat-name">{{ cat.category }}</span>
+          <div class="cat-bar-wrap">
+            <div class="cat-bar" [style.width]="cat.percentage + '%'"></div>
+          </div>
+          <span class="cat-count">{{ cat.count }} orders</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !reports">
+    <div class="empty-icon">📊</div>
+    <div class="empty-title">No report data yet</div>
+    <div class="empty-desc">Reports will be generated once orders start coming in.</div>
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<!-- Admin Dashboard -->
+<div class="page-container">
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+
+    <!-- Banner -->
+    <div class="admin-banner">
+      <div>
+        <div class="admin-sup">Admin Panel</div>
+        <div class="admin-title">Platform Overview</div>
+        <div class="admin-sub">Monitor platform health, approve sellers &amp; products.</div>
+      </div>
+      <div class="admin-emoji">⚙️</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid-4 stats-grid" *ngIf="stats">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Total Sellers</div>
+        <div class="stat-value">{{ stats.totalSellers }}</div>
+        <div class="stat-sub">{{ approvedSellers }} approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value accent">{{ stats.totalProducts }}</div>
+        <div class="stat-sub">listed on marketplace</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value">{{ stats.totalOrders }}</div>
+        <div class="stat-sub">orders placed</div>
+      </div>
+      <div class="stat-card warn-card" [class.has-pending]="pendingSellers.length > 0">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-value warn">{{ pendingSellers.length + pendingProducts.length }}</div>
+        <div class="stat-sub">{{ pendingSellers.length }} sellers · {{ pendingProducts.length }} products</div>
+      </div>
+    </div>
+
+    <!-- Navigation cards -->
+    <div class="grid-4 nav-cards">
+      <a routerLink="/admin/sellers" class="nav-card">
+        <div class="nav-icon">👥</div>
+        <div class="nav-label">Manage Sellers</div>
+        <div class="nav-sub">Approve or suspend accounts</div>
+      </a>
+      <a routerLink="/admin/products" class="nav-card">
+        <div class="nav-icon">📦</div>
+        <div class="nav-label">Manage Products</div>
+        <div class="nav-sub">Review all listings</div>
+      </a>
+      <a routerLink="/admin/reports" class="nav-card">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Reports</div>
+        <div class="nav-sub">Sales &amp; category analytics</div>
+      </a>
+      <a routerLink="/admin/sellers" class="nav-card pending-card">
+        <div class="nav-icon">🔔</div>
+        <div class="nav-label">Pending</div>
+        <div class="pending-badge" *ngIf="pendingSellers.length + pendingProducts.length > 0">
+          {{ pendingSellers.length + pendingProducts.length }}
+        </div>
+        <div class="nav-sub">Items awaiting review</div>
+      </a>
+    </div>
+
+    <!-- ── Pending Sellers — cards + pagination ── -->
+    <div class="section" *ngIf="!sellersLoading && pendingSellers.length > 0">
+      <div class="section-header">
+        <div class="section-title">
+          Sellers Pending Approval
+          <span class="count-badge">{{ pendingSellers.length }}</span>
+        </div>
+        <a routerLink="/admin/sellers" class="section-link">View all →</a>
+      </div>
+
+      <div class="approval-cards">
+        <div class="approval-card seller-card" *ngFor="let seller of pagedPendingSellers">
+          <div class="acard-top">
+            <div class="acard-avatar seller-avatar">
+              {{ (seller.name || 'S').charAt(0).toUpperCase() }}
+            </div>
+            <div class="acard-info">
+              <div class="acard-name">{{ seller.name || 'Unknown' }}</div>
+              <div class="acard-sub">{{ seller.storeName || 'No store name' }}</div>
+            </div>
+            <span [class]="'status-badge ' + getSellerStatusClass(seller.verificationStatus)">
+              {{ seller.verificationStatus | titlecase }}
+            </span>
+          </div>
+          <div class="acard-meta">
+            <div class="meta-row">
+              <span class="meta-label">Contact</span>
+              <span class="meta-val">{{ seller.contact || seller.email || '—' }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">ID</span>
+              <span class="meta-val">#{{ seller.id }}</span>
+            </div>
+          </div>
+          <button class="btn-primary btn-sm btn-pill acard-btn"
+                  (click)="approveSeller(seller.id)">
+            ✓ Approve Seller
+          </button>
+        </div>
+      </div>
+
+      <div class="pagination" *ngIf="totalSellerPages > 1">
+        <button class="page-btn nav-btn" (click)="goToSellerPage(sellersPage - 1)" [disabled]="sellersPage === 1">‹</button>
+        <button class="page-btn"
+                *ngFor="let p of sellerPageNumbers"
+                [class.active]="p === sellersPage"
+                (click)="goToSellerPage(p)">{{ p }}</button>
+        <button class="page-btn nav-btn" (click)="goToSellerPage(sellersPage + 1)" [disabled]="sellersPage === totalSellerPages">›</button>
+      </div>
+    </div>
+
+    <!-- ── Pending Products — cards + pagination ── -->
+    <div class="section" *ngIf="!productsLoading && pendingProducts.length > 0">
+      <div class="section-header">
+        <div class="section-title">
+          Products Pending Review
+          <span class="count-badge">{{ pendingProducts.length }}</span>
+        </div>
+        <a routerLink="/admin/products" class="section-link">View all →</a>
+      </div>
+
+      <div class="approval-cards">
+        <div class="approval-card product-card" *ngFor="let p of pagedPendingProducts">
+          <div class="product-thumb-wrap">
+            <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name" class="product-thumb"/>
+            <div *ngIf="!p.imageUrl" class="product-thumb-placeholder">📦</div>
+          </div>
+          <div class="acard-info product-info">
+            <div class="acard-name">{{ p.name }}</div>
+            <div class="acard-sub">by {{ p.sellerName || 'Seller' }}</div>
+            <div class="product-price">₹ {{ p.price }}</div>
+          </div>
+          <span [class]="'status-badge ' + getProductStatusClass(p.status)">
+            {{ p.status | titlecase }}
+          </span>
+          <div class="product-actions">
+            <button class="btn-primary btn-sm btn-pill" (click)="approveProduct(p.id)">✓ Approve</button>
+            <button class="btn-danger btn-sm btn-pill"  (click)="rejectProduct(p.id)">✕ Reject</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination" *ngIf="totalProductPages > 1">
+        <button class="page-btn nav-btn" (click)="goToProductPage(productsPage - 1)" [disabled]="productsPage === 1">‹</button>
+        <button class="page-btn"
+                *ngFor="let p of productPageNumbers"
+                [class.active]="p === productsPage"
+                (click)="goToProductPage(p)">{{ p }}</button>
+        <button class="page-btn nav-btn" (click)="goToProductPage(productsPage + 1)" [disabled]="productsPage === totalProductPages">›</button>
+      </div>
+    </div>
+
+    <!-- All-clear state -->
+    <div class="all-clear"
+         *ngIf="!sellersLoading && !productsLoading && pendingSellers.length === 0 && pendingProducts.length === 0">
+      <div class="all-clear-icon">✅</div>
+      <div class="all-clear-title">All caught up!</div>
+      <div class="all-clear-sub">No pending sellers or products require your attention.</div>
+    </div>
+
+  </div>
+</div>

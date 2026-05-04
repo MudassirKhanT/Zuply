@@ -1,0 +1,52 @@
+<!-- src/app/pages/products/detail/detail.component.html -->
+<div class="page-container">
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading && product" class="detail-wrap">
+    <button class="back-btn" routerLink="/products">← Back</button>
+
+    <div class="detail-grid">
+      <!-- Image -->
+      <div class="detail-image">
+        <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name"/>
+        <div *ngIf="!product.imageUrl" class="detail-img-placeholder">
+          <span style="font-size:80px">🛒</span>
+        </div>
+        <app-ai-badge *ngIf="product.aiGenerated"></app-ai-badge>
+      </div>
+
+      <!-- Info -->
+      <div class="detail-info">
+        <div class="detail-cat badge-primary">{{ product.category }}</div>
+        <h1 class="detail-name">{{ product.name }}</h1>
+        <div class="detail-seller">🏪 {{ product.sellerName }}</div>
+        <div class="detail-dist badge-distance" *ngIf="product.distance">📍 {{ product.distance }}</div>
+        <div class="detail-price">₹ {{ product.price }}</div>
+
+        <div class="detail-desc" *ngIf="product.description">
+          <div class="desc-title">Description</div>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <div class="qty-row">
+          <div class="qty-selector">
+            <button class="qty-btn" (click)="decrement()">−</button>
+            <span class="qty-value">{{ quantity }}</span>
+            <button class="qty-btn" (click)="increment()">+</button>
+          </div>
+        </div>
+
+        <div class="detail-btns">
+          <button class="btn-secondary btn-pill" (click)="addToWishlist()">❤️ Wishlist</button>
+          <button class="btn-primary btn-pill" (click)="addToCart()">🛒 Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !product">
+    <div class="empty-icon">😕</div>
+    <div class="empty-title">Product not found</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+</div>

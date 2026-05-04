@@ -1,0 +1,258 @@
+@import 'styles';
+
+.admin-banner {
+  background: $zuply-primary-deeper;
+  border-radius: $radius-xl;
+  padding: $space-xl;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-xl;
+
+  .admin-sup   { font-size: $text-xs; color: $zuply-accent; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: $space-xs; }
+  .admin-title { font-size: $text-2xl; font-weight: 700; margin-bottom: $space-xs; }
+  .admin-sub   { font-size: $text-base; opacity: .8; }
+  .admin-emoji { font-size: 64px; opacity: .2; }
+}
+
+.stats-grid { margin-bottom: $space-xl; }
+
+.stat-card {
+  .stat-icon { font-size: 28px; margin-bottom: $space-sm; }
+  .accent    { color: $zuply-accent; }
+  .warn      { color: $zuply-warning; }
+}
+
+.warn-card.has-pending {
+  border-color: $zuply-warning;
+  background: $zuply-warning-light;
+}
+
+// Navigation cards
+.nav-cards { margin-bottom: $space-xl; }
+
+.nav-card {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  padding: $space-lg;
+  border: 1px solid $zuply-border-light;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: $transition-fast;
+  position: relative;
+
+  &:hover { box-shadow: $shadow-md; transform: translateY(-2px); border-color: $zuply-primary; }
+
+  .nav-icon  { font-size: 36px; margin-bottom: $space-sm; }
+  .nav-label { font-size: $text-base; font-weight: 700; color: $zuply-primary; margin-bottom: 4px; }
+  .nav-sub   { font-size: $text-xs; color: $zuply-text-secondary; }
+}
+
+.pending-card {
+  border-color: $zuply-warning;
+  background: $zuply-warning-light;
+
+  .nav-label { color: darken($zuply-warning, 10%); }
+}
+
+.pending-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: $zuply-error;
+  color: #fff;
+  font-size: $text-xs;
+  font-weight: 700;
+  min-width: 22px;
+  height: 22px;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+// Section
+.section        { margin-top: $space-xl; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: $space-md; }
+.section-title  {
+  font-size: $text-xl;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+.section-link   { font-size: $text-sm; color: $zuply-primary; font-weight: 600; text-decoration: none; &:hover { text-decoration: underline; } }
+
+.count-badge {
+  background: $zuply-warning;
+  color: #fff;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: $radius-pill;
+}
+
+// ── Approval cards ────────────────────────────────────────────────────────────
+.approval-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $space-md;
+  margin-bottom: $space-lg;
+}
+
+.approval-card {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  transition: $transition-fast;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: rgba($zuply-primary, .25);
+    transform: translateY(-2px);
+  }
+}
+
+// Seller card specifics
+.acard-top {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+}
+
+.acard-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $text-lg;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.seller-avatar {
+  background: linear-gradient(135deg, $zuply-primary, #0e7076);
+  color: #fff;
+}
+
+.acard-info { flex: 1; min-width: 0; }
+.acard-name { font-size: $text-base; font-weight: 700; color: $zuply-text; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acard-sub  { font-size: $text-xs; color: $zuply-text-secondary; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.acard-meta { display: flex; flex-direction: column; gap: 6px; }
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: $text-sm;
+}
+.meta-label { color: $zuply-text-secondary; }
+.meta-val   { font-weight: 600; color: $zuply-text; }
+
+.acard-btn { align-self: stretch; }
+
+// Product card specifics
+.product-card { padding: 0; overflow: hidden; }
+
+.product-thumb-wrap {
+  width: 100%;
+  height: 160px;
+  background: $zuply-bg;
+  border-radius: $radius-xl $radius-xl 0 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-thumb-placeholder {
+  font-size: 48px;
+  opacity: .3;
+}
+
+.product-info { padding: $space-md $space-lg 0; }
+
+.product-price {
+  font-size: $text-lg;
+  font-weight: 800;
+  color: $zuply-accent;
+  margin-top: 4px;
+}
+
+.product-actions {
+  display: flex;
+  gap: $space-sm;
+  padding: 0 $space-lg $space-lg;
+  margin-top: auto;
+}
+
+.status-badge {
+  padding: 3px 10px;
+  border-radius: $radius-pill;
+  font-size: $text-xs;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Pagination ─────────────────────────────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: $space-md;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: $radius-md;
+  border: 1.5px solid $zuply-border;
+  background: $zuply-surface;
+  color: $zuply-text;
+  font-size: $text-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(:disabled) { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-mist; }
+  &.active { background: $zuply-primary; border-color: $zuply-primary; color: #fff; }
+  &:disabled { opacity: .35; cursor: not-allowed; }
+  &.nav-btn { font-size: $text-lg; }
+}
+
+.action-btns { display: flex; gap: $space-sm; flex-wrap: wrap; }
+
+// Status badges (used as modifier on .status-badge)
+.badge-pending   { color: $zuply-warning; background: $zuply-warning-light; }
+.badge-approved  { color: $zuply-success; background: $zuply-success-light; }
+.badge-rejected  { color: $zuply-error;   background: $zuply-error-light; }
+.badge-suspended { color: $zuply-error;   background: $zuply-error-light; }
+
+// All clear
+.all-clear {
+  text-align: center;
+  padding: $space-3xl $space-lg;
+
+  .all-clear-icon  { font-size: 56px; margin-bottom: $space-md; }
+  .all-clear-title { font-size: $text-2xl; font-weight: 700; color: $zuply-success; margin-bottom: $space-sm; }
+  .all-clear-sub   { font-size: $text-base; color: $zuply-text-secondary; }
+}
