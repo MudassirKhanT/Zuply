@@ -1,0 +1,9 @@
+// src/app/pages/wishlist/wishlist.component.scss
+@import 'styles';
+.wish-card   { background:$zuply-surface; border-radius:$radius-lg; border:1px solid $zuply-border-light; overflow:hidden; transition:$transition-fast; &:hover{box-shadow:$shadow-md;transform:translateY(-2px);} }
+.wish-img    { height:120px; background:$zuply-primary-light; display:flex; align-items:center; justify-content:center; font-size:44px; }
+.wish-body   { padding:$space-md; }
+.wish-name   { font-size:$text-base; font-weight:500; color:$zuply-text; margin-bottom:4px; }
+.wish-seller { font-size:$text-sm; color:$zuply-text-secondary; margin-bottom:4px; }
+.wish-price  { font-size:$text-lg; font-weight:700; color:$zuply-accent; margin-bottom:$space-sm; }
+.wish-actions{ display:flex; gap:$space-sm; flex-wrap:wrap; }

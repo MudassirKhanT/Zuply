@@ -1,0 +1,25 @@
+<!-- src/app/pages/wishlist/wishlist.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">My Wishlist</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+  <div class="grid-4" *ngIf="!loading && items.length > 0">
+    <div class="wish-card" *ngFor="let item of items">
+      <div class="wish-img">🛒</div>
+      <div class="wish-body">
+        <div class="wish-name">{{ item.productName }}</div>
+        <div class="wish-seller" *ngIf="item.sellerName">{{ item.sellerName }}</div>
+        <div class="wish-price">₹ {{ item.price }}</div>
+        <div class="wish-actions">
+          <button class="btn-primary btn-sm btn-pill" (click)="moveToCart(item)">Add to Cart</button>
+          <button class="btn-danger btn-sm btn-pill" (click)="remove(item)">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="empty-state" *ngIf="!loading && items.length === 0">
+    <div class="empty-icon">❤️</div>
+    <div class="empty-title">Your wishlist is empty</div>
+    <div class="empty-desc">Save products you love to buy them later.</div>
+    <a routerLink="/products" class="btn-primary btn-pill">Browse Products</a>
+  </div>
+</div>

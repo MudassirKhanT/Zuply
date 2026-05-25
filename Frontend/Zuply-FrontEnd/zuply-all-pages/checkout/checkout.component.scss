@@ -1,0 +1,70 @@
+// src/app/pages/checkout/checkout.component.scss
+@import 'styles';
+
+.checkout-layout { display:grid; grid-template-columns:1fr 380px; gap:$space-xl; align-items:start; }
+.checkout-left   { display:flex; flex-direction:column; gap:$space-lg; }
+.form-row        { display:grid; grid-template-columns:1fr 1fr; gap:$space-md; }
+
+// ── Payment options ───────────────────────────────────────────
+.payment-options { display:flex; flex-direction:column; gap:$space-sm; }
+.payment-option  {
+  display:flex; align-items:center; gap:$space-md; padding:$space-md;
+  border-radius:$radius-md; border:1.5px solid $zuply-border;
+  cursor:pointer; transition:$transition-fast;
+  &:hover  { border-color:$zuply-primary; background:$zuply-primary-mist; }
+  &.active { border-color:$zuply-primary; background:$zuply-primary-light; }
+  .pay-icon  { font-size:22px; flex-shrink:0; }
+  .pay-info  { flex:1; }
+  .pay-label { font-size:$text-base; font-weight:600; color:$zuply-text; }
+  .pay-desc  { font-size:$text-xs; color:$zuply-text-muted; margin-top:1px; }
+  .pay-radio { flex-shrink:0; }
+}
+
+// ── Saved address picker ──────────────────────────────────────
+.saved-addr-list { display:flex; flex-direction:column; gap:$space-sm; margin-bottom:$space-sm; }
+.saved-addr-item {
+  padding:$space-sm $space-md; border:1.5px solid $zuply-border-light;
+  border-radius:$radius-md; cursor:pointer; transition:$transition-fast;
+  &:hover  { border-color:$zuply-primary; }
+  &.active { border-color:$zuply-primary; background:$zuply-primary-light; }
+}
+.sa-label   { font-weight:700; font-size:$text-sm; color:$zuply-primary; margin-bottom:2px; display:flex; align-items:center; gap:6px; }
+.sa-default { background:$zuply-primary; color:#fff; font-size:10px; padding:1px 7px; border-radius:10px; font-weight:700; }
+.sa-text    { font-size:$text-sm; color:$zuply-text; }
+.sa-phone   { font-size:$text-xs; color:$zuply-text-muted; margin-top:2px; }
+.manage-addr-link { font-size:$text-sm; color:$zuply-primary; text-decoration:none; font-weight:600;
+  &:hover { text-decoration:underline; } }
+
+// ── Summary ───────────────────────────────────────────────────
+.summary-row     { display:flex; justify-content:space-between; padding:8px 0; font-size:$text-base; color:$zuply-text-secondary;
+  &.total { font-weight:700; color:$zuply-text; font-size:$text-lg; } }
+.summary-divider { height:1px; background:$zuply-border-light; margin:4px 0; }
+.error-banner    { background:$zuply-error-light; color:$zuply-error; border:1px solid rgba($zuply-error,.2);
+  border-radius:$radius-md; padding:$space-sm $space-md; font-size:$text-sm; margin-top:$space-md; }
+
+// ── Success page ──────────────────────────────────────────────
+.success-page {
+  min-height:60vh; display:flex; align-items:center; justify-content:center; padding:$space-xl 0;
+}
+.success-card {
+  max-width:480px; width:100%; text-align:center;
+  background:#fff; border-radius:$radius-xl;
+  box-shadow:0 8px 40px rgba(13,92,99,.12);
+  padding:$space-2xl $space-xl;
+}
+.success-icon    { font-size:72px; line-height:1; margin-bottom:$space-lg; }
+.success-title   { font-size:$text-2xl; font-weight:800; color:$zuply-text; margin:0 0 $space-sm; }
+.success-message { font-size:$text-md; color:$zuply-text; margin:0 0 $space-sm; line-height:1.6; }
+.success-sub     { font-size:$text-sm; color:$zuply-text-secondary; margin:0 0 $space-lg; }
+.success-order-id {
+  background:$zuply-primary-mist; border-radius:$radius-md;
+  padding:10px 16px; font-size:$text-sm; color:$zuply-text; margin-bottom:$space-xl;
+  strong { color:$zuply-primary; }
+}
+.success-actions { display:flex; flex-direction:column; gap:$space-sm; }
+
+@media(max-width:768px) {
+  .checkout-layout { grid-template-columns:1fr; }
+  .form-row        { grid-template-columns:1fr; }
+  .success-card    { padding:$space-xl $space-lg; }
+}

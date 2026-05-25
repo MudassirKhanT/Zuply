@@ -1,0 +1,47 @@
+<!-- src/app/pages/profile/profile.component.html -->
+<div class="page-container">
+  <div class="profile-wrap">
+    <div class="profile-card" *ngIf="user">
+
+      <!-- Avatar / PFP -->
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar">
+          <img *ngIf="profilePic" [src]="profilePic" alt="Profile picture" class="pfp-img"/>
+          <span *ngIf="!profilePic" class="pfp-initial">{{ userInitial }}</span>
+        </div>
+        <div class="pfp-actions">
+          <label class="pfp-upload-btn" title="Upload photo">
+            📷
+            <input type="file" accept="image/*" (change)="onPfpChange($event)" style="display:none"/>
+          </label>
+          <button class="pfp-remove-btn" *ngIf="profilePic" (click)="removePfp()" title="Remove photo">✕</button>
+        </div>
+      </div>
+
+      <div class="profile-name">{{ user.name }}</div>
+      <div class="badge-primary" style="display:inline-block; margin-bottom:8px">{{ user.role | titlecase }}</div>
+      <div class="profile-email">{{ user.email }}</div>
+      <div class="profile-phone" *ngIf="user.phone">📞 {{ user.phone }}</div>
+
+      <!-- Quick links -->
+      <div class="profile-quick-links" *ngIf="user.role === 'CUSTOMER'">
+        <a routerLink="/orders"  class="pql-item">
+          <span>📦</span> My Orders
+        </a>
+        <a routerLink="/wishlist" class="pql-item">
+          <span>❤️</span> Wishlist
+        </a>
+        <a routerLink="/address" class="pql-item">
+          <span>📍</span> Addresses
+        </a>
+      </div>
+
+      <div class="profile-actions">
+        <a routerLink="/seller/dashboard" class="btn-secondary btn-pill" *ngIf="user.role === 'SELLER'">Dashboard</a>
+        <a routerLink="/admin/dashboard"  class="btn-secondary btn-pill" *ngIf="user.role === 'ADMIN'">Admin Panel</a>
+        <button class="btn-danger btn-pill" (click)="logout()">Logout</button>
+      </div>
+
+    </div>
+  </div>
+</div>

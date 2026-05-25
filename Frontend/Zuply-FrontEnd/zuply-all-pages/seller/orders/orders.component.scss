@@ -1,0 +1,181 @@
+// src/app/pages/seller/orders/orders.component.scss
+@import 'styles';
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+  flex-wrap: wrap;
+}
+
+.total-chip {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+}
+
+// ── Summary strip ─────────────────────────────────────────────────────────────
+.order-summary {
+  display: flex;
+  align-items: center;
+  gap: $space-xl;
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-lg $space-xl;
+  margin-bottom: $space-xl;
+  flex-wrap: wrap;
+}
+
+.summary-item  { display: flex; align-items: center; gap: $space-md; flex: 1; min-width: 100px; }
+.si-icon       { font-size: 24px; }
+.si-value      { font-size: $text-xl; font-weight: 800; color: $zuply-text; }
+.si-label      { font-size: $text-xs; color: $zuply-text-secondary; font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: .05em; }
+.si-value.warn       { color: $zuply-warning; }
+.si-value.processing { color: $zuply-accent; }
+.si-value.success    { color: $zuply-success; }
+.summary-divider     { width: 1px; height: 36px; background: $zuply-border-light; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .summary-divider { display: none; }
+  .order-summary   { gap: $space-md; padding: $space-md; }
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+.filter-tabs {
+  display: flex;
+  gap: $space-sm;
+  flex-wrap: wrap;
+  margin-bottom: $space-lg;
+  border-bottom: 2px solid $zuply-border-light;
+  padding-bottom: $space-sm;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 8px 16px;
+  border-radius: $radius-md;
+  border: 1.5px solid transparent;
+  background: transparent;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text-secondary;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(.active) {
+    background: $zuply-bg;
+    color: $zuply-text;
+    border-color: $zuply-border-light;
+  }
+
+  &.active {
+    background: $zuply-primary;
+    color: #fff;
+    border-color: $zuply-primary;
+    .tab-count { background: rgba(#fff, .25); color: #fff; }
+  }
+
+  // Per-status active tints
+  &.active.tab-pending    { background: $zuply-warning; border-color: $zuply-warning; }
+  &.active.tab-processing { background: $zuply-accent;  border-color: $zuply-accent;  }
+  &.active.tab-delivered  { background: $zuply-success; border-color: $zuply-success; }
+}
+
+.tab-count {
+  background: $zuply-border-light;
+  color: $zuply-text-secondary;
+  font-size: $text-xs;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  transition: $transition-fast;
+}
+
+// ── Orders table ──────────────────────────────────────────────────────────────
+.orders-table {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  overflow: hidden;
+}
+
+// 6-col grid: order-id | customer | product | qty | status | actions
+.table-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 1.5fr 60px 130px 180px;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid $zuply-border-light;
+  align-items: center;
+  font-size: $text-sm;
+
+  &.header {
+    background: $zuply-primary-mist;
+    font-weight: 600;
+    color: $zuply-text-secondary;
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  &:last-child { border-bottom: none; }
+}
+
+.order-id      { color: $zuply-primary; font-weight: 700; }
+.customer-name { font-weight: 500; color: $zuply-text; }
+.product-name-cell { color: $zuply-text-secondary; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.qty-chip {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: $radius-pill;
+  white-space: nowrap;
+}
+
+// ── Status badges ─────────────────────────────────────────────────────────────
+.status-placed     { color: $zuply-primary; background: $zuply-primary-light;   padding: 4px 12px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 700; white-space: nowrap; }
+.status-processing { color: $zuply-warning; background: $zuply-warning-light;   padding: 4px 12px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 700; white-space: nowrap; }
+.status-delivered  { color: $zuply-success; background: $zuply-success-light;   padding: 4px 12px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 700; white-space: nowrap; }
+.status-cancelled  { color: $zuply-error;   background: $zuply-error-light;     padding: 4px 12px; border-radius: $radius-pill; font-size: $text-xs; font-weight: 700; white-space: nowrap; }
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+.action-btns { display: flex; gap: $space-xs; flex-wrap: wrap; align-items: center; }
+
+.done-tag {
+  font-size: $text-xs;
+  color: $zuply-success;
+  font-weight: 700;
+  background: $zuply-success-light;
+  padding: 4px 10px;
+  border-radius: $radius-pill;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 1024px) {
+  .table-row { grid-template-columns: 80px 1fr 1.2fr 110px 160px; }
+  // hide qty col
+  .table-row > span:nth-child(4),
+  .table-row.header > span:nth-child(4) { display: none; }
+}
+
+@media (max-width: 768px) {
+  .table-row { grid-template-columns: 1fr 1fr; }
+  .table-row.header { display: none; }
+}

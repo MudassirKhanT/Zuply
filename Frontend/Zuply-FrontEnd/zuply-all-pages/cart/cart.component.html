@@ -1,0 +1,48 @@
+<!-- src/app/pages/cart/cart.component.html -->
+<div class="page-container">
+  <h1 class="text-2xl" style="margin-bottom:24px">Shopping Cart</h1>
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="cart-layout" *ngIf="!loading && cart && cart.items.length > 0">
+    <div class="cart-items">
+      <div class="cart-item" *ngFor="let item of cart.items">
+        <div class="item-info">
+          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-price">₹ {{ item.pricePerUnit }}</div>
+        </div>
+        <div class="item-controls">
+          <div class="qty-selector">
+            <button class="qty-btn" (click)="updateQty(item, item.quantity - 1)">−</button>
+            <span class="qty-value">{{ item.quantity }}</span>
+            <button class="qty-btn" (click)="updateQty(item, item.quantity + 1)">+</button>
+          </div>
+          <div class="item-total">₹ {{ item.totalPrice }}</div>
+          <button class="remove-btn" (click)="removeItem(item)">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="form-card">
+        <div class="form-card-title">Order Summary</div>
+        <div class="summary-row"><span>Subtotal</span><span>₹ {{ cart.grandTotal }}</span></div>
+        <div class="summary-row"><span>Delivery</span><span class="text-success">Free</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total"><span>Grand Total</span><span class="price">₹ {{ cart.grandTotal }}</span></div>
+        <button class="btn-primary btn-full btn-pill" style="margin-top:16px" (click)="checkout()">
+          Proceed to Checkout →
+        </button>
+        <a routerLink="/products" class="btn-secondary btn-full btn-pill" style="margin-top:8px;display:block;text-align:center;">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && (!cart || cart.items.length === 0)">
+    <div class="empty-icon">🛒</div>
+    <div class="empty-title">Your cart is empty</div>
+    <div class="empty-desc">Add products from nearby stores to get started.</div>
+    <a routerLink="/products" class="btn-primary btn-pill">Start Shopping</a>
+  </div>
+</div>

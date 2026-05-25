@@ -1,0 +1,113 @@
+<div class="page-container">
+  <div class="addr-page">
+
+    <div class="addr-header">
+      <div>
+        <h1 class="addr-title">Saved Addresses</h1>
+        <p class="addr-subtitle">Manage your delivery addresses for faster checkout.</p>
+      </div>
+      <button class="btn-primary btn-pill" (click)="openAdd()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add Address
+      </button>
+    </div>
+
+    <!-- Success flash -->
+    <div class="success-flash" *ngIf="successMsg">✅ {{ successMsg }}</div>
+
+    <!-- Address cards -->
+    <div class="addr-grid" *ngIf="addresses.length > 0">
+      <div class="addr-card" *ngFor="let a of addresses" [class.is-default]="a.isDefault">
+        <div class="addr-card-top">
+          <span class="addr-label">{{ labelIcon(a.label) }} {{ a.label }}</span>
+          <span class="default-badge" *ngIf="a.isDefault">Default</span>
+        </div>
+        <div class="addr-text">{{ a.address }}</div>
+        <div class="addr-city">{{ a.city }} — {{ a.pincode }}</div>
+        <div class="addr-phone">📞 {{ a.phone }}</div>
+        <div class="addr-actions">
+          <button class="act-btn act-btn--edit" (click)="openEdit(a)">Edit</button>
+          <button class="act-btn act-btn--default" *ngIf="!a.isDefault" (click)="setDefault(a.id)">Set Default</button>
+          <button class="act-btn act-btn--remove" (click)="remove(a.id)">Remove</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="addr-empty" *ngIf="addresses.length === 0 && !showForm">
+      <div class="empty-icon">📦</div>
+      <div class="empty-title">No saved addresses</div>
+      <div class="empty-desc">Add an address to speed up your checkout.</div>
+      <button class="btn-primary btn-pill" (click)="openAdd()">Add Your First Address</button>
+    </div>
+
+    <!-- Add / Edit Form -->
+    <div class="addr-form-wrap" *ngIf="showForm">
+      <div class="form-card">
+        <div class="form-card-title">{{ editingId ? '✏️ Edit Address' : '➕ New Address' }}</div>
+
+        <!-- Label row -->
+        <div class="label-row">
+          <button *ngFor="let l of labels" class="label-chip" [class.active]="form.label === l" (click)="form.label = l">
+            {{ labelIcon(l) }} {{ l }}
+          </button>
+        </div>
+
+        <div class="error-banner" *ngIf="formError">⚠️ {{ formError }}</div>
+
+        <div class="input-group">
+          <label>Full Address *</label>
+          <textarea class="input" rows="3" placeholder="House no, Street, Area, Landmark"
+                    [(ngModel)]="form.address"
+                    (blur)="addressTouched = true"
+                    [class.input-error]="addressTouched && !form.address.trim()"></textarea>
+          <span class="field-error" *ngIf="addressTouched && !form.address.trim()">
+            Address is required.
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label>City *</label>
+            <input class="input" type="text" placeholder="City"
+                   [(ngModel)]="form.city"
+                   (blur)="cityTouched = true"
+                   [class.input-error]="cityTouched && !form.city.trim()"/>
+            <span class="field-error" *ngIf="cityTouched && !form.city.trim()">
+              City is required.
+            </span>
+          </div>
+          <div class="input-group">
+            <label>Pincode *</label>
+            <input class="input" type="text" placeholder="600001" maxlength="6"
+                   [(ngModel)]="form.pincode"
+                   (blur)="pincodeTouched = true"
+                   [class.input-error]="pincodeTouched && !isPincodeValid"/>
+            <span class="field-error" *ngIf="pincodeTouched && !isPincodeValid">
+              Enter a valid 6-digit pincode.
+            </span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Phone Number *</label>
+          <input class="input" type="tel" placeholder="9876543210" maxlength="10"
+                 [(ngModel)]="form.phone"
+                 (blur)="phoneTouched = true"
+                 [class.input-error]="phoneTouched && !isPhoneValid"/>
+          <span class="field-error" *ngIf="phoneTouched && !isPhoneValid">
+            Enter a valid 10-digit mobile number (starts with 6–9).
+          </span>
+        </div>
+
+        <div class="form-btns">
+          <button class="btn-secondary btn-pill" (click)="cancel()">Cancel</button>
+          <button class="btn-primary btn-pill" (click)="submitForm()">
+            {{ editingId ? 'Update Address' : 'Save Address' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

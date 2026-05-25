@@ -1,0 +1,217 @@
+// src/app/pages/admin/products/products.component.scss
+@import 'styles';
+
+// ── Page header ───────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+}
+
+.total-chip {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+}
+
+// ── Search bar ────────────────────────────────────────────────────────────────
+.search-bar-wrap {
+  margin-bottom: $space-md;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1.5px solid $zuply-border;
+  border-radius: $radius-pill;
+  font-size: $text-sm;
+  background: #fff;
+  color: $zuply-text;
+  box-shadow: $shadow-sm;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+
+  &::placeholder { color: $zuply-text-secondary; }
+  &:focus { border-color: $zuply-primary; box-shadow: 0 0 0 3px rgba($zuply-primary, 0.1); }
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+.filter-tabs {
+  display: flex;
+  gap: $space-sm;
+  flex-wrap: wrap;
+  margin-bottom: $space-lg;
+  border-bottom: 2px solid $zuply-border-light;
+  padding-bottom: $space-sm;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 8px 16px;
+  border-radius: $radius-md;
+  border: 1.5px solid transparent;
+  background: transparent;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text-secondary;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(.active) {
+    background: $zuply-bg;
+    color: $zuply-text;
+    border-color: $zuply-border-light;
+  }
+
+  &.active {
+    background: $zuply-primary;
+    color: #fff;
+    border-color: $zuply-primary;
+    .tab-count { background: rgba(#fff, .25); color: #fff; }
+  }
+}
+
+.tab-count {
+  background: $zuply-border-light;
+  color: $zuply-text-secondary;
+  font-size: $text-xs;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  transition: $transition-fast;
+}
+
+// ── Products table ────────────────────────────────────────────────────────────
+.products-table {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  overflow: hidden;
+}
+
+// 7-column grid: product | seller | category | price | type | status | actions
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 90px 100px 110px 160px;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid $zuply-border-light;
+  align-items: center;
+  font-size: $text-sm;
+
+  &.header {
+    background: $zuply-primary-mist;
+    font-weight: 600;
+    color: $zuply-text-secondary;
+    font-size: $text-xs;
+    text-transform: uppercase;
+  }
+
+  &:last-child { border-bottom: none; }
+}
+
+// ── Product cell ──────────────────────────────────────────────────────────────
+.prod-cell {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.prod-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid $zuply-border-light;
+}
+
+.prod-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  background: $zuply-primary-mist;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.prod-name {
+  font-weight: 500;
+  color: $zuply-text;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+// ── Price ─────────────────────────────────────────────────────────────────────
+.price-sm {
+  font-weight: 600;
+  color: $zuply-primary;
+}
+
+// ── Source badge ──────────────────────────────────────────────────────────────
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: $text-xs;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+
+  &.ai {
+    background: #e8f4fd;
+    color: #1a6fa8;
+  }
+
+  &.manual {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+}
+
+// ── Status badges ─────────────────────────────────────────────────────────────
+.status-pending  { color: #d97706; background: #fffbeb; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; }
+.status-approved { color: #16a34a; background: #f0fdf4; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; }
+.status-rejected { color: #dc2626; background: #fef2f2; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; }
+
+// ── Action buttons ────────────────────────────────────────────────────────────
+.action-btns {
+  display: flex;
+  gap: $space-xs;
+  flex-wrap: wrap;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 1200px) {
+  .table-row {
+    grid-template-columns: 2fr 1fr 90px 100px 140px;
+    // hide category on medium screens
+    span:nth-child(3) { display: none; }
+  }
+  .table-row.header span:nth-child(3) { display: none; }
+}
+
+@media (max-width: 900px) {
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+    gap: $space-sm;
+  }
+  .table-row.header { display: none; }
+}

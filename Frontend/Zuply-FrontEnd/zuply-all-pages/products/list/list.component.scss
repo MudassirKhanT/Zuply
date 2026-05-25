@@ -1,0 +1,105 @@
+// src/app/pages/products/list/list.component.scss
+@import 'styles';
+
+.cart-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $zuply-success;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: $radius-pill;
+  font-size: $text-sm;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: $shadow-md;
+  animation: fadeInUp 0.2s ease;
+
+  &--error { background: $zuply-error; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.list-header { margin-bottom: $space-md; }
+
+.search-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-lg;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid $zuply-border;
+  border-radius: $radius-pill;
+  padding: 6px 8px 6px 14px;
+  gap: $space-sm;
+  min-width: 220px;
+  box-shadow: $shadow-sm;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: $zuply-primary;
+    box-shadow: 0 0 0 3px rgba($zuply-primary, 0.1);
+  }
+
+  .search-icon { font-size: 15px; opacity: 0.5; flex-shrink: 0; }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: $text-sm;
+    color: $zuply-text;
+    padding: 4px 0;
+
+    &::placeholder { color: $zuply-text-secondary; }
+  }
+
+  .search-btn { flex-shrink: 0; }
+}
+
+.sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  flex-shrink: 0;
+}
+
+.sort-label {
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.sort-select {
+  border: 1.5px solid $zuply-border;
+  border-radius: $radius-md;
+  padding: 8px 12px;
+  font-size: $text-sm;
+  color: $zuply-text;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+
+  &:focus { border-color: $zuply-primary; }
+}
+
+.chips-row     { display: flex; flex-wrap: wrap; gap: $space-sm; margin-bottom: $space-lg; }
+.results-count { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-md; }
+
+@media (max-width: 600px) {
+  .search-sort-bar { flex-direction: column; align-items: stretch; }
+  .sort-wrap       { justify-content: flex-end; }
+  .sort-select     { flex: 1; }
+}

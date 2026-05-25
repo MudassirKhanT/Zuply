@@ -1,0 +1,107 @@
+<!-- src/app/pages/admin/products/products.component.html -->
+<div class="page-container">
+
+  <div class="page-header">
+    <h1 class="text-2xl">Manage Products</h1>
+    <span class="total-chip">{{ allProducts.length }} total</span>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+  <div *ngIf="!loading">
+
+    <!-- Search bar -->
+    <div class="search-bar-wrap">
+      <input class="input search-input" type="text" placeholder="Search by product name or seller..."
+             [(ngModel)]="searchQuery" />
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button
+        *ngFor="let f of filters"
+        class="filter-tab"
+        [class.active]="activeFilter === f.key"
+        (click)="setFilter(f.key)">
+        {{ f.icon }} {{ f.label }}
+        <span class="tab-count">{{ filterCounts[f.key] }}</span>
+      </button>
+    </div>
+
+    <!-- Products table -->
+    <div class="products-table" *ngIf="products.length > 0">
+
+      <div class="table-row header">
+        <span>Product</span>
+        <span>Seller</span>
+        <span>Category</span>
+        <span>Price</span>
+        <span>Type</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+
+      <div class="table-row" *ngFor="let p of products">
+
+        <span class="prod-cell">
+          <img
+            *ngIf="p.imageUrl"
+            [src]="p.imageUrl"
+            class="prod-thumb"
+            alt="product"
+            onerror="this.style.display='none'"
+          />
+          <span class="prod-placeholder" *ngIf="!p.imageUrl">📦</span>
+          <span class="prod-name">{{ p.name || '—' }}</span>
+        </span>
+
+        <span>{{ p.sellerName || '—' }}</span>
+        <span>{{ p.category   || '—' }}</span>
+        <span class="price-sm">{{ p.price != null ? ('₹ ' + p.price) : '—' }}</span>
+
+        <span class="source-badge" [class.ai]="p.source === 'LISTING'" [class.manual]="p.source === 'MANUAL'">
+          {{ p.source === 'LISTING' ? '🤖 AI' : '✏️ Manual' }}
+        </span>
+
+        <span [class]="getStatusClass(p.status)">{{ p.status | titlecase }}</span>
+
+        <div class="action-btns">
+          <button
+            class="btn-primary btn-sm btn-pill"
+            *ngIf="p.status !== 'APPROVED'"
+            [disabled]="actionId === p.id"
+            (click)="approve(p.id, p.source)">
+            {{ actionId === p.id ? '...' : 'Approve' }}
+          </button>
+          <button
+            class="btn-danger btn-sm btn-pill"
+            *ngIf="p.status !== 'REJECTED'"
+            [disabled]="actionId === p.id"
+            (click)="reject(p.id, p.source)">
+            {{ actionId === p.id ? '...' : 'Reject' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="products.length === 0">
+      <div class="empty-icon">📦</div>
+      <div class="empty-title">
+        {{ activeFilter === 'pending' ? 'No pending products' :
+           activeFilter === 'approved' ? 'No approved products' :
+           activeFilter === 'rejected' ? 'No rejected products' :
+           'No products found' }}
+      </div>
+      <div class="empty-desc">
+        {{ activeFilter === 'pending' ? 'All products have been reviewed.' :
+           activeFilter === 'approved' ? 'No products have been approved yet.' :
+           'Products submitted by sellers will appear here.' }}
+      </div>
+    </div>
+
+  </div>
+</div>

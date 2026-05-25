@@ -1,0 +1,271 @@
+@import 'styles';
+
+@keyframes linkSlide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(4px); }
+}
+
+// ─── Footer shell ────────────────────────────────────────────────────────────
+
+.footer {
+  background: #041f23;
+  color: rgba(255, 255, 255, .7);
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+// ─── Top section ─────────────────────────────────────────────────────────────
+
+.footer-top {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.6fr;
+  gap: 48px;
+  align-items: start;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1.8fr 1fr 1fr 1fr;
+    .footer-col-newsletter { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr 1fr;
+    .footer-col-brand { grid-column: 1 / -1; }
+    .footer-col-newsletter { grid-column: 1 / -1; }
+    padding: 0 24px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+// ─── Brand column ─────────────────────────────────────────────────────────────
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.footer-brand-text {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -.02em;
+
+  em {
+    color: $zuply-accent;
+    font-style: normal;
+  }
+}
+
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, .5);
+  max-width: 280px;
+  margin-bottom: 24px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.social-link {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid rgba(255, 255, 255, .1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, .55);
+  transition: all .2s ease;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba($zuply-accent, .2);
+    border-color: rgba($zuply-accent, .4);
+    color: $zuply-accent;
+    transform: translateY(-2px);
+  }
+}
+
+// ─── Link columns ─────────────────────────────────────────────────────────────
+
+.footer-col-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .85);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  li a {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .5);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    transition: all .18s ease;
+    position: relative;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 0;
+      height: 1px;
+      background: $zuply-accent;
+      margin-right: 0;
+      transition: all .18s ease;
+      vertical-align: middle;
+    }
+
+    &:hover {
+      color: rgba(255, 255, 255, .9);
+      padding-left: 8px;
+
+      &::before {
+        width: 5px;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+// ─── Newsletter column ────────────────────────────────────────────────────────
+
+.newsletter-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, .5);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 0;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12);
+  transition: border-color .2s;
+
+  &:focus-within {
+    border-color: rgba($zuply-accent, .5);
+    box-shadow: 0 0 0 3px rgba($zuply-accent, .1);
+  }
+}
+
+.newsletter-input {
+  flex: 1;
+  background: rgba(255, 255, 255, .05);
+  border: none;
+  outline: none;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #fff;
+  font-family: $font-family;
+
+  &::placeholder { color: rgba(255, 255, 255, .3); }
+}
+
+.newsletter-btn {
+  width: 42px;
+  background: $zuply-accent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  transition: background .18s;
+
+  &:hover { background: darken($zuply-accent, 8%); }
+}
+
+.newsletter-note {
+  font-size: 11px;
+  color: rgba(255, 255, 255, .3);
+}
+
+// ─── Bottom bar ───────────────────────────────────────────────────────────────
+
+.footer-bottom {
+  padding: 18px 0;
+}
+
+.footer-bottom-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    padding: 0 24px;
+    gap: 8px;
+  }
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, .3);
+}
+
+.footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  a {
+    font-size: 12px;
+    color: rgba(255, 255, 255, .35);
+    text-decoration: none;
+    transition: color .15s;
+
+    &:hover { color: rgba(255, 255, 255, .7); }
+  }
+}
+
+.legal-sep {
+  color: rgba(255, 255, 255, .15);
+  font-size: 14px;
+}
+
+.footer-made {
+  font-size: 12px;
+  color: rgba(255, 255, 255, .25);
+}

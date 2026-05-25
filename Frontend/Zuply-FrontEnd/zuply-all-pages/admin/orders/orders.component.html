@@ -1,0 +1,103 @@
+<!-- src/app/pages/admin/orders/orders.component.html -->
+<div class="page-container">
+
+  <div class="page-header">
+    <h1 class="text-2xl">All Orders</h1>
+    <span class="total-chip">{{ allOrders.length }} total</span>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+  <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+  <div *ngIf="!loading">
+
+    <!-- Revenue summary bar -->
+    <div class="revenue-bar" *ngIf="allOrders.length > 0">
+      <div class="rev-item">
+        <div class="rev-label">Total Revenue</div>
+        <div class="rev-value">₹ {{ totalRevenue | number:'1.0-0' }}</div>
+      </div>
+      <div class="rev-divider"></div>
+      <div class="rev-item">
+        <div class="rev-label">Orders Placed</div>
+        <div class="rev-value">{{ filterCounts['PLACED'] }}</div>
+      </div>
+      <div class="rev-divider"></div>
+      <div class="rev-item">
+        <div class="rev-label">Processing</div>
+        <div class="rev-value">{{ filterCounts['PROCESSING'] }}</div>
+      </div>
+      <div class="rev-divider"></div>
+      <div class="rev-item">
+        <div class="rev-label">Delivered</div>
+        <div class="rev-value delivered">{{ filterCounts['DELIVERED'] }}</div>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button
+        *ngFor="let f of filters"
+        class="filter-tab"
+        [class.active]="activeFilter === f.key"
+        (click)="setFilter(f.key)">
+        {{ f.icon }} {{ f.label }}
+        <span class="tab-count">{{ filterCounts[f.key] }}</span>
+      </button>
+    </div>
+
+    <!-- Orders table -->
+    <div class="orders-table" *ngIf="orders.length > 0">
+      <div class="table-row header">
+        <span>Order ID</span>
+        <span>Customer</span>
+        <span>Delivery Address</span>
+        <span>Items</span>
+        <span>Amount</span>
+        <span>Payment</span>
+        <span>Status</span>
+        <span>Date</span>
+      </div>
+
+      <div class="table-row" *ngFor="let o of orders">
+
+        <span class="order-id">#{{ o.orderId }}</span>
+
+        <span class="customer-cell">
+          <div class="cust-name">{{ o.customerName || '—' }}</div>
+          <div class="cust-email">{{ o.customerEmail || '' }}</div>
+        </span>
+
+        <span class="addr-cell">
+          <div>{{ o.deliveryAddress || '—' }}</div>
+          <div class="addr-sub" *ngIf="o.city || o.pincode">
+            {{ o.city }}{{ o.city && o.pincode ? ', ' : '' }}{{ o.pincode }}
+          </div>
+        </span>
+
+        <span class="items-badge">{{ o.itemCount }} item{{ o.itemCount !== 1 ? 's' : '' }}</span>
+
+        <span class="amount">₹ {{ o.totalAmount | number:'1.0-0' }}</span>
+
+        <span class="payment-method">{{ o.paymentMethod || '—' }}</span>
+
+        <span class="status-wrap">
+          <span [class]="getStatusClass(o.status)">
+            {{ getStatusIcon(o.status) }} {{ o.status | titlecase }}
+          </span>
+        </span>
+
+        <span class="date-cell">{{ formatDate(o.createdAt) }}</span>
+
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="orders.length === 0">
+      <div class="empty-icon">🛍️</div>
+      <div class="empty-title">No {{ activeFilter === 'all' ? '' : activeFilter.toLowerCase() }} orders</div>
+      <div class="empty-desc">Orders placed by customers will appear here.</div>
+    </div>
+
+  </div>
+</div>

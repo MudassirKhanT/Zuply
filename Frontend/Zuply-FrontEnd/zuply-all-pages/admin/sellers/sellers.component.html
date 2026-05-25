@@ -1,0 +1,99 @@
+<!-- src/app/pages/admin/sellers/sellers.component.html -->
+<div class="page-container">
+
+  <div class="page-header">
+    <h1 class="text-2xl">Manage Sellers</h1>
+    <span class="total-chip">{{ allSellers.length }} total</span>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+
+    <!-- Search bar -->
+    <div class="search-bar-wrap">
+      <input class="input search-input" type="text" placeholder="Search by name, store or email..."
+             [(ngModel)]="searchQuery" />
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button
+        *ngFor="let f of filters"
+        class="filter-tab"
+        [class.active]="activeFilter === f.key"
+        (click)="setFilter(f.key)">
+        {{ f.icon }} {{ f.label }}
+        <span class="tab-count">{{ filterCounts[f.key] }}</span>
+      </button>
+    </div>
+
+    <!-- Sellers table -->
+    <div class="sellers-table" *ngIf="sellers.length > 0">
+      <div class="table-row header">
+        <span>Seller</span>
+        <span>Store</span>
+        <span>Contact</span>
+        <span>Location</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+      <div class="table-row" *ngFor="let seller of sellers">
+
+        <span class="seller-cell">
+          <div class="seller-avatar">{{ (seller.name || 'S').charAt(0).toUpperCase() }}</div>
+          <div class="seller-info">
+            <div class="seller-name">{{ seller.name || '—' }}</div>
+            <div class="seller-id">#{{ seller.id }}</div>
+          </div>
+        </span>
+
+        <span>{{ seller.storeName || '—' }}</span>
+        <span class="contact-cell">
+          <div>{{ seller.email || '—' }}</div>
+          <div class="contact-phone">{{ seller.phone || '' }}</div>
+        </span>
+        <span>{{ seller.location || seller.pincode || '—' }}</span>
+
+        <span [class]="getStatusClass(seller.verificationStatus)">
+          {{ seller.verificationStatus | titlecase }}
+        </span>
+
+        <div class="action-btns">
+          <button
+            class="btn-primary btn-sm btn-pill"
+            *ngIf="seller.verificationStatus !== 'APPROVED' || !seller.active"
+            (click)="approve(seller.id)">
+            {{ !seller.active && seller.verificationStatus === 'APPROVED' ? 'Re-activate' : 'Approve' }}
+          </button>
+          <button
+            class="btn-warning btn-sm btn-pill"
+            *ngIf="seller.verificationStatus === 'PENDING'"
+            (click)="reject(seller.id)">
+            Reject
+          </button>
+          <button
+            class="btn-danger btn-sm btn-pill"
+            *ngIf="seller.active"
+            (click)="suspend(seller.id)">
+            Suspend
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="sellers.length === 0">
+      <div class="empty-icon">👥</div>
+      <div class="empty-title">No {{ activeFilter === 'all' ? '' : activeFilter }} sellers</div>
+      <div class="empty-desc">
+        {{ activeFilter === 'pending' ? 'No sellers are awaiting approval.' :
+           activeFilter === 'approved' ? 'No sellers have been approved yet.' :
+           activeFilter === 'suspended' ? 'No sellers are currently suspended.' :
+           'No sellers have registered yet.' }}
+      </div>
+    </div>
+
+  </div>
+</div>

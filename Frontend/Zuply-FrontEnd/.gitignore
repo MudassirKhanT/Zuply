@@ -1,0 +1,10 @@
+.vercel
+.env*.local
+
+# ── Sensitive environment files ───────────────────────
+# environment.prod.ts has production API URLs — kept in root .gitignore
+# environment.ts (localhost) is safe to commit
+
+# ── Claude AI session files ───────────────────────────
+.claude/
+CLAUDE.md

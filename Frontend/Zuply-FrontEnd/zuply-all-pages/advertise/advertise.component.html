@@ -1,0 +1,124 @@
+<div class="adv-page">
+
+  <!-- ── Hero ──────────────────────────────────────────────────── -->
+  <div class="adv-hero">
+    <div class="adv-hero-inner">
+      <div class="adv-hero-badge">🚀 Grow Your Business</div>
+      <h1 class="adv-hero-title">Reach Millions of<br>Local Buyers on Zuply</h1>
+      <p class="adv-hero-sub">
+        Advertise your products to hyper-local customers actively searching in your pincode.
+        AI-powered listings, real-time analytics, and affordable plans for every business size.
+      </p>
+      <div class="adv-hero-actions">
+        <button class="btn-primary btn-pill btn-lg" (click)="getStarted()">Start Selling Free</button>
+        <a routerLink="/become-a-seller" class="btn-outline btn-pill btn-lg">View Seller Plans</a>
+      </div>
+      <div class="adv-hero-stats">
+        <div class="adv-stat">
+          <span class="adv-stat-num">50K+</span>
+          <span class="adv-stat-label">Active Buyers</span>
+        </div>
+        <div class="adv-stat-sep"></div>
+        <div class="adv-stat">
+          <span class="adv-stat-num">10K+</span>
+          <span class="adv-stat-label">Verified Sellers</span>
+        </div>
+        <div class="adv-stat-sep"></div>
+        <div class="adv-stat">
+          <span class="adv-stat-num">500+</span>
+          <span class="adv-stat-label">Cities Covered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-container">
+
+    <!-- ── Benefits ─────────────────────────────────────────────── -->
+    <div class="adv-section">
+      <div class="adv-section-header">
+        <h2 class="adv-section-title">Why Advertise on Zuply?</h2>
+        <p class="adv-section-sub">Everything you need to grow your local business online</p>
+      </div>
+      <div class="adv-benefits-grid">
+        <div class="adv-benefit-card" *ngFor="let b of benefits">
+          <div class="adv-benefit-icon">{{ b.icon }}</div>
+          <div class="adv-benefit-title">{{ b.title }}</div>
+          <div class="adv-benefit-desc">{{ b.desc }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── How It Works ──────────────────────────────────────────── -->
+    <div class="adv-section adv-steps-section">
+      <div class="adv-section-header">
+        <h2 class="adv-section-title">How It Works</h2>
+        <p class="adv-section-sub">Go live on Zuply in 4 simple steps</p>
+      </div>
+      <div class="adv-steps">
+        <div class="adv-step" *ngFor="let s of steps; let last = last">
+          <div class="adv-step-num">{{ s.num }}</div>
+          <div class="adv-step-content">
+            <div class="adv-step-title">{{ s.title }}</div>
+            <div class="adv-step-desc">{{ s.desc }}</div>
+          </div>
+          <div class="adv-step-arrow" *ngIf="!last">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Pricing Plans ─────────────────────────────────────────── -->
+    <div class="adv-section">
+      <div class="adv-section-header">
+        <h2 class="adv-section-title">Flexible Pricing Plans</h2>
+        <p class="adv-section-sub">Start free. Scale when you're ready.</p>
+      </div>
+      <div class="adv-plans-grid">
+        <div
+          class="adv-plan-card"
+          *ngFor="let p of plans"
+          [class.adv-plan--highlight]="p.highlight"
+        >
+          <div class="adv-plan-badge" *ngIf="p.highlight">Most Popular</div>
+          <div class="adv-plan-name">{{ p.name }}</div>
+          <div class="adv-plan-price">
+            <span class="adv-plan-amount">{{ p.price }}</span>
+            <span class="adv-plan-period">/ {{ p.period }}</span>
+          </div>
+          <ul class="adv-plan-features">
+            <li *ngFor="let f of p.features">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              {{ f }}
+            </li>
+          </ul>
+          <button
+            class="adv-plan-btn"
+            [class.btn-primary]="p.highlight"
+            [class.btn-outline]="!p.highlight"
+            (click)="getStarted()"
+          >
+            {{ p.highlight ? 'Get Started' : 'Choose Plan' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CTA Banner ────────────────────────────────────────────── -->
+    <div class="adv-cta-banner">
+      <div class="adv-cta-text">
+        <div class="adv-cta-title">Ready to grow your business?</div>
+        <div class="adv-cta-sub">Join thousands of sellers already earning on Zuply. No credit card required to start.</div>
+      </div>
+      <button class="btn-primary btn-pill btn-lg adv-cta-btn" (click)="getStarted()">
+        Create Your Free Store
+      </button>
+    </div>
+
+  </div>
+</div>

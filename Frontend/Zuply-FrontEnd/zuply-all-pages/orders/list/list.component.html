@@ -1,0 +1,81 @@
+<!-- src/app/pages/orders/list/list.component.html -->
+<div class="page-container">
+  <div class="orders-page-header">
+    <h1 class="orders-title">My Orders</h1>
+    <p class="orders-sub">Track, review and manage your orders.</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-row">
+    <button *ngFor="let tab of tabs"
+            class="tab-btn"
+            [class.active]="activeTab === tab"
+            (click)="setTab(tab)">
+      {{ tab | titlecase }}
+    </button>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <!-- Orders grid -->
+  <div class="orders-list" *ngIf="!loading && filtered.length > 0">
+    <div class="order-card" *ngFor="let order of filtered" (click)="viewDetail(order)">
+
+      <!-- Product thumbnail strip -->
+      <div class="order-thumbs">
+        <ng-container *ngFor="let item of order.items; let i = index">
+          <div class="order-thumb" *ngIf="i < 3">
+            <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.productName"/>
+            <div *ngIf="!item.imageUrl" class="thumb-placeholder">
+              {{ item.productName?.charAt(0)?.toUpperCase() || '📦' }}
+            </div>
+          </div>
+        </ng-container>
+        <div class="thumb-more" *ngIf="order.items.length > 3">+{{ order.items.length - 3 }}</div>
+      </div>
+
+      <!-- Order body -->
+      <div class="order-body">
+        <div class="order-top-row">
+          <span class="order-id">Order #{{ order.orderId }}</span>
+          <span class="order-status-badge" [class]="getStatusClass(order.status)">
+            {{ getStatusIcon(order.status) }} {{ order.status | titlecase }}
+          </span>
+        </div>
+
+        <!-- Items summary -->
+        <div class="order-items-summary">
+          <span *ngFor="let item of order.items; let last = last">
+            {{ item.productName }}{{ !last ? ', ' : '' }}
+          </span>
+        </div>
+
+        <div class="order-meta-row">
+          <span class="order-date">🗓 {{ order.createdAt | date:'dd MMM yyyy' }}</span>
+          <span class="order-payment">{{ order.paymentMethod }}</span>
+        </div>
+
+        <div class="order-footer">
+          <div class="order-total">₹ {{ order.totalAmount }}</div>
+          <div class="order-footer-actions">
+            <!-- Write review (only on delivered orders) -->
+            <button *ngIf="order.status === 'DELIVERED' && firstProductId(order)"
+                    class="btn-review"
+                    (click)="writeReview(firstProductId(order), $event)">
+              ✍️ Write Review
+            </button>
+            <button class="btn-secondary btn-sm btn-pill">View Details →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && filtered.length === 0">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No {{ activeTab === 'ALL' ? '' : (activeTab | titlecase) + ' ' }}orders found</div>
+    <div class="empty-desc">Your orders will appear here once you place them.</div>
+    <a routerLink="/products" class="btn-primary btn-pill">Start Shopping</a>
+  </div>
+</div>

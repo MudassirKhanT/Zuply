@@ -1,0 +1,236 @@
+<!-- src/app/pages/products/detail/detail.component.html -->
+<div class="page-container">
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading && product" class="detail-wrap">
+    <button class="back-btn" routerLink="/products">← Back</button>
+
+    <div class="detail-grid">
+      <!-- Image column -->
+      <div class="detail-image-col">
+        <div class="detail-image">
+          <img *ngIf="selectedImage" [src]="selectedImage" [alt]="product.name"/>
+          <div *ngIf="!selectedImage" class="detail-img-placeholder">
+            <span style="font-size:80px">🛒</span>
+          </div>
+          <app-ai-badge *ngIf="product.aiGenerated"></app-ai-badge>
+        </div>
+        <div class="thumb-strip" *ngIf="product.extraImages && product.extraImages.length">
+          <button class="thumb-item" [class.active]="selectedImage === product.imageUrl" (click)="selectedImage = product.imageUrl || ''">
+            <img [src]="product.imageUrl" [alt]="product.name"/>
+          </button>
+          <button class="thumb-item" *ngFor="let img of product.extraImages" [class.active]="selectedImage === img" (click)="selectedImage = img">
+            <img [src]="img" [alt]="product.name"/>
+          </button>
+        </div>
+      </div>
+
+      <!-- Info column -->
+      <div class="detail-info">
+        <div class="detail-cat badge-primary">{{ product.category || product.categoryName }}</div>
+        <h1 class="detail-name">{{ product.name }}</h1>
+        <div class="detail-seller">🏪 {{ product.sellerName }}</div>
+        <div class="detail-dist badge-distance" *ngIf="product.distance">📍 {{ product.distance }}</div>
+
+        <!-- Rating summary -->
+        <div class="rating-summary" *ngIf="product.reviewCount && product.reviewCount > 0">
+          <div class="stars-display">
+            <span *ngFor="let s of starArray(5)" class="star-icon" [class.filled]="s <= (product.averageRating || 0)">★</span>
+          </div>
+          <span class="rating-val">{{ product.averageRating | number:'1.1-1' }}</span>
+          <span class="rating-count">({{ product.reviewCount }} review{{ product.reviewCount !== 1 ? 's' : '' }})</span>
+        </div>
+
+        <div class="detail-price">₹ {{ product.price }}</div>
+
+        <!-- ── Stock indicator ── -->
+        <div class="stock-indicator" [class]="stockClass">
+          <span class="stock-dot"></span>
+          {{ stockLabel }}
+        </div>
+
+        <div class="detail-desc" *ngIf="product.description">
+          <div class="desc-title">Description</div>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- ── Category-specific: Clothing size chart ── -->
+        <div class="cat-section" *ngIf="isCategory('Clothing') || isCategory('Fashion & Footwear')">
+          <div class="cat-section-title">📏 Size Guide</div>
+          <div class="size-chart">
+            <table class="size-table">
+              <thead><tr><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hip (in)</th></tr></thead>
+              <tbody>
+                <tr><td>S</td><td>34–36</td><td>28–30</td><td>36–38</td></tr>
+                <tr><td>M</td><td>38–40</td><td>32–34</td><td>40–42</td></tr>
+                <tr><td>L</td><td>42–44</td><td>36–38</td><td>44–46</td></tr>
+                <tr><td>XL</td><td>46–48</td><td>40–42</td><td>48–50</td></tr>
+                <tr><td>XXL</td><td>50–52</td><td>44–46</td><td>52–54</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="cat-note">💡 Model in image wears size M. When in doubt, size up.</div>
+        </div>
+
+        <!-- ── Category-specific: Electronics warranty ── -->
+        <div class="cat-section" *ngIf="isCategory('Electronics')">
+          <div class="cat-section-title">🔧 Warranty & Support</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>🛡️</span> Seller warranty applies</div>
+            <div class="cat-chip"><span>🔌</span> Check voltage specs before use</div>
+            <div class="cat-chip"><span>📋</span> Keep invoice for warranty claims</div>
+          </div>
+        </div>
+
+        <!-- ── Category-specific: Grocery / Food shelf life ── -->
+        <div class="cat-section" *ngIf="isCategory('Grocery') || isCategory('Food & Beverage')">
+          <div class="cat-section-title">🏷️ Product Info</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>📅</span> Check expiry date on package</div>
+            <div class="cat-chip"><span>🌡️</span> Store in cool, dry place</div>
+            <div class="cat-chip"><span>🌿</span> 100% natural — no preservatives</div>
+          </div>
+        </div>
+
+        <!-- ── Category-specific: Home & Kitchen ── -->
+        <div class="cat-section" *ngIf="isCategory('Home & Kitchen')">
+          <div class="cat-section-title">🏠 Product Details</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>📐</span> Measure your space before ordering</div>
+            <div class="cat-chip"><span>🧰</span> Assembly required — tools included</div>
+            <div class="cat-chip"><span>♻️</span> Eco-friendly materials used</div>
+          </div>
+        </div>
+
+        <!-- ── Category-specific: Beauty & Personal Care ── -->
+        <div class="cat-section" *ngIf="isCategory('Beauty & Personal Care')">
+          <div class="cat-section-title">✨ Usage & Safety</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>🧪</span> Patch test recommended before use</div>
+            <div class="cat-chip"><span>🌿</span> Cruelty-free formulation</div>
+            <div class="cat-chip"><span>📅</span> Use within 12 months of opening</div>
+          </div>
+        </div>
+
+        <!-- ── Category-specific: Health & Wellness ── -->
+        <div class="cat-section" *ngIf="isCategory('Health & Wellness')">
+          <div class="cat-section-title">💊 Health Information</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>👨‍⚕️</span> Consult a doctor before use</div>
+            <div class="cat-chip"><span>📋</span> FSSAI approved</div>
+            <div class="cat-chip"><span>🌡️</span> Store below 25°C away from sunlight</div>
+          </div>
+        </div>
+
+        <!-- ── Category-specific: Agriculture ── -->
+        <div class="cat-section" *ngIf="isCategory('Agriculture')">
+          <div class="cat-section-title">🌾 Agricultural Info</div>
+          <div class="cat-info-chips">
+            <div class="cat-chip"><span>📦</span> Bulk orders available — contact seller</div>
+            <div class="cat-chip"><span>🌱</span> Certified organic / natural</div>
+            <div class="cat-chip"><span>🌧️</span> Seasonal availability may vary</div>
+          </div>
+        </div>
+
+        <!-- ── Delivery & Return (all categories) ── -->
+        <div class="delivery-section">
+          <div class="delivery-row">
+            <span class="del-icon">🚚</span>
+            <div>
+              <div class="del-title">Delivery</div>
+              <div class="del-val">{{ product.deliveryMethod || 'Local delivery by seller · 1–3 days' }}</div>
+            </div>
+          </div>
+          <div class="delivery-row">
+            <span class="del-icon">🔄</span>
+            <div>
+              <div class="del-title">Returns</div>
+              <div class="del-val">{{ product.returnPolicy || '7-day return policy' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quantity + actions -->
+        <div class="qty-row">
+          <div class="qty-selector">
+            <button class="qty-btn" (click)="decrement()">−</button>
+            <span class="qty-value">{{ quantity }}</span>
+            <button class="qty-btn" (click)="increment()" [disabled]="product.stock !== undefined && quantity >= product.stock">+</button>
+          </div>
+        </div>
+
+        <div class="detail-btns">
+          <button class="btn-secondary btn-pill" (click)="addToWishlist()">❤️ Wishlist</button>
+          <button class="btn-primary btn-pill" (click)="addToCart()" [disabled]="addingToCart || product.stock === 0">
+            {{ product.stock === 0 ? 'Out of Stock' : addingToCart ? 'Adding...' : '🛒 Add to Cart' }}
+          </button>
+        </div>
+
+        <div class="action-msg" *ngIf="actionMsg" [class.action-msg--error]="actionMsgType === 'error'">
+          {{ actionMsg }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Reviews ────────────────────────────────────────────── -->
+    <div class="reviews-section" id="reviews">
+      <div class="reviews-header">
+        <div class="reviews-title">Customer Reviews
+          <span class="count-badge" *ngIf="reviews.length > 0">{{ reviews.length }}</span>
+        </div>
+      </div>
+
+      <div class="review-form-card" *ngIf="isCustomer">
+        <div class="review-form-title">Write a Review</div>
+        <div class="star-picker">
+          <span *ngFor="let s of starArray(5)" class="star-pick"
+                [class.active]="s <= (hoverRating || newRating)"
+                (mouseenter)="hoverRating = s" (mouseleave)="hoverRating = 0"
+                (click)="newRating = s">★</span>
+        </div>
+        <textarea class="review-textarea" [(ngModel)]="newComment"
+                  placeholder="Share your experience (optional)" rows="3"></textarea>
+        <div class="review-msg" *ngIf="reviewMsg" [class.review-msg--error]="reviewMsgType === 'error'">
+          {{ reviewMsg }}
+        </div>
+        <button class="btn-primary btn-pill review-submit-btn"
+                (click)="submitReview()" [disabled]="submittingReview || newRating === 0">
+          {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+        </button>
+      </div>
+
+      <div class="review-login-prompt" *ngIf="!isLoggedIn">
+        <a routerLink="/login">Login</a> to write a review.
+      </div>
+
+      <app-loading-spinner [show]="reviewsLoading"></app-loading-spinner>
+
+      <div class="reviews-empty" *ngIf="!reviewsLoading && reviews.length === 0">
+        No reviews yet. Be the first to share your experience!
+      </div>
+
+      <div class="review-cards" *ngIf="!reviewsLoading && reviews.length > 0">
+        <div class="review-card" *ngFor="let r of reviews">
+          <div class="review-top">
+            <div class="reviewer-avatar">{{ r.customerName?.charAt(0)?.toUpperCase() }}</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name">{{ r.customerName }}</div>
+              <div class="review-date">{{ r.createdAt }}</div>
+            </div>
+            <div class="review-stars">
+              <span *ngFor="let s of starArray(5)" class="star-icon" [class.filled]="s <= r.rating">★</span>
+            </div>
+          </div>
+          <p class="review-comment" *ngIf="r.comment">{{ r.comment }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !product">
+    <div class="empty-icon">😕</div>
+    <div class="empty-title">Product not found</div>
+    <button class="btn-primary btn-pill" routerLink="/products">Browse Products</button>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+// src/app/pages/admin/orders/orders.component.scss
+@import 'styles';
+
+// ── Page header ───────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+}
+
+.total-chip {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+}
+
+// ── Revenue summary bar ───────────────────────────────────────────────────────
+.revenue-bar {
+  display: flex;
+  align-items: center;
+  gap: $space-lg;
+  background: linear-gradient(135deg, $zuply-primary-deeper, $zuply-primary);
+  border-radius: $radius-xl;
+  padding: $space-lg $space-xl;
+  margin-bottom: $space-xl;
+  flex-wrap: wrap;
+}
+
+.rev-item { text-align: center; flex: 1; min-width: 100px; }
+.rev-label { font-size: $text-xs; color: rgba(#fff, .7); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.rev-value { font-size: $text-xl; font-weight: 800; color: #fff;
+  &.delivered { color: $zuply-accent; }
+}
+.rev-divider { width: 1px; height: 40px; background: rgba(#fff, .2); flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .rev-divider { display: none; }
+  .revenue-bar { gap: $space-md; padding: $space-md; }
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+.filter-tabs {
+  display: flex;
+  gap: $space-sm;
+  flex-wrap: wrap;
+  margin-bottom: $space-lg;
+  border-bottom: 2px solid $zuply-border-light;
+  padding-bottom: $space-sm;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 8px 16px;
+  border-radius: $radius-md;
+  border: 1.5px solid transparent;
+  background: transparent;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text-secondary;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(.active) {
+    background: $zuply-bg;
+    color: $zuply-text;
+    border-color: $zuply-border-light;
+  }
+
+  &.active {
+    background: $zuply-primary;
+    color: #fff;
+    border-color: $zuply-primary;
+    .tab-count { background: rgba(#fff, .25); color: #fff; }
+  }
+}
+
+.tab-count {
+  background: $zuply-border-light;
+  color: $zuply-text-secondary;
+  font-size: $text-xs;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  transition: $transition-fast;
+}
+
+// ── Orders table ──────────────────────────────────────────────────────────────
+.orders-table {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  overflow: hidden;
+}
+
+// 8-column grid
+.table-row {
+  display: grid;
+  grid-template-columns: 80px 1.5fr 1.5fr 80px 100px 100px 130px 110px;
+  gap: $space-sm;
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid $zuply-border-light;
+  align-items: center;
+  font-size: $text-sm;
+
+  &.header {
+    background: $zuply-primary-mist;
+    font-weight: 600;
+    color: $zuply-text-secondary;
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  &:last-child { border-bottom: none; }
+}
+
+// ── Cell styles ───────────────────────────────────────────────────────────────
+.order-id { font-weight: 700; color: $zuply-primary; }
+
+.customer-cell { line-height: 1.4; }
+.cust-name  { font-weight: 600; color: $zuply-text; }
+.cust-email { font-size: $text-xs; color: $zuply-text-muted; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.addr-cell { line-height: 1.4; font-size: $text-xs; }
+.addr-sub  { color: $zuply-text-secondary; }
+
+.items-badge {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: $radius-pill;
+  white-space: nowrap;
+}
+
+.amount { font-weight: 700; color: $zuply-accent; }
+.payment-method { font-size: $text-xs; color: $zuply-text-secondary; }
+
+.status-wrap { display: flex; }
+
+.date-cell { font-size: $text-xs; color: $zuply-text-secondary; }
+
+// ── Status ────────────────────────────────────────────────────────────────────
+.status-placed     { color: #1a6fa8; background: #e8f4fd; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-processing { color: #d97706; background: #fffbeb; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-delivered  { color: #16a34a; background: #f0fdf4; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-cancelled  { color: #dc2626; background: #fef2f2; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 1400px) {
+  .table-row { grid-template-columns: 80px 1.5fr 1.2fr 80px 100px 110px 110px; }
+  // hide delivery address on medium-large
+  .table-row > span:nth-child(3),
+  .table-row.header > span:nth-child(3) { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .table-row { grid-template-columns: 80px 1.5fr 80px 100px 120px 110px; }
+  .table-row > span:nth-child(6),
+  .table-row.header > span:nth-child(6) { display: none; }
+}
+
+@media (max-width: 768px) {
+  .table-row { grid-template-columns: 1fr 1fr 1fr; }
+  .table-row.header { display: none; }
+}

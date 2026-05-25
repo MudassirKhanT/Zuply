@@ -1,0 +1,809 @@
+@import 'styles';
+
+// ── Secondary utility top bar ──────────────────────────────────
+.nav-topbar {
+  background: $zuply-primary;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nav-topbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $space-lg;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-lg;
+}
+
+.topbar-tagline {
+  font-size: 11px;
+  color: rgba(255,255,255,0.60);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+
+  svg { flex-shrink: 0; opacity: 0.8; }
+
+  &:hover {
+    color: $zuply-accent;
+    svg { opacity: 1; }
+  }
+}
+
+.topbar-sep {
+  color: rgba(255,255,255,0.22);
+  font-size: 11px;
+  line-height: 1;
+  user-select: none;
+}
+
+// ── Navbar shell ───────────────────────────────────────────────
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid rgba(13, 92, 99, 0.1);
+  box-shadow: 0 1px 12px rgba(13, 92, 99, 0.07);
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $space-lg;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: $space-lg;
+}
+
+// ── Brand ──────────────────────────────────────────────────────
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  text-decoration: none;
+  flex-shrink: 0;
+
+  .brand-text {
+    font-size: $text-xl;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: $zuply-primary;
+    em { color: $zuply-accent; font-style: normal; }
+  }
+}
+
+// ── Desktop nav links ──────────────────────────────────────────
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: $radius-md;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $zuply-text-secondary;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+  white-space: nowrap;
+
+  .link-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  &:hover {
+    background: rgba(13, 92, 99, 0.07);
+    color: $zuply-primary;
+    .link-icon { opacity: 1; transform: scale(1.1); }
+  }
+
+  &.active {
+    color: $zuply-primary;
+    font-weight: 600;
+    background: rgba(13, 92, 99, 0.08);
+    .link-icon { opacity: 1; }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: $zuply-primary;
+    }
+  }
+}
+
+.nav-cart { padding-right: 16px; }
+
+.cart-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: $zuply-accent;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.nav-upload {
+  background: $zuply-primary !important;
+  color: #fff !important;
+  border-radius: $radius-pill !important;
+  padding: 7px 16px !important;
+  font-weight: 600 !important;
+  margin-left: 6px;
+  &:hover { background: $zuply-primary-darker !important; }
+  &::after { display: none !important; }
+}
+
+// ── Desktop right actions ──────────────────────────────────────
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  flex-shrink: 0;
+}
+
+// ── Quick sell link ────────────────────────────────────────────
+.nav-quick-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: $radius-pill;
+  font-size: $text-xs;
+  font-weight: 600;
+  color: $zuply-primary;
+  border: 1.5px solid rgba(13,92,99,.25);
+  text-decoration: none;
+  transition: all .18s;
+  white-space: nowrap;
+
+  &:hover { background: rgba(13,92,99,.07); border-color: $zuply-primary; }
+}
+
+// ── Account dropdown ──────────────────────────────────────────
+.account-wrap {
+  position: relative;
+}
+
+.account-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 5px;
+  border: 1.5px solid rgba(13,92,99,.15);
+  border-radius: $radius-pill;
+  background: transparent;
+  cursor: pointer;
+  transition: all .18s;
+
+  &:hover, &.open { border-color: $zuply-primary; background: rgba(13,92,99,.05); }
+}
+
+.account-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: $text-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.account-name {
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-chevron {
+  color: $zuply-text-muted;
+  transition: transform .2s;
+  .account-btn.open & { transform: rotate(180deg); }
+}
+
+.hide-md { @media (max-width: 900px) { display: none; } }
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+  z-index: 1100;
+  overflow: hidden;
+
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .2s, transform .2s, visibility 0s .2s;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .2s, transform .2s, visibility 0s 0s;
+  }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: $space-md;
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+}
+
+.dh-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  border: 2px solid rgba(255,255,255,.4);
+  color: #fff;
+  font-weight: 800;
+  font-size: $text-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dh-name { font-weight: 700; font-size: $text-sm; color: #fff; }
+.dh-role { font-size: $text-xs; color: rgba(255,255,255,.7); text-transform: capitalize; margin-top: 1px; }
+
+.dropdown-divider { height: 1px; background: $zuply-border-light; margin: 4px 0; }
+
+.dd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $zuply-text;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background .14s;
+
+  svg { width: 16px; height: 16px; color: $zuply-text-muted; flex-shrink: 0; }
+
+  &:hover { background: rgba(13,92,99,.05); color: $zuply-primary;
+    svg { color: $zuply-primary; } }
+
+  &--danger { color: $zuply-error;
+    svg { color: $zuply-error; }
+    &:hover { background: rgba(220,38,38,.05); } }
+}
+
+// ── Mobile top-right (hamburger — hidden on desktop) ──────────
+.mobile-right {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-left: auto;
+
+  @media (min-width: 769px) { display: none !important; }
+}
+
+// ── Hamburger (mobile only) ────────────────────────────────────
+.hamburger {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  border-radius: $radius-md;
+  transition: background 0.18s ease;
+
+  // Hard-hide on desktop — belt-and-suspenders with .mobile-right rule
+  @media (min-width: 769px) { display: none !important; }
+
+  &:hover { background: rgba(13, 92, 99, 0.07); }
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: $zuply-text;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    transform-origin: center;
+  }
+
+  &.open {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// ── Mobile overlay backdrop ────────────────────────────────────
+.mobile-overlay {
+  visibility: hidden;
+  pointer-events: none;
+  position: fixed;
+  inset: 64px 0 0 0;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 998;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.28s ease, visibility 0s 0.28s;
+
+  &.open {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+    transition: opacity 0.28s ease, visibility 0s 0s;
+  }
+
+  @media (min-width: 769px) { display: none !important; }
+}
+
+// ── Mobile menu panel ──────────────────────────────────────────
+.mobile-menu {
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 999;
+  background: #fff;
+  border-bottom-left-radius: $radius-xl;
+  border-bottom-right-radius: $radius-xl;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  max-height: calc(100vh - 64px);
+
+  transform: translateY(-12px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0s 0.28s;
+
+  &.open {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity   0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s 0s;
+  }
+
+  @media (min-width: 769px) { display: none !important; }
+}
+
+// ── Scroll wrapper (inner, enables overflow-y on tall menus) ───
+.mm-scroll-wrap {
+  overflow-y: auto;
+  max-height: calc(100vh - 64px);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+// ── User header block ──────────────────────────────────────────
+.mm-user {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+}
+
+.mm-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: $text-lg;
+  flex-shrink: 0;
+}
+
+.mm-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+// User name (displayed in header)
+.mm-name {
+  font-size: $text-base;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Role badge pill (e.g. "● Seller Account")
+.mm-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: $text-xs;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-pill;
+  padding: 2px 9px 2px 6px;
+  font-weight: 600;
+}
+
+// Coloured dot inside the role badge
+.mm-role-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $zuply-accent;
+  flex-shrink: 0;
+}
+
+// Settings gear icon link (top-right of user header)
+.mm-profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.18s, color 0.18s;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+  }
+
+  svg { width: 18px; height: 18px; }
+}
+
+// ── Guest header block ─────────────────────────────────────────
+.mm-guest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-md $space-lg;
+  background: $zuply-primary-mist;
+  gap: $space-md;
+  flex-wrap: wrap;
+}
+
+.mm-guest-left {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  flex: 1;
+  min-width: 0;
+}
+
+.mm-guest-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: rgba(13, 92, 99, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mm-guest-title {
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text;
+  strong { color: $zuply-primary; }
+}
+
+.mm-guest-sub {
+  font-size: $text-xs;
+  color: $zuply-text-secondary;
+  margin-top: 2px;
+}
+
+.mm-guest-actions {
+  display: flex;
+  gap: $space-sm;
+  flex-shrink: 0;
+}
+
+// ── Divider ────────────────────────────────────────────────────
+.mm-divider {
+  height: 1px;
+  background: $zuply-border-light;
+  margin: $space-xs $space-lg;
+}
+
+// ── Section label headings ─────────────────────────────────────
+.mm-section-label {
+  padding: $space-sm $space-lg 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: $zuply-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: $space-xs;
+}
+
+// ── Menu items ─────────────────────────────────────────────────
+.mm-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px $space-lg;
+  text-decoration: none;
+  color: $zuply-text;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(13, 92, 99, 0.04);
+    .mm-chevron { transform: translateX(3px); opacity: 0.8; }
+  }
+
+  &--danger {
+    color: $zuply-error;
+    &:hover { background: rgba(220, 38, 38, 0.05); }
+    .mm-label { color: $zuply-error; }
+  }
+}
+
+// ── Item text wrapper (label + sublabel stacked) ───────────────
+.mm-item-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+// ── Icon circles ───────────────────────────────────────────────
+.mm-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg { width: 18px; height: 18px; }
+
+  &--teal   { background: rgba(13,  92,  99,  0.10); color: #0D5C63; }
+  &--rose   { background: rgba(244, 63,  94,  0.10); color: #e11d48; }
+  &--amber  { background: rgba(201, 168, 76,  0.12); color: #b45309; }
+  &--blue   { background: rgba(59,  130, 246, 0.10); color: #2563eb; }
+  &--indigo { background: rgba(99,  102, 241, 0.10); color: #4f46e5; }
+  &--red    { background: rgba(220, 38,  38,  0.10); color: #dc2626; }
+  &--green  { background: rgba(34,  197, 94,  0.10); color: #16a34a; }
+}
+
+// ── Item primary label ─────────────────────────────────────────
+.mm-label {
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text;
+  line-height: 1.3;
+}
+
+// ── Item sublabel (description line) ──────────────────────────
+.mm-sublabel {
+  font-size: $text-xs;
+  color: $zuply-text-muted;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// danger override
+.mm-item--danger .mm-label { color: $zuply-error; }
+
+// ── Chevron arrow ─────────────────────────────────────────────
+.mm-chevron {
+  width: 16px;
+  height: 16px;
+  color: $zuply-text-muted;
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+// ── Cart count badge ───────────────────────────────────────────
+.mm-count-badge {
+  background: $zuply-accent;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  margin-right: 4px;
+}
+
+// ── Quick tile grid (More section) ─────────────────────────────
+.mm-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-sm;
+  padding: $space-xs $space-lg $space-md;
+}
+
+.mm-quick-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: $space-md $space-xs $space-sm;
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  text-decoration: none;
+  border: 1px solid $zuply-border-light;
+  transition: background 0.18s ease, border-color 0.18s ease,
+              box-shadow 0.18s ease, transform 0.18s ease;
+  text-align: center;
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(13, 92, 99, 0.25);
+    box-shadow: 0 4px 14px rgba(13, 92, 99, 0.1);
+    transform: translateY(-3px);
+  }
+}
+
+// SVG icon circle inside each tile
+.mq-tile-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg { width: 22px; height: 22px; }
+
+  // colour variants
+  &.mq-icon--teal  { background: rgba(13,  92,  99,  0.10); color: #0D5C63; }
+  &.mq-icon--blue  { background: rgba(59,  130, 246, 0.10); color: #2563eb; }
+  &.mq-icon--amber { background: rgba(201, 168, 76,  0.12); color: #b45309; }
+}
+
+// Fallback emoji icon (legacy)
+.mq-tile-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.mq-tile-label {
+  font-size: $text-xs;
+  font-weight: 700;
+  color: $zuply-text;
+  line-height: 1.3;
+}
+
+.mq-tile-sub {
+  font-size: 10px;
+  color: $zuply-text-muted;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-top: -3px;
+}
+
+// ── Legacy quick-links list (kept for any existing usage) ──────
+.mm-quick-links {
+  padding: $space-sm 0;
+}
+
+.mm-quick-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px $space-lg;
+  text-decoration: none;
+  transition: background .15s;
+
+  &:hover { background: rgba(13,92,99,.04); }
+}
+
+.mq-icon {
+  font-size: 22px;
+  width: 38px;
+  height: 38px;
+  background: $zuply-primary-mist;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mq-title { font-size: $text-sm; font-weight: 600; color: $zuply-text; }
+.mq-sub   { font-size: $text-xs; color: $zuply-text-muted; margin-top: 1px; }
+
+// ── Bottom safe-area spacer ────────────────────────────────────
+.mm-bottom-space {
+  height: $space-xl;
+}

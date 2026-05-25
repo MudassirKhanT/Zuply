@@ -1,0 +1,176 @@
+// src/app/pages/admin/sellers/sellers.component.scss
+@import 'styles';
+
+// ── Page header ───────────────────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+}
+
+.total-chip {
+  background: $zuply-primary-mist;
+  color: $zuply-primary;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+}
+
+// ── Search bar ────────────────────────────────────────────────────────────────
+.search-bar-wrap {
+  margin-bottom: $space-md;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1.5px solid $zuply-border;
+  border-radius: $radius-pill;
+  font-size: $text-sm;
+  background: #fff;
+  color: $zuply-text;
+  box-shadow: $shadow-sm;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+
+  &::placeholder { color: $zuply-text-secondary; }
+  &:focus { border-color: $zuply-primary; box-shadow: 0 0 0 3px rgba($zuply-primary, 0.1); }
+}
+
+// ── Filter tabs ───────────────────────────────────────────────────────────────
+.filter-tabs {
+  display: flex;
+  gap: $space-sm;
+  flex-wrap: wrap;
+  margin-bottom: $space-lg;
+  border-bottom: 2px solid $zuply-border-light;
+  padding-bottom: $space-sm;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  padding: 8px 16px;
+  border-radius: $radius-md;
+  border: 1.5px solid transparent;
+  background: transparent;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text-secondary;
+  cursor: pointer;
+  transition: $transition-fast;
+  font-family: $font-family;
+
+  &:hover:not(.active) {
+    background: $zuply-bg;
+    color: $zuply-text;
+    border-color: $zuply-border-light;
+  }
+
+  &.active {
+    background: $zuply-primary;
+    color: #fff;
+    border-color: $zuply-primary;
+
+    .tab-count { background: rgba(#fff, .25); color: #fff; }
+  }
+}
+
+.tab-count {
+  background: $zuply-border-light;
+  color: $zuply-text-secondary;
+  font-size: $text-xs;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  transition: $transition-fast;
+}
+
+// ── Sellers table ─────────────────────────────────────────────────────────────
+.sellers-table {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  overflow: hidden;
+}
+
+// 6-column grid: seller | store | contact | location | status | actions
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1.5fr 1fr 120px 180px;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid $zuply-border-light;
+  align-items: center;
+  font-size: $text-sm;
+
+  &.header {
+    background: $zuply-primary-mist;
+    font-weight: 600;
+    color: $zuply-text-secondary;
+    font-size: $text-xs;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  &:last-child { border-bottom: none; }
+}
+
+// ── Seller cell ───────────────────────────────────────────────────────────────
+.seller-cell {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.seller-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, $zuply-primary, #0e7076);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $text-base;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.seller-info  { min-width: 0; }
+.seller-name  { font-weight: 600; color: $zuply-text; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seller-id    { font-size: $text-xs; color: $zuply-text-muted; }
+
+// ── Contact cell ──────────────────────────────────────────────────────────────
+.contact-cell { line-height: 1.4; }
+.contact-phone { font-size: $text-xs; color: $zuply-text-secondary; }
+
+// ── Status ────────────────────────────────────────────────────────────────────
+.status-pending   { color: #d97706; background: #fffbeb; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-approved  { color: #16a34a; background: #f0fdf4; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-rejected  { color: #dc2626; background: #fef2f2; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+.status-suspended { color: #dc2626; background: #fef2f2; padding: 3px 10px; border-radius: 20px; font-size: $text-xs; font-weight: 600; white-space: nowrap; }
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+.action-btns { display: flex; gap: $space-xs; flex-wrap: wrap; }
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 1200px) {
+  .table-row { grid-template-columns: 2fr 1fr 1fr 110px 160px; }
+  .table-row.header span:nth-child(4),
+  .table-row > span:nth-child(4) { display: none; }
+}
+
+@media (max-width: 900px) {
+  .table-row { grid-template-columns: 1fr 1fr; }
+  .table-row.header { display: none; }
+}

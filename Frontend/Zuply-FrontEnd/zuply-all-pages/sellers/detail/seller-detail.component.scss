@@ -1,0 +1,21 @@
+@import 'styles';
+
+.seller-detail-page { padding: 32px 0 60px; }
+
+.back-btn { display: inline-block; margin-bottom: $space-lg; font-size: $text-sm; font-weight: 600; color: $zuply-primary; text-decoration: none; &:hover { text-decoration: underline; } }
+
+.seller-header-card {
+  display: flex; align-items: center; gap: $space-lg;
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+  border-radius: $radius-xl; padding: $space-xl $space-2xl; margin-bottom: $space-xl; color: #fff;
+}
+.sdh-avatar { width: 72px; height: 72px; border-radius: 50%; background: $zuply-accent; color: #fff; font-weight: 800; font-size: 2rem; display: flex; align-items: center; justify-content: center; border: 4px solid rgba(#fff,.3); flex-shrink: 0; }
+.sdh-name  { font-size: $text-2xl; font-weight: 800; margin-bottom: 4px; }
+.sdh-loc   { font-size: $text-sm; opacity: 0.8; margin-bottom: 4px; }
+.sdh-count { font-size: $text-sm; background: rgba(#fff,.15); border-radius: $radius-pill; padding: 3px 14px; display: inline-block; }
+
+.section-label { font-size: $text-base; font-weight: 700; color: $zuply-text-secondary; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: $space-lg; }
+
+.empty-state { text-align: center; padding: $space-2xl; }
+.empty-icon  { font-size: 3rem; margin-bottom: $space-sm; }
+.empty-title { font-size: 1.1rem; font-weight: 700; color: $zuply-text; margin-bottom: $space-lg; }

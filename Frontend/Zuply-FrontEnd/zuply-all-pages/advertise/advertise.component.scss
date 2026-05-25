@@ -1,0 +1,386 @@
+@import 'styles';
+
+// ── Hero ─────────────────────────────────────────────────────────
+.adv-hero {
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 60%, darken($zuply-primary-deeper, 8%) 100%);
+  padding: $space-3xl $space-lg;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+}
+
+.adv-hero-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
+}
+
+.adv-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: $radius-pill;
+  padding: 4px 14px;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: .02em;
+}
+
+.adv-hero-title {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.adv-hero-sub {
+  font-size: $text-md;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.65;
+  max-width: 560px;
+}
+
+.adv-hero-actions {
+  display: flex;
+  gap: $space-md;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: $space-sm;
+
+  .btn-outline {
+    color: #fff;
+    border-color: rgba(255,255,255,0.50);
+    &:hover { background: rgba(255,255,255,0.08); border-color: #fff; }
+  }
+}
+
+// ── Stats row ────────────────────────────────────────────────────
+.adv-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: $space-xl;
+  margin-top: $space-lg;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.adv-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.adv-stat-num {
+  font-size: $text-2xl;
+  font-weight: 800;
+  color: $zuply-accent;
+}
+
+.adv-stat-label {
+  font-size: $text-xs;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.adv-stat-sep {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.18);
+}
+
+// ── Section ───────────────────────────────────────────────────────
+.adv-section {
+  margin-bottom: $space-3xl;
+}
+
+.adv-section-header {
+  text-align: center;
+  margin-bottom: $space-2xl;
+}
+
+.adv-section-title {
+  font-size: $text-2xl;
+  font-weight: 700;
+  color: $zuply-text;
+  margin: 0 0 $space-sm;
+}
+
+.adv-section-sub {
+  font-size: $text-md;
+  color: $zuply-text-muted;
+}
+
+// ── Benefits grid ────────────────────────────────────────────────
+.adv-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-lg;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+}
+
+.adv-benefit-card {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  padding: $space-xl;
+  transition: $transition-fast;
+
+  &:hover {
+    border-color: $zuply-primary;
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.adv-benefit-icon {
+  font-size: 2rem;
+  margin-bottom: $space-sm;
+}
+
+.adv-benefit-title {
+  font-size: $text-md;
+  font-weight: 700;
+  color: $zuply-text;
+  margin-bottom: $space-xs;
+}
+
+.adv-benefit-desc {
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+  line-height: 1.65;
+}
+
+// ── Steps ─────────────────────────────────────────────────────────
+.adv-steps-section {
+  background: $zuply-primary-mist;
+  border-radius: $radius-xl;
+  padding: $space-2xl $space-xl;
+}
+
+.adv-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-md;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.adv-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 180px;
+  max-width: 220px;
+  position: relative;
+}
+
+.adv-step-num {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: $zuply-primary;
+  color: #fff;
+  font-size: $text-lg;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-md;
+  flex-shrink: 0;
+}
+
+.adv-step-title {
+  font-size: $text-md;
+  font-weight: 700;
+  color: $zuply-text;
+  margin-bottom: $space-xs;
+}
+
+.adv-step-desc {
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+  line-height: 1.6;
+}
+
+.adv-step-arrow {
+  color: $zuply-primary;
+  opacity: 0.45;
+  align-self: center;
+  flex-shrink: 0;
+  margin-bottom: $space-xl;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+// ── Plans grid ────────────────────────────────────────────────────
+.adv-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-lg;
+  align-items: start;
+
+  @media (max-width: 860px) { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+}
+
+.adv-plan-card {
+  background: $zuply-surface;
+  border: 2px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  position: relative;
+  transition: $transition-fast;
+
+  &:hover { box-shadow: $shadow-md; }
+
+  &.adv-plan--highlight {
+    border-color: $zuply-primary;
+    background: linear-gradient(160deg, rgba($zuply-primary, .03) 0%, $zuply-surface 100%);
+    box-shadow: 0 0 0 4px rgba($zuply-primary, .08), $shadow-md;
+  }
+}
+
+.adv-plan-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $zuply-primary;
+  color: #fff;
+  font-size: $text-xs;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: $radius-pill;
+  white-space: nowrap;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.adv-plan-name {
+  font-size: $text-lg;
+  font-weight: 700;
+  color: $zuply-text;
+}
+
+.adv-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: $space-xs;
+}
+
+.adv-plan-amount {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: $zuply-primary;
+  line-height: 1;
+}
+
+.adv-plan-period {
+  font-size: $text-sm;
+  color: $zuply-text-muted;
+}
+
+.adv-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  flex: 1;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+    font-size: $text-sm;
+    color: $zuply-text-secondary;
+
+    svg { color: $zuply-success; flex-shrink: 0; }
+  }
+}
+
+.adv-plan-btn {
+  width: 100%;
+  padding: $space-sm $space-lg;
+  border-radius: $radius-pill;
+  font-size: $text-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-fast;
+  margin-top: $space-sm;
+
+  &.btn-primary {
+    background: $zuply-primary;
+    color: #fff;
+    border: 2px solid $zuply-primary;
+    &:hover { background: $zuply-primary-deeper; border-color: $zuply-primary-deeper; }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    color: $zuply-primary;
+    border: 2px solid $zuply-primary;
+    &:hover { background: $zuply-primary-light; }
+  }
+}
+
+// ── CTA Banner ────────────────────────────────────────────────────
+.adv-cta-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-lg;
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+  border-radius: $radius-xl;
+  padding: $space-2xl $space-xl;
+  margin-bottom: $space-3xl;
+  flex-wrap: wrap;
+}
+
+.adv-cta-text { flex: 1; min-width: 220px; }
+
+.adv-cta-title {
+  font-size: $text-xl;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: $space-xs;
+}
+
+.adv-cta-sub {
+  font-size: $text-sm;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.6;
+}
+
+.adv-cta-btn {
+  flex-shrink: 0;
+  background: #fff !important;
+  color: $zuply-primary !important;
+  font-weight: 700;
+  &:hover { background: rgba(255,255,255,0.90) !important; }
+}

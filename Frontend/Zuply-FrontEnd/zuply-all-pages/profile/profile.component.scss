@@ -1,0 +1,79 @@
+// src/app/pages/profile/profile.component.scss
+@import 'styles';
+
+.profile-wrap { display: flex; justify-content: center; padding: $space-xl 0; }
+
+.profile-card {
+  background: $zuply-surface; border-radius: $radius-xl; padding: $space-2xl;
+  width: 100%; max-width: 420px; box-shadow: $shadow-lg;
+  text-align: center; border: 1px solid $zuply-border-light;
+}
+
+// ── Avatar / PFP ──────────────────────────────────────────────
+.profile-avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: $space-md;
+}
+
+.profile-avatar {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, $zuply-primary, $zuply-primary-deeper);
+  color: #fff; font-size: $text-3xl; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; border: 3px solid rgba(13,92,99,.2);
+  box-shadow: 0 4px 16px rgba(13,92,99,.2);
+}
+
+.pfp-img     { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.pfp-initial { line-height: 1; }
+
+.pfp-actions {
+  display: flex; gap: 6px; margin-top: 8px; justify-content: center;
+}
+
+.pfp-upload-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: $zuply-primary; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer; border: none;
+  box-shadow: 0 2px 6px rgba(13,92,99,.3);
+  transition: transform .15s;
+  &:hover { transform: scale(1.1); }
+}
+
+.pfp-remove-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: $zuply-error; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; cursor: pointer; border: none;
+  box-shadow: 0 2px 6px rgba(220,38,38,.3);
+  transition: transform .15s;
+  &:hover { transform: scale(1.1); }
+}
+
+// ── Info ──────────────────────────────────────────────────────
+.profile-name  { font-size: $text-xl; font-weight: 700; color: $zuply-text; margin-bottom: $space-xs; }
+.profile-email { font-size: $text-sm; color: $zuply-text-secondary; margin-top: $space-xs; }
+.profile-phone { font-size: $text-sm; color: $zuply-text-muted; margin-top: 4px; margin-bottom: $space-lg; }
+
+// ── Quick links ───────────────────────────────────────────────
+.profile-quick-links {
+  display: flex; gap: $space-sm; justify-content: center; flex-wrap: wrap;
+  margin: $space-lg 0;
+}
+
+.pql-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: $radius-pill;
+  background: $zuply-primary-mist; border: 1px solid rgba(13,92,99,.15);
+  font-size: $text-sm; font-weight: 600; color: $zuply-primary;
+  text-decoration: none; transition: all .15s;
+
+  &:hover { background: $zuply-primary; color: #fff; }
+}
+
+// ── Actions ───────────────────────────────────────────────────
+.profile-actions { display: flex; flex-direction: column; gap: $space-sm; }

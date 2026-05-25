@@ -1,0 +1,105 @@
+<!-- src/app/pages/auth/register/register.component.html -->
+<div class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <svg width="48" height="48" viewBox="0 0 46 46" fill="none">
+        <rect x="3" y="13" width="40" height="30" rx="6" fill="#0D5C63"/>
+        <path d="M14 13C14 7 32 7 32 13" stroke="#0D5C63" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M15 23L21.5 23L15 32L31 32" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="auth-brand">zu<em>ply</em></div>
+    </div>
+
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Join thousands of local shoppers and sellers</p>
+
+    <div class="role-selector">
+      <button *ngFor="let r of roles" class="role-btn" [class.active]="role === r" (click)="role = r">
+        {{ r | titlecase }}
+      </button>
+    </div>
+
+    <div class="error-banner" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+    <!-- Full Name -->
+    <div class="input-group">
+      <label>Full Name *</label>
+      <input class="input" type="text" placeholder="Enter your full name"
+             [(ngModel)]="name"
+             (blur)="nameTouched = true"
+             [class.input-error]="nameTouched && !name.trim()"/>
+      <span class="field-error" *ngIf="nameTouched && !name.trim()">
+        Name is required.
+      </span>
+    </div>
+
+    <!-- Email -->
+    <div class="input-group">
+      <label>Email Address *</label>
+      <input class="input" type="email" placeholder="user&#64;example.com"
+             [(ngModel)]="email"
+             (blur)="emailTouched = true"
+             [class.input-error]="emailTouched && !isEmailValid"/>
+      <span class="field-error" *ngIf="emailTouched && !isEmailValid">
+        Enter a valid email (e.g. user&#64;example.com).
+      </span>
+    </div>
+
+    <!-- Phone -->
+    <div class="input-group">
+      <label>Phone Number *</label>
+      <input class="input" type="tel" placeholder="10-digit mobile number"
+             [(ngModel)]="phone"
+             maxlength="10"
+             (blur)="phoneTouched = true"
+             [class.input-error]="phoneTouched && !isPhoneValid"/>
+      <span class="field-error" *ngIf="phoneTouched && !isPhoneValid">
+        Enter a valid 10-digit mobile number (starts with 6–9).
+      </span>
+    </div>
+
+    <!-- Store Name (SELLER only) -->
+    <div class="input-group" *ngIf="role === 'SELLER'">
+      <label>Store Name</label>
+      <input class="input" type="text" placeholder="Enter your store name" [(ngModel)]="storeName"/>
+    </div>
+
+    <!-- Password -->
+    <div class="input-group">
+      <label>Password *</label>
+      <div class="password-wrap">
+        <input class="input" [type]="showPassword ? 'text' : 'password'"
+               placeholder="Min 8 chars, uppercase, lowercase & number"
+               [(ngModel)]="password"
+               (blur)="passwordTouched = true"
+               [class.input-error]="passwordTouched && !isPasswordValid"/>
+        <span class="password-toggle" (click)="showPassword = !showPassword">
+          {{ showPassword ? '🙈' : '👁️' }}
+        </span>
+      </div>
+      <!-- Password strength bar -->
+      <div class="strength-bar-wrap" *ngIf="password">
+        <div class="strength-bar">
+          <div class="strength-fill" [class]="'strength-' + passwordStrength"></div>
+        </div>
+        <span class="strength-label" [class]="'strength-label-' + passwordStrength">
+          {{ passwordStrength | titlecase }}
+        </span>
+      </div>
+      <span class="field-error" *ngIf="passwordTouched && !isPasswordValid">
+        Min 8 characters with at least one uppercase, lowercase and digit.
+      </span>
+    </div>
+
+    <button class="btn-primary btn-full btn-pill register-btn"
+            (click)="onRegister()" [disabled]="loading">
+      {{ loading ? 'Creating account...' : 'Create Account' }}
+    </button>
+
+    <div class="auth-footer">
+      Already have an account?
+      <a routerLink="/login" class="auth-link">Login</a>
+    </div>
+  </div>
+</div>

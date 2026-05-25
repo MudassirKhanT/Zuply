@@ -1,0 +1,82 @@
+@import 'styles';
+
+.addr-page { max-width: 860px; margin: 0 auto; padding: $space-xl 0; }
+
+.addr-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: $space-lg;
+  margin-bottom: $space-xl;
+  flex-wrap: wrap;
+}
+.addr-title   { font-size: $text-2xl; font-weight: 800; color: $zuply-text; margin: 0 0 4px; }
+.addr-subtitle { font-size: $text-sm; color: $zuply-text-secondary; margin: 0; }
+
+.success-flash {
+  background: rgba(16,185,129,.1); color: #065f46; border: 1px solid rgba(16,185,129,.3);
+  border-radius: $radius-md; padding: 12px 16px; margin-bottom: $space-lg;
+  font-size: $text-sm; font-weight: 500;
+}
+
+.addr-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: $space-lg;
+  margin-bottom: $space-xl;
+}
+
+.addr-card {
+  background: #fff; border: 2px solid $zuply-border-light;
+  border-radius: $radius-lg; padding: $space-lg;
+  transition: box-shadow .18s; cursor: default;
+
+  &:hover { box-shadow: 0 4px 16px rgba(13,92,99,.1); }
+  &.is-default { border-color: $zuply-primary; }
+}
+
+.addr-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: $space-sm;
+}
+.addr-label   { font-weight: 700; font-size: $text-sm; color: $zuply-primary; }
+.default-badge {
+  background: $zuply-primary; color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.addr-text  { font-size: $text-sm; color: $zuply-text; line-height: 1.5; margin-bottom: 4px; }
+.addr-city  { font-size: $text-xs; color: $zuply-text-secondary; margin-bottom: 4px; }
+.addr-phone { font-size: $text-xs; color: $zuply-text-muted; margin-bottom: $space-md; }
+
+.addr-actions { display: flex; gap: $space-sm; flex-wrap: wrap; }
+
+.act-btn {
+  padding: 5px 12px; border-radius: 20px; font-size: $text-xs; font-weight: 600;
+  border: 1.5px solid transparent; cursor: pointer; transition: all .15s;
+
+  &--edit   { border-color: $zuply-primary; color: $zuply-primary; background: transparent;
+              &:hover { background: $zuply-primary; color: #fff; } }
+  &--default { border-color: $zuply-accent; color: #b45309; background: transparent;
+              &:hover { background: $zuply-accent; color: #fff; } }
+  &--remove  { border-color: $zuply-error; color: $zuply-error; background: transparent;
+              &:hover { background: $zuply-error; color: #fff; } }
+}
+
+.addr-empty {
+  text-align: center; padding: 60px 24px;
+  .empty-icon  { font-size: 56px; margin-bottom: $space-md; }
+  .empty-title { font-size: $text-xl; font-weight: 700; color: $zuply-text; margin-bottom: 8px; }
+  .empty-desc  { font-size: $text-sm; color: $zuply-text-secondary; margin-bottom: $space-lg; }
+}
+
+.addr-form-wrap { margin-top: $space-xl; }
+
+.label-row { display: flex; gap: $space-sm; margin-bottom: $space-md; }
+.label-chip {
+  padding: 7px 16px; border-radius: 24px; font-size: $text-sm; font-weight: 600;
+  border: 1.5px solid $zuply-border-light; background: transparent;
+  cursor: pointer; color: $zuply-text-secondary; transition: all .15s;
+
+  &.active { border-color: $zuply-primary; background: rgba(13,92,99,.08); color: $zuply-primary; }
+  &:hover:not(.active) { border-color: $zuply-primary; color: $zuply-primary; }
+}
+
+.form-btns {
+  display: flex; gap: $space-sm; justify-content: flex-end; margin-top: $space-lg;
+}

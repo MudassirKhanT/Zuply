@@ -1,0 +1,104 @@
+<!-- src/app/pages/seller/products/products.component.html -->
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-top">
+    <div class="page-title-wrap">
+      <h1 class="text-2xl">My Products</h1>
+      <span class="total-chip">{{ allProducts.length }} total</span>
+    </div>
+    <a routerLink="/seller/upload" class="btn-accent btn-pill">+ Upload New</a>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs" *ngIf="allProducts.length > 0">
+      <button
+        *ngFor="let f of filters"
+        class="filter-tab"
+        [class.active]="activeFilter === f.key"
+        [class]="activeFilter === f.key ? 'filter-tab active ' + f.colorClass : 'filter-tab'"
+        (click)="setFilter(f.key)">
+        {{ f.icon }} {{ f.label }}
+        <span class="tab-count">{{ filterCounts[f.key] }}</span>
+      </button>
+    </div>
+
+    <!-- Products grid -->
+    <div class="grid-4" *ngIf="products.length > 0">
+      <div class="prod-card" *ngFor="let p of products">
+
+        <!-- Clickable image -->
+        <div class="prod-img" [routerLink]="['/products', p.id]">
+          <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name" onerror="this.style.display='none'"/>
+          <span *ngIf="!p.imageUrl" class="prod-placeholder">🛒</span>
+        </div>
+
+        <div class="prod-body">
+          <!-- Status + Category row -->
+          <div class="prod-top-row">
+            <span [class]="'status-pill ' + getStatusClass(p.status || 'PENDING')">
+              {{ p.status || 'Pending' | titlecase }}
+            </span>
+            <span *ngIf="p.categoryName" class="prod-cat">{{ p.categoryName }}</span>
+          </div>
+
+          <!-- Name (clickable) -->
+          <div class="prod-name" [routerLink]="['/products', p.id]">{{ p.name }}</div>
+          <div class="prod-price">₹ {{ p.price }}</div>
+
+          <!-- Stock display -->
+          <div class="stock-row" *ngIf="editingStockId !== p.id">
+            <span class="stock-text">Stock: <strong>{{ p.stock }}</strong></span>
+            <button class="btn-secondary btn-sm btn-pill" (click)="startEditStock(p)">Edit Stock</button>
+          </div>
+
+          <!-- Stock editor -->
+          <div class="stock-editor" *ngIf="editingStockId === p.id">
+            <span class="stock-editor-label">New stock quantity</span>
+            <div class="stock-editor-row">
+              <input class="input stock-input" type="number" min="0" [(ngModel)]="editStockValue" />
+              <button class="btn-primary btn-sm btn-pill" (click)="saveStock(p)">Save</button>
+              <button class="btn-ghost btn-sm btn-pill" (click)="cancelEditStock()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="card-actions">
+            <button class="btn-danger btn-sm btn-pill" (click)="deleteProduct(p.id)">Delete</button>
+            <a [routerLink]="['/products', p.id]" class="btn-outline btn-sm btn-pill">View →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtered empty state -->
+    <div class="empty-state" *ngIf="products.length === 0 && allProducts.length > 0">
+      <div class="empty-icon">
+        {{ activeFilter === 'approved' ? '✅' : activeFilter === 'pending' ? '⏳' : '❌' }}
+      </div>
+      <div class="empty-title">
+        {{ activeFilter === 'approved' ? 'No approved products yet' :
+           activeFilter === 'pending'  ? 'No products pending review' :
+           'No rejected products' }}
+      </div>
+      <div class="empty-desc">
+        {{ activeFilter === 'approved' ? 'Products approved by admin will appear here.' :
+           activeFilter === 'pending'  ? 'All your products have been reviewed.' :
+           'None of your products have been rejected.' }}
+      </div>
+    </div>
+
+    <!-- No products at all -->
+    <div class="empty-state" *ngIf="allProducts.length === 0">
+      <div class="empty-icon">📦</div>
+      <div class="empty-title">No products yet</div>
+      <div class="empty-desc">Upload your first product using AI-powered listing.</div>
+      <a routerLink="/seller/upload" class="btn-primary btn-pill">Upload Now</a>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<!-- src/app/pages/seller/orders/orders.component.html -->
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="text-2xl">Customer Orders</h1>
+    <span class="total-chip">{{ allOrders.length }} total</span>
+  </div>
+
+  <app-loading-spinner [show]="loading"></app-loading-spinner>
+
+  <div *ngIf="!loading">
+
+    <!-- Summary strip -->
+    <div class="order-summary" *ngIf="allOrders.length > 0">
+      <div class="summary-item">
+        <span class="si-icon">⏳</span>
+        <div>
+          <div class="si-value warn">{{ filterCounts['pending'] }}</div>
+          <div class="si-label">Awaiting Action</div>
+        </div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <span class="si-icon">⚙️</span>
+        <div>
+          <div class="si-value processing">{{ filterCounts['processing'] }}</div>
+          <div class="si-label">Processing</div>
+        </div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <span class="si-icon">✅</span>
+        <div>
+          <div class="si-value success">{{ filterCounts['delivered'] }}</div>
+          <div class="si-label">Delivered</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs" *ngIf="allOrders.length > 0">
+      <button
+        *ngFor="let f of filters"
+        class="filter-tab"
+        [class.active]="activeFilter === f.key"
+        [class]="activeFilter === f.key ? 'filter-tab active ' + f.colorClass : 'filter-tab'"
+        (click)="setFilter(f.key)">
+        {{ f.icon }} {{ f.label }}
+        <span class="tab-count">{{ filterCounts[f.key] }}</span>
+      </button>
+    </div>
+
+    <!-- Orders table -->
+    <div class="orders-table" *ngIf="orders.length > 0">
+      <div class="table-row header">
+        <span>Order ID</span>
+        <span>Customer</span>
+        <span>Product</span>
+        <span>Qty</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+      <div class="table-row" *ngFor="let order of orders">
+        <span class="order-id">#{{ order.orderId }}</span>
+        <span class="customer-name">{{ order.customerName || 'Customer' }}</span>
+        <span class="product-name-cell">{{ order.productName }}</span>
+        <span class="qty-chip">×{{ order.quantity }}</span>
+        <span [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus | titlecase }}</span>
+        <div class="action-btns">
+          <button class="btn-primary btn-sm btn-pill"
+                  *ngIf="order.orderStatus === 'PLACED'"
+                  (click)="updateStatus(order.orderId, 'PROCESSING')">
+            ▶ Process
+          </button>
+          <button class="btn-accent btn-sm btn-pill"
+                  *ngIf="order.orderStatus === 'PROCESSING'"
+                  (click)="updateStatus(order.orderId, 'DELIVERED')">
+            ✓ Mark Delivered
+          </button>
+          <span class="done-tag" *ngIf="order.orderStatus === 'DELIVERED'">✓ Completed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtered empty state -->
+    <div class="empty-state" *ngIf="orders.length === 0 && allOrders.length > 0">
+      <div class="empty-icon">
+        {{ activeFilter === 'pending' ? '⏳' : activeFilter === 'processing' ? '⚙️' : '✅' }}
+      </div>
+      <div class="empty-title">No {{ activeFilter }} orders</div>
+      <div class="empty-desc">{{ getEmptyMessage() }}</div>
+    </div>
+
+    <!-- No orders at all -->
+    <div class="empty-state" *ngIf="allOrders.length === 0">
+      <div class="empty-icon">🛍️</div>
+      <div class="empty-title">No orders yet</div>
+      <div class="empty-desc">Orders from customers will appear here once your products go live.</div>
+    </div>
+
+  </div>
+</div>

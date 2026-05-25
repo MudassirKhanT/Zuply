@@ -1,0 +1,242 @@
+@import 'styles';
+
+// ── Hero ─────────────────────────────────────────────────────────
+.cc-hero {
+  background: linear-gradient(135deg, $zuply-primary 0%, $zuply-primary-deeper 100%);
+  padding: $space-3xl $space-lg;
+  text-align: center;
+}
+
+.cc-hero-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
+}
+
+.cc-hero-icon {
+  width: 72px;
+  height: 72px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.cc-hero-title {
+  font-size: $text-3xl;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.cc-hero-sub {
+  font-size: $text-md;
+  color: rgba(255,255,255,0.80);
+  line-height: 1.6;
+}
+
+// ── Contact grid ──────────────────────────────────────────────────
+.cc-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-lg;
+  margin-top: -$space-xl;
+  margin-bottom: $space-xl;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 560px)  { grid-template-columns: 1fr; }
+}
+
+.cc-contact-card {
+  background: $zuply-surface;
+  border-radius: $radius-lg;
+  border: 1px solid $zuply-border-light;
+  box-shadow: $shadow-md;
+  padding: $space-xl $space-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: $space-sm;
+}
+
+.cc-card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $space-xs;
+
+  &.cc-icon--teal  { background: rgba(13,92,99,.10);   color: $zuply-primary; }
+  &.cc-icon--blue  { background: rgba(59,130,246,.10); color: #2563eb; }
+  &.cc-icon--green { background: rgba(22,163,74,.10);  color: $zuply-success; }
+  &.cc-icon--amber { background: rgba(201,168,76,.12); color: #b45309; }
+}
+
+.cc-card-title {
+  font-size: $text-lg;
+  font-weight: 700;
+  color: $zuply-text;
+}
+
+.cc-card-value {
+  font-size: $text-md;
+  font-weight: 600;
+  color: $zuply-primary;
+}
+
+.cc-card-note {
+  font-size: $text-xs;
+  color: $zuply-text-muted;
+  flex: 1;
+}
+
+.cc-card-btn {
+  margin-top: $space-sm;
+  width: 100%;
+}
+
+// ── Section ───────────────────────────────────────────────────────
+.cc-section {
+  margin-bottom: $space-xl;
+}
+
+.cc-section-title {
+  font-size: $text-2xl;
+  font-weight: 700;
+  color: $zuply-text;
+  margin-bottom: $space-lg;
+}
+
+// ── Topic chips ───────────────────────────────────────────────────
+.cc-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-md;
+
+  @media (max-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.cc-topic {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: $transition-fast;
+
+  &:hover {
+    border-color: $zuply-primary;
+    background: $zuply-primary-light;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.cc-topic-icon { font-size: 24px; }
+
+.cc-topic-label {
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text;
+}
+
+// ── FAQ ───────────────────────────────────────────────────────────
+.cc-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.cc-faq-item {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: box-shadow .2s;
+
+  &.open { box-shadow: $shadow-sm; border-color: rgba($zuply-primary, .25); }
+}
+
+.cc-faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+  padding: $space-md $space-lg;
+  background: transparent;
+  border: none;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $zuply-text;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+
+  &:hover { background: $zuply-primary-mist; }
+}
+
+.cc-faq-chevron {
+  color: $zuply-text-muted;
+  flex-shrink: 0;
+  transition: transform .2s;
+
+  .cc-faq-item.open & { transform: rotate(180deg); }
+}
+
+.cc-faq-a {
+  padding: 0 $space-lg $space-md;
+  font-size: $text-sm;
+  color: $zuply-text-secondary;
+  line-height: 1.7;
+  border-top: 1px solid $zuply-border-light;
+  padding-top: $space-md;
+}
+
+// ── Hours card ────────────────────────────────────────────────────
+.cc-hours-card {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-lg;
+  background: $zuply-primary-mist;
+  border: 1px solid rgba($zuply-primary, .15);
+  border-radius: $radius-lg;
+  padding: $space-xl;
+  margin-bottom: $space-xl;
+}
+
+.cc-hours-icon { font-size: 36px; flex-shrink: 0; }
+
+.cc-hours-title {
+  font-size: $text-lg;
+  font-weight: 700;
+  color: $zuply-primary;
+  margin-bottom: $space-md;
+}
+
+.cc-hours-rows { display: flex; flex-direction: column; gap: $space-sm; }
+
+.cc-hours-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: $text-sm;
+  color: $zuply-text;
+  gap: $space-lg;
+
+  span { color: $zuply-text-secondary; }
+  strong { font-weight: 600; }
+
+  @media (max-width: 480px) { flex-direction: column; gap: 2px; }
+}

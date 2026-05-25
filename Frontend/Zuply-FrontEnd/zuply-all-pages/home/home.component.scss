@@ -1,0 +1,254 @@
+@import 'styles';
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-section {
+  background: $zuply-primary-deeper;
+  padding: $space-3xl 0 $space-2xl;
+  margin-bottom: $space-xl;
+}
+
+.hero-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: $space-xl; animation: fadeInUp 0.7s ease both;
+}
+
+.hero-content { flex: 1; color: #fff; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba($zuply-accent, 0.15); border: 1px solid rgba($zuply-accent, 0.35);
+  color: $zuply-accent; font-size: $text-sm; font-weight: 600;
+  padding: 5px 14px; border-radius: $radius-pill; margin-bottom: $space-md;
+  .badge-dot { width: 7px; height: 7px; background: $zuply-accent; border-radius: 50%; }
+}
+
+.hero-heading {
+  font-size: 48px; font-weight: 800; line-height: 1.1;
+  letter-spacing: -1.5px; margin-bottom: $space-md; color: #fff;
+}
+.hero-accent { color: $zuply-accent; }
+
+.hero-sub {
+  font-size: $text-md; opacity: 0.8; margin-bottom: $space-lg;
+  max-width: 480px; line-height: 1.65;
+}
+
+.hero-ctas { display: flex; gap: $space-md; margin-bottom: $space-xl; flex-wrap: wrap; }
+
+.hero-stats { display: flex; align-items: center; gap: $space-lg; }
+.stat-item  { display: flex; flex-direction: column; gap: 2px; }
+.stat-num   { font-size: $text-xl; font-weight: 800; color: $zuply-accent; }
+.stat-lbl   { font-size: $text-xs; color: rgba(#fff, 0.6); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-div   { width: 1px; height: 32px; background: rgba(#fff, 0.15); }
+
+.hero-emoji {
+  font-size: 100px; opacity: 0.12; flex-shrink: 0;
+  pointer-events: none;
+}
+
+// ── Features Bar ──────────────────────────────────────────
+.features-bar {
+  background: $zuply-surface;
+  border: 1px solid $zuply-border-light;
+  border-radius: $radius-xl;
+  padding: $space-xl;
+  margin-bottom: $space-xl;
+}
+.features-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: $space-lg;
+}
+.feature-item { display: flex; align-items: flex-start; gap: $space-md; }
+.feature-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.feature-title { font-size: $text-base; font-weight: 600; color: $zuply-text; margin-bottom: 2px; }
+.feature-desc  { font-size: $text-sm; color: $zuply-text-secondary; }
+
+// ── Section layout ─────────────────────────────────────────
+.section { margin-bottom: $space-xl; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: $space-md; }
+.section-title  { font-size: $text-xl; font-weight: 700; color: $zuply-text; }
+.section-link   { font-size: $text-sm; font-weight: 600; color: $zuply-primary; cursor: pointer; text-decoration: none; }
+.section-header-right { display: flex; align-items: center; gap: 14px; }
+.clear-filter-btn {
+  padding: 4px 12px; border-radius: $radius-pill;
+  border: 1.5px solid $zuply-border; background: #fff;
+  font-size: $text-xs; font-weight: 600; color: $zuply-text-secondary; cursor: pointer;
+  &:hover { border-color: $zuply-primary; color: $zuply-primary; background: $zuply-primary-light; }
+}
+
+// ── Categories ─────────────────────────────────────────────
+.categories-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  gap: $space-sm; margin-bottom: $space-sm;
+}
+
+// ── How It Works ────────────────────────────────────────────
+.how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: $space-lg; }
+.how-step {
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg; padding: $space-xl $space-lg; text-align: center;
+  transition: $transition-normal;
+  &:hover { box-shadow: $shadow-md; transform: translateY(-3px); }
+}
+.step-num   { font-size: $text-xs; font-weight: 700; color: $zuply-accent; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: $space-sm; }
+.step-icon  { font-size: 36px; margin-bottom: $space-sm; }
+.step-title { font-size: $text-base; font-weight: 700; color: $zuply-primary; margin-bottom: $space-xs; }
+.step-desc  { font-size: $text-sm; color: $zuply-text-secondary; line-height: 1.5; }
+
+// ── Section subtitle ──────────────────────────────────────────
+.section-subtitle { font-size: $text-sm; color: $zuply-text-muted; margin-top: 2px; }
+
+// ── Category cards grid ───────────────────────────────────────
+.cat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: $space-md;
+  margin-bottom: $space-lg;
+}
+
+.cat-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 6px; padding: $space-md $space-sm;
+  background: $zuply-surface; border: 1.5px solid $zuply-border-light;
+  border-radius: $radius-lg; cursor: pointer;
+  transition: all .2s; text-decoration: none;
+
+  &:hover { border-color: $zuply-primary; box-shadow: 0 4px 16px rgba(13,92,99,.1);
+    transform: translateY(-3px); }
+  &.active { border-color: $zuply-primary; background: $zuply-primary-light;
+    .cat-card-name { color: $zuply-primary; } }
+}
+
+.cat-card-icon { font-size: 32px; line-height: 1; }
+.cat-card-name { font-size: $text-xs; font-weight: 700; color: $zuply-text; }
+.cat-card-desc { font-size: 10px; color: $zuply-text-muted; line-height: 1.3; }
+
+// ── Local Sellers grid ────────────────────────────────────────
+.sellers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $space-md;
+}
+
+.seller-card {
+  background: $zuply-surface; border: 1.5px solid $zuply-border-light;
+  border-radius: $radius-lg; padding: $space-md;
+  cursor: pointer; transition: $transition-fast; text-decoration: none;
+  display: flex; flex-direction: column; gap: $space-sm;
+
+  &:hover { box-shadow: $shadow-md; border-color: $zuply-primary; transform: translateY(-2px); }
+}
+
+.seller-card-top {
+  display: flex; align-items: center; gap: $space-sm;
+}
+
+.sc-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, $zuply-primary, $zuply-primary-deeper);
+  color: #fff; font-weight: 800; font-size: $text-lg;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.sc-info { flex: 1; min-width: 0; }
+.sc-name { font-weight: 700; font-size: $text-sm; color: $zuply-text;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-meta { font-size: $text-xs; color: $zuply-text-muted; }
+
+.sc-location {
+  display: flex; align-items: center; gap: 3px;
+  font-size: $text-xs; color: $zuply-text-muted;
+  background: $zuply-primary-mist; padding: 3px 8px; border-radius: 10px; flex-shrink: 0;
+  svg { flex-shrink: 0; }
+}
+
+.sc-cats { display: flex; flex-wrap: wrap; gap: 4px; }
+.sc-cat-chip {
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  background: rgba(13,92,99,.08); color: $zuply-primary; border-radius: 10px;
+}
+
+.sc-cta {
+  font-size: $text-xs; font-weight: 700; color: $zuply-primary;
+  margin-top: auto; padding-top: $space-xs;
+}
+
+// ── Quick links bar ────────────────────────────────────────────
+.quick-links-bar {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: $space-md;
+  margin-bottom: $space-xl;
+}
+
+.ql-item {
+  display: flex; align-items: center; gap: $space-sm;
+  background: $zuply-surface; border: 1px solid $zuply-border-light;
+  border-radius: $radius-lg; padding: $space-md; text-decoration: none;
+  transition: $transition-fast;
+
+  &:hover { border-color: $zuply-primary; box-shadow: $shadow-sm; }
+}
+
+.ql-icon  { font-size: 28px; flex-shrink: 0; }
+.ql-title { font-size: $text-sm; font-weight: 700; color: $zuply-text; }
+.ql-sub   { font-size: $text-xs; color: $zuply-text-muted; margin-top: 1px; }
+
+// ── Sell Banner ────────────────────────────────────────────
+.sell-banner {
+  background: linear-gradient(135deg, $zuply-primary-deeper 0%, $zuply-primary 100%);
+  border-radius: $radius-xl; padding: $space-2xl $space-xl;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: $space-xl; margin-bottom: $space-3xl;
+}
+.sell-content { flex: 1; color: #fff; }
+.sell-badge {
+  display: inline-block; background: rgba($zuply-accent, 0.2); border: 1px solid rgba($zuply-accent, 0.4);
+  color: $zuply-accent; font-size: $text-xs; font-weight: 700;
+  padding: 3px 12px; border-radius: $radius-pill; text-transform: uppercase; margin-bottom: $space-sm;
+}
+.sell-title { font-size: $text-2xl; font-weight: 800; margin-bottom: $space-sm; }
+.sell-desc  { font-size: $text-md; opacity: 0.8; margin-bottom: $space-lg; max-width: 500px; line-height: 1.6; }
+.sell-visual { display: flex; flex-direction: column; gap: $space-sm; flex-shrink: 0; }
+.sell-step {
+  display: flex; align-items: center; gap: $space-md;
+  background: rgba(#fff, 0.08); border: 1px solid rgba(#fff, 0.15);
+  border-radius: $radius-md; padding: 10px 18px; color: #fff;
+}
+.ss-num  { font-size: $text-sm; font-weight: 700; color: $zuply-accent; min-width: 28px; }
+.ss-text { font-size: $text-sm; font-weight: 500; }
+
+// Empty state
+.empty-state { text-align: center; padding: $space-2xl $space-xl; }
+.empty-icon  { font-size: 3rem; margin-bottom: $space-sm; }
+.empty-title { font-size: $text-xl; font-weight: 700; color: $zuply-text; margin-bottom: $space-xs; }
+.empty-desc  { color: $zuply-text-secondary; font-size: $text-sm; margin-bottom: $space-lg; }
+
+@media (max-width: 1024px) {
+  .features-grid   { grid-template-columns: repeat(2, 1fr); }
+  .how-grid        { grid-template-columns: repeat(2, 1fr); }
+  .cat-cards-grid  { grid-template-columns: repeat(4, 1fr); }
+  .hero-heading    { font-size: 36px; }
+  .quick-links-bar { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hero-inner     { flex-direction: column; }
+  .hero-emoji     { display: none; }
+  .hero-heading   { font-size: 28px; }
+  .cat-cards-grid { grid-template-columns: repeat(4, 1fr); }
+  .sell-banner    { flex-direction: column; }
+  .sell-visual    { width: 100%; }
+  .sellers-grid   { grid-template-columns: repeat(2, 1fr); }
+  .quick-links-bar { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .hero-heading    { font-size: 24px; }
+  .cat-cards-grid  { grid-template-columns: repeat(4, 1fr); .cat-card-desc { display: none; } }
+  .how-grid        { grid-template-columns: 1fr; }
+  .features-grid   { grid-template-columns: 1fr; }
+  .hero-ctas       { flex-direction: column; }
+  .sellers-grid    { grid-template-columns: 1fr; }
+}
